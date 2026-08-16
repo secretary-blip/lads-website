@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propose a project | LADS</title>
+<meta name="description" content="Propose a project idea to the LADS board.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#C00000">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  .stats { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); margin-top:1.5rem; }
+  .stat { background:var(--grey-soft); border:1px solid var(--line); padding:1.1rem 1.2rem; }
+  .stat .n { font-size:2rem; font-weight:700; line-height:1.1; }
+  .stat .k { font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-text); margin-top:0.3rem; }
+
+  .tabs { display:flex; gap:0; border-bottom:1px solid var(--line); margin-top:2.5rem; flex-wrap:wrap; }
+  .tab { background:none; border:0; border-bottom:2px solid transparent; padding:0.8rem 1.1rem;
+         font-family:inherit; font-size:0.95rem; font-weight:600; color:var(--gray-text); cursor:pointer; }
+  .tab[aria-selected="true"] { color:var(--red); border-bottom-color:var(--red); }
+  .tab .count { font-size:0.78rem; background:var(--red); color:#fff; border-radius:999px;
+                padding:0.1rem 0.45rem; margin-left:0.4rem; vertical-align:middle; }
+
+  .rec { border:1px solid var(--line); padding:1.25rem; margin-top:1rem; }
+  .rec-top { display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; align-items:flex-start; }
+  .rec h3 { font-size:1.1rem; margin:0; }
+  .rec dl { display:grid; grid-template-columns:auto 1fr; gap:0.35rem 1rem; margin:0.9rem 0 0; font-size:0.9rem; }
+  .rec dt { color:var(--gray-text); }
+  .rec dd { margin:0; }
+  .rec .btn-row { margin-top:1.1rem; }
+  .rec .body { margin-top:0.9rem; font-size:0.95rem; line-height:1.65; white-space:pre-wrap; }
+
+  .pill { display:inline-block; font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
+          padding:0.2rem 0.55rem; border:1px solid var(--line); color:var(--gray-text); white-space:nowrap; }
+  .pill.ok   { border-color:#1a7f37; color:#1a7f37; }
+  .pill.wait { border-color:#9a6700; color:#9a6700; }
+  .pill.no   { border-color:var(--red); color:var(--red); }
+
+  .toolbar { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-top:1.5rem; }
+  .toolbar input, .toolbar select { padding:0.6rem 0.7rem; font-family:inherit; font-size:0.92rem; }
+
+  .muted { color:var(--gray-text); }
+  .stack > * + * { margin-top:1.5rem; }
+
+  @media (max-width:640px){ .rec dl { grid-template-columns:1fr; gap:0.15rem; } .rec dt { margin-top:0.5rem; } }
+
+  /* Dark mode, written twice as css/style.css does: once for the system
+     preference, once for the manual toggle. The greens and ambers that pass
+     contrast on white fail badly on #121212, so they get their own values. */
+  @media (prefers-color-scheme: dark){
+    html:not([data-theme="light"]) .stat { background:var(--panel); border-color:var(--line); }
+    html:not([data-theme="light"]) .rec  { border-color:var(--line); }
+    html:not([data-theme="light"]) .pill.ok   { border-color:#4ADE80; color:#4ADE80; }
+    html:not([data-theme="light"]) .pill.wait { border-color:#E3B341; color:#E3B341; }
+  }
+  html[data-theme="dark"] .stat { background:var(--panel); border-color:var(--line); }
+  html[data-theme="dark"] .rec  { border-color:var(--line); }
+  html[data-theme="dark"] .pill.ok   { border-color:#4ADE80; color:#4ADE80; }
+  html[data-theme="dark"] .pill.wait { border-color:#E3B341; color:#E3B341; }
+</style>
+</head>
+<body>
+<header>
+  <div class="nav-wrap">
+    <a class="logo" href="index.html"><img src="assets/lads_logo.png" alt="LADS, Lebanese Association of Dental Students"></a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-controls="nav" aria-expanded="false" onclick="var n=document.getElementById('nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o);">&#9776;</button>
+    <nav id="nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="account.html" data-portal-link class="active">Portal</a></li>
+        <li><a href="join.html" class="btn-join">Join LADS</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-label="Switch between light and dark mode" title="Switch theme">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    </button>
+  </div>
+</header>
+<main id="main">
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Member Portal</p>
+      <h1 class="h-sec">Propose a project.</h1>
+    </div>
+
+    <p class="muted" style="margin-top:0.75rem; max-width:60ch;">
+      Every LADS campaign started as somebody's idea. If you have one, whether it
+      is a campaign, a workshop, a trip or something nobody has tried, put it here
+      and the relevant committee head will look at it.
+    </p>
+
+    <p id="loading" class="muted" style="margin-top:2rem;">Loading&hellip;</p>
+
+    <div id="app" hidden>
+      <div class="split" style="margin-top:2.5rem;">
+        <div>
+          <h2 class="h-sub" style="font-size:1.3rem;">Your idea</h2>
+          <p class="muted" style="margin-top:0.5rem; font-size:0.92rem;">
+            You do not need it fully worked out. A clear problem and a rough plan
+            is enough to start a conversation.
+          </p>
+        </div>
+        <div>
+          <form id="form" novalidate>
+            <div class="form-field">
+              <label for="title">Give it a name</label>
+              <input type="text" id="title" required placeholder="Free screening day in Tripoli">
+            </div>
+            <div class="form-field">
+              <label for="committee">Which committee does it fit?</label>
+              <select id="committee"><option value="">Not sure, let the board decide</option></select>
+            </div>
+            <div class="form-field">
+              <label for="summary">What is the idea?</label>
+              <textarea id="summary" rows="7" required
+                placeholder="What would happen, who it is for, and what problem it addresses."></textarea>
+            </div>
+            <div class="form-field">
+              <label for="needs">What would it need?</label>
+              <textarea id="needs" rows="4"
+                placeholder="Rough budget, number of volunteers, materials, partners, a venue."></textarea>
+            </div>
+            <button type="submit" class="btn" id="submit">Submit idea</button>
+            <p id="msg" class="form-msg" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+
+      <div style="margin-top:3.5rem;">
+        <h2 class="h-sub" style="font-size:1.3rem;">Your proposals</h2>
+        <div id="mine" style="margin-top:1rem;"></div>
+      </div>
+
+      <p style="margin-top:3rem;"><a href="account.html" class="btn btn-outline">Back to your account</a></p>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <img src="assets/lads_logo.png" alt="LADS">
+      <h4>LADS</h4>
+      <p>Lebanese Association of Dental Students<br>Faculty of Dentistry, Beirut Arab University<br>Tarik El Jadida, Riad El Solh 11072809<br>Beirut, Lebanon</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="join.html">Membership</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/lebaneseassociationofdentalstudents" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.linkedin.com/company/lebanese-association-of-dental-students" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:info@ladslb.org">info@ladslb.org</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015. GOOGLE FOR NONPROFITS CHARITY ID 1658. <a href="about.html#transparency" style="text-decoration:underline;">ORGANISATION DETAILS</a></p>
+  </div>
+</footer>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  if(!btn) return;
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function current(){
+    var set = root.getAttribute('data-theme');
+    if(set) return set;
+    return mq.matches ? 'dark' : 'light';
+  }
+  function paint(){
+    var dark = current()==='dark';
+    btn.querySelector('.moon').style.display = dark ? 'none' : 'block';
+    btn.querySelector('.sun').style.display  = dark ? 'block' : 'none';
+  }
+  var saved=null; try{saved=localStorage.getItem('lads-theme');}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  paint();
+  mq.addEventListener && mq.addEventListener('change', paint);
+  btn.addEventListener('click', function(){
+    var next = current()==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{localStorage.setItem('lads-theme', next);}catch(e){}
+    paint();
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+
+import { sb, requireAuth, fmtDate, escapeHtml, say } from "./js/portal.js";
+
+const APP_STATUS = {
+  submitted: ["Submitted", "wait"],
+  under_review: ["Under review", "wait"],
+  accepted: ["Accepted", "ok"],
+  rejected: ["Not accepted", "no"],
+  withdrawn: ["Withdrawn", ""],
+};
+const PROP_STATUS = {
+  submitted: ["Submitted", "wait"],
+  under_review: ["Under review", "wait"],
+  approved: ["Approved", "ok"],
+  declined: ["Declined", "no"],
+  implemented: ["Implemented", "ok"],
+};
+
+const $ = id => document.getElementById(id);
+
+const session = await requireAuth();
+let committees = [];
+
+if (session) {
+  const { data } = await sb.from("committees").select("id,name").order("sort_order");
+  committees = data || [];
+  $("committee").innerHTML = '<option value="">Not sure, let the board decide</option>' +
+    committees.map(c => '<option value="' + c.id + '">' + escapeHtml(c.name) + '</option>').join("");
+  await loadMine();
+  $("loading").hidden = true;
+  $("app").hidden = false;
+}
+
+async function loadMine() {
+  const { data, error } = await sb.from("proposals")
+    .select("*").eq("profile_id", session.user.id)
+    .order("created_at", { ascending: false });
+  if (error) { console.error(error); return; }
+
+  const names = {};
+  committees.forEach(c => { names[c.id] = c.name; });
+
+  $("mine").innerHTML = (data && data.length)
+    ? data.map(p => {
+        const [label, cls] = PROP_STATUS[p.status] || [p.status, ""];
+        return '<div class="rec">' +
+          '<div class="rec-top"><div>' +
+            '<h3>' + escapeHtml(p.title) + '</h3>' +
+            '<p class="muted" style="font-size:0.9rem; margin-top:0.2rem;">Submitted ' +
+              escapeHtml(fmtDate(p.created_at)) +
+              (p.committee_id ? ' &middot; ' + escapeHtml(names[p.committee_id] || p.committee_id) : '') +
+            '</p>' +
+          '</div><span class="pill ' + cls + '">' + escapeHtml(label) + '</span></div>' +
+          '<div class="body">' + escapeHtml(p.summary) + '</div>' +
+          (p.reviewer_note
+            ? '<dl><dt>Note from the board</dt><dd>' + escapeHtml(p.reviewer_note) + '</dd></dl>' : '') +
+        '</div>';
+      }).join("")
+    : '<p class="muted">Nothing yet. Ideas you submit will appear here.</p>';
+}
+
+$("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = $("submit"), msg = $("msg");
+
+  if (!$("title").value.trim()) return say(msg, "Please give your idea a name.", "error");
+  if ($("summary").value.trim().length < 40)
+    return say(msg, "Please describe the idea in a little more detail.", "error");
+
+  btn.disabled = true;
+  say(msg, "Submitting\u2026");
+
+  const { error } = await sb.from("proposals").insert({
+    profile_id: session.user.id,
+    title: $("title").value.trim(),
+    summary: $("summary").value.trim(),
+    committee_id: $("committee").value || null,
+    needs: $("needs").value.trim() || null,
+  });
+
+  btn.disabled = false;
+  if (error) return say(msg, "Could not submit: " + error.message, "error");
+
+  say(msg, "Submitted. Thank you, someone will look at it.", "success");
+  $("form").reset();
+  await loadMine();
+});
+
+</script>
+</body>
+</html>

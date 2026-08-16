@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events | LADS</title>
+<meta name="description" content="Upcoming LADS events and registration.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#C00000">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  .stats { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); margin-top:1.5rem; }
+  .stat { background:var(--grey-soft); border:1px solid var(--line); padding:1.1rem 1.2rem; }
+  .stat .n { font-size:2rem; font-weight:700; line-height:1.1; }
+  .stat .k { font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-text); margin-top:0.3rem; }
+
+  .tabs { display:flex; gap:0; border-bottom:1px solid var(--line); margin-top:2.5rem; flex-wrap:wrap; }
+  .tab { background:none; border:0; border-bottom:2px solid transparent; padding:0.8rem 1.1rem;
+         font-family:inherit; font-size:0.95rem; font-weight:600; color:var(--gray-text); cursor:pointer; }
+  .tab[aria-selected="true"] { color:var(--red); border-bottom-color:var(--red); }
+  .tab .count { font-size:0.78rem; background:var(--red); color:#fff; border-radius:999px;
+                padding:0.1rem 0.45rem; margin-left:0.4rem; vertical-align:middle; }
+
+  .rec { border:1px solid var(--line); padding:1.25rem; margin-top:1rem; }
+  .rec-top { display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; align-items:flex-start; }
+  .rec h3 { font-size:1.1rem; margin:0; }
+  .rec dl { display:grid; grid-template-columns:auto 1fr; gap:0.35rem 1rem; margin:0.9rem 0 0; font-size:0.9rem; }
+  .rec dt { color:var(--gray-text); }
+  .rec dd { margin:0; }
+  .rec .btn-row { margin-top:1.1rem; }
+  .rec .body { margin-top:0.9rem; font-size:0.95rem; line-height:1.65; white-space:pre-wrap; }
+
+  .pill { display:inline-block; font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
+          padding:0.2rem 0.55rem; border:1px solid var(--line); color:var(--gray-text); white-space:nowrap; }
+  .pill.ok   { border-color:#1a7f37; color:#1a7f37; }
+  .pill.wait { border-color:#9a6700; color:#9a6700; }
+  .pill.no   { border-color:var(--red); color:var(--red); }
+
+  .toolbar { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-top:1.5rem; }
+  .toolbar input, .toolbar select { padding:0.6rem 0.7rem; font-family:inherit; font-size:0.92rem; }
+
+  .muted { color:var(--gray-text); }
+  .stack > * + * { margin-top:1.5rem; }
+
+  @media (max-width:640px){ .rec dl { grid-template-columns:1fr; gap:0.15rem; } .rec dt { margin-top:0.5rem; } }
+
+  /* Dark mode, written twice as css/style.css does: once for the system
+     preference, once for the manual toggle. The greens and ambers that pass
+     contrast on white fail badly on #121212, so they get their own values. */
+  @media (prefers-color-scheme: dark){
+    html:not([data-theme="light"]) .stat { background:var(--panel); border-color:var(--line); }
+    html:not([data-theme="light"]) .rec  { border-color:var(--line); }
+    html:not([data-theme="light"]) .pill.ok   { border-color:#4ADE80; color:#4ADE80; }
+    html:not([data-theme="light"]) .pill.wait { border-color:#E3B341; color:#E3B341; }
+  }
+  html[data-theme="dark"] .stat { background:var(--panel); border-color:var(--line); }
+  html[data-theme="dark"] .rec  { border-color:var(--line); }
+  html[data-theme="dark"] .pill.ok   { border-color:#4ADE80; color:#4ADE80; }
+  html[data-theme="dark"] .pill.wait { border-color:#E3B341; color:#E3B341; }
+</style>
+</head>
+<body>
+<header>
+  <div class="nav-wrap">
+    <a class="logo" href="index.html"><img src="assets/lads_logo.png" alt="LADS, Lebanese Association of Dental Students"></a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-controls="nav" aria-expanded="false" onclick="var n=document.getElementById('nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o);">&#9776;</button>
+    <nav id="nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="account.html" data-portal-link class="active">Portal</a></li>
+        <li><a href="join.html" class="btn-join">Join LADS</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-label="Switch between light and dark mode" title="Switch theme">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    </button>
+  </div>
+</header>
+<main id="main">
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Member Portal</p>
+      <h1 class="h-sec">Events.</h1>
+    </div>
+
+    <p id="loading" class="muted" style="margin-top:2rem;">Loading&hellip;</p>
+
+    <div id="app" hidden>
+      <div id="dues-warn" hidden class="notice" style="margin-top:1.5rem;">
+        <h3>Some events are for paid members</h3>
+        <p id="dues-warn-text"></p>
+        <p style="margin-top:1rem;"><a href="join.html" class="btn">How to pay your dues</a></p>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button class="tab" id="tab-up" role="tab" aria-selected="true" aria-controls="pane-up">
+          Upcoming<span class="count" id="c-up" hidden>0</span>
+        </button>
+        <button class="tab" id="tab-mine" role="tab" aria-selected="false" aria-controls="pane-mine">
+          You are going<span class="count" id="c-mine" hidden>0</span>
+        </button>
+        <button class="tab" id="tab-past" role="tab" aria-selected="false" aria-controls="pane-past">Past</button>
+      </div>
+
+      <div id="pane-up" role="tabpanel" aria-labelledby="tab-up"><div id="list-up" style="margin-top:1.5rem;"></div></div>
+      <div id="pane-mine" role="tabpanel" aria-labelledby="tab-mine" hidden><div id="list-mine" style="margin-top:1.5rem;"></div></div>
+      <div id="pane-past" role="tabpanel" aria-labelledby="tab-past" hidden><div id="list-past" style="margin-top:1.5rem;"></div></div>
+
+      <p style="margin-top:3rem;"><a href="account.html" class="btn btn-outline">Back to your account</a></p>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <img src="assets/lads_logo.png" alt="LADS">
+      <h4>LADS</h4>
+      <p>Lebanese Association of Dental Students<br>Faculty of Dentistry, Beirut Arab University<br>Tarik El Jadida, Riad El Solh 11072809<br>Beirut, Lebanon</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="join.html">Membership</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/lebaneseassociationofdentalstudents" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.linkedin.com/company/lebanese-association-of-dental-students" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:info@ladslb.org">info@ladslb.org</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015. GOOGLE FOR NONPROFITS CHARITY ID 1658. <a href="about.html#transparency" style="text-decoration:underline;">ORGANISATION DETAILS</a></p>
+  </div>
+</footer>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  if(!btn) return;
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function current(){
+    var set = root.getAttribute('data-theme');
+    if(set) return set;
+    return mq.matches ? 'dark' : 'light';
+  }
+  function paint(){
+    var dark = current()==='dark';
+    btn.querySelector('.moon').style.display = dark ? 'none' : 'block';
+    btn.querySelector('.sun').style.display  = dark ? 'block' : 'none';
+  }
+  var saved=null; try{saved=localStorage.getItem('lads-theme');}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  paint();
+  mq.addEventListener && mq.addEventListener('change', paint);
+  btn.addEventListener('click', function(){
+    var next = current()==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{localStorage.setItem('lads-theme', next);}catch(e){}
+    paint();
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+
+import { sb, requireAuth, getProfile, getMemberships, duesYear,
+         fmtDate, escapeHtml, say } from "./js/portal.js";
+
+const $ = id => document.getElementById(id);
+
+const session = await requireAuth();
+let profile = null, paidUp = false, events = [], myRegs = [], committees = {};
+
+if (session) {
+  profile = await getProfile();
+  const ms = await getMemberships();
+  const cur = ms.find(m => m.academic_year === duesYear());
+  paidUp = !!cur && ["paid", "waived"].includes(cur.status);
+  await loadCommittees();
+  await load();
+  $("loading").hidden = true;
+  $("app").hidden = false;
+  wireTabs();
+
+  if (!paidUp) {
+    $("dues-warn-text").textContent =
+      "Your dues for " + duesYear() + " are not confirmed yet, so events marked members only are locked. " +
+      "Everything else is open to you.";
+    $("dues-warn").hidden = false;
+  }
+}
+
+async function loadCommittees() {
+  const { data } = await sb.from("committees").select("id,name");
+  (data || []).forEach(c => { committees[c.id] = c.name; });
+}
+
+async function load() {
+  const [{ data: ev }, { data: regs }] = await Promise.all([
+    sb.from("events").select("*").eq("published", true).order("starts_at", { ascending: true }),
+    sb.from("event_registrations").select("*").eq("profile_id", session.user.id),
+  ]);
+  events = ev || [];
+  myRegs = regs || [];
+  render();
+}
+
+const regFor = id => myRegs.find(r => r.event_id === id && !r.cancelled);
+
+function when(e) {
+  const d = new Date(e.starts_at);
+  const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  return fmtDate(e.starts_at) + " at " + time;
+}
+
+function card(e, past) {
+  const mine = regFor(e.id);
+  const locked = e.members_only && !paidUp;
+  const closed = e.registration_closes && new Date(e.registration_closes) < new Date();
+  const opens  = e.registration_opens && new Date(e.registration_opens) > new Date();
+
+  let action = "";
+  if (past) {
+    action = mine ? '<span class="pill ok">You attended</span>' : "";
+  } else if (mine) {
+    action = '<button type="button" class="btn btn-outline" data-act="cancel" data-id="' + e.id + '">Cancel your place</button>';
+  } else if (locked) {
+    action = '<span class="muted" style="font-size:0.9rem;">Members only. Confirm your dues to register.</span>';
+  } else if (opens) {
+    action = '<span class="muted" style="font-size:0.9rem;">Registration opens ' + escapeHtml(fmtDate(e.registration_opens)) + '</span>';
+  } else if (closed) {
+    action = '<span class="muted" style="font-size:0.9rem;">Registration has closed</span>';
+  } else {
+    action = '<button type="button" class="btn" data-act="register" data-id="' + e.id + '">Register</button>';
+  }
+
+  return '<div class="rec" data-card="' + e.id + '">' +
+    '<div class="rec-top"><div>' +
+      '<h3>' + escapeHtml(e.title) + '</h3>' +
+      '<p class="muted" style="font-size:0.9rem; margin-top:0.2rem;">' + escapeHtml(when(e)) +
+        (e.location ? ' &middot; ' + escapeHtml(e.location) : '') + '</p>' +
+    '</div>' +
+    (mine && !past ? '<span class="pill ok">You are going</span>'
+                   : (e.members_only ? '<span class="pill">Members only</span>' : '')) +
+    '</div>' +
+    (e.summary ? '<div class="body">' + escapeHtml(e.summary) + '</div>' : '') +
+    '<dl>' +
+      (e.committee_id ? '<dt>Committee</dt><dd>' + escapeHtml(committees[e.committee_id] || e.committee_id) + '</dd>' : '') +
+    '</dl>' +
+    '<div class="btn-row">' + action + '</div>' +
+    '<p class="form-msg" data-msg role="status" aria-live="polite"></p>' +
+  '</div>';
+}
+
+function render() {
+  const now = new Date();
+  const upcoming = events.filter(e => new Date(e.starts_at) >= now);
+  const past     = events.filter(e => new Date(e.starts_at) <  now).reverse();
+  const mine     = upcoming.filter(e => regFor(e.id));
+
+  $("c-up").hidden = !upcoming.length;   $("c-up").textContent = upcoming.length;
+  $("c-mine").hidden = !mine.length;     $("c-mine").textContent = mine.length;
+
+  $("list-up").innerHTML = upcoming.length
+    ? upcoming.map(e => card(e, false)).join("")
+    : '<p class="muted">No events published yet. They will appear here as the board announces them.</p>';
+
+  $("list-mine").innerHTML = mine.length
+    ? mine.map(e => card(e, false)).join("")
+    : '<p class="muted">You have not registered for anything yet.</p>';
+
+  $("list-past").innerHTML = past.length
+    ? past.map(e => card(e, true)).join("")
+    : '<p class="muted">Nothing here yet.</p>';
+}
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const card = btn.closest(".rec");
+  const msg = card.querySelector("[data-msg]");
+  card.querySelectorAll("button").forEach(b => b.disabled = true);
+
+  try {
+    if (btn.dataset.act === "register") {
+      say(msg, "Registering\u2026");
+      const existing = myRegs.find(r => r.event_id === id);
+      const { error } = existing
+        ? await sb.from("event_registrations").update({ cancelled: false }).eq("id", existing.id)
+        : await sb.from("event_registrations").insert({ event_id: id, profile_id: session.user.id });
+      if (error) throw error;
+      say(msg, "You are registered.", "success");
+    } else {
+      say(msg, "Cancelling\u2026");
+      const mine = regFor(id);
+      const { error } = await sb.from("event_registrations").update({ cancelled: true }).eq("id", mine.id);
+      if (error) throw error;
+      say(msg, "Your place has been cancelled.", "success");
+    }
+    await load();
+  } catch (err) {
+    console.error(err);
+    say(msg, "Could not save: " + (err.message || "unknown error"), "error");
+    card.querySelectorAll("button").forEach(b => b.disabled = false);
+  }
+});
+
+function wireTabs() {
+  const map = { "tab-up": "pane-up", "tab-mine": "pane-mine", "tab-past": "pane-past" };
+  Object.keys(map).forEach(t => {
+    $(t).addEventListener("click", () => {
+      Object.keys(map).forEach(k => {
+        const on = k === t;
+        $(k).setAttribute("aria-selected", String(on));
+        $(map[k]).hidden = !on;
+      });
+    });
+  });
+}
+
+</script>
+</body>
+</html>

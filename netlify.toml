@@ -1,0 +1,31 @@
+# Only the site/ folder is published. Everything else in this repository,
+# the SQL migrations and the documentation, stays out of the public website.
+# Before this split, db files sat next to index.html and were downloadable.
+
+[build]
+  publish = "site"
+  command = ""
+
+[[redirects]]
+  from = "/*"
+  status = 404
+  to = "/404.html"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Portal pages hold personal data. Never let a proxy or browser cache them.
+[[headers]]
+  for = "/account.html"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/admin-*"
+  [headers.values]
+    Cache-Control = "no-store"

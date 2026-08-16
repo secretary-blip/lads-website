@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-116JSZSGZN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-116JSZSGZN');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your account | LADS</title>
+<meta name="description" content="Your LADS membership record.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#C00000">
+
+<meta name="robots" content="noindex">
+</head>
+<body>
+<header>
+  <div class="nav-wrap">
+    <a class="logo" href="index.html"><img src="assets/lads_logo.png" alt="LADS, Lebanese Association of Dental Students"></a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-controls="nav" aria-expanded="false" onclick="var n=document.getElementById('nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o);">&#9776;</button>
+    <nav id="nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="account.html" data-portal-link class="active">Portal</a></li>
+        <li><a href="join.html" class="btn-join">Join LADS</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-label="Switch between light and dark mode" title="Switch theme">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    </button>
+  </div>
+</header>
+<main id="main">
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Member Portal</p>
+      <h1 class="h-sec" id="greeting">Your account.</h1>
+    </div>
+
+    <div id="loading" style="margin-top:2rem; color:var(--gray-text);">Loading your record…</div>
+
+    <div id="dash" hidden>
+
+      <!-- dues status -->
+      <div class="panel" id="dues-panel" style="margin-top:2rem;">
+        <p class="eyebrow">Membership</p>
+        <h2 id="dues-status" style="font-size:1.6rem; margin-top:0.4rem;"></h2>
+        <p id="dues-detail" style="margin-top:0.6rem; color:var(--gray-text);"></p>
+        <div id="dues-action" style="margin-top:1.1rem;"></div>
+      </div>
+
+      <!-- profile -->
+      <div class="split" style="margin-top:2.5rem;">
+        <div>
+          <h2 class="h-sub" style="font-size:1.3rem;">Your details</h2>
+          <p style="margin-top:0.5rem; color:var(--gray-text); font-size:0.92rem;">
+            Keep these current so we can reach you about events and renewals.
+          </p>
+        </div>
+        <div>
+          <form id="profile-form">
+            <div class="form-field">
+              <label for="full_name">Full name</label>
+              <input type="text" id="full_name" required>
+            </div>
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input type="email" id="email" disabled>
+              <span class="hint">Your sign-in address. Contact us to change it.</span>
+            </div>
+            <div class="form-field">
+              <label for="phone">Phone number</label>
+              <input type="tel" id="phone" placeholder="76 123 456">
+            </div>
+            <div class="form-field">
+              <label for="university">University</label>
+              <select id="university">
+                <option value="">Select…</option>
+                <option value="BAU">Beirut Arab University (BAU)</option>
+                <option value="LU">Lebanese University (LU)</option>
+                <option value="USJ">Université Saint-Joseph (USJ)</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="academic_year">Academic year</label>
+              <select id="academic_year">
+                <option value="">Select…</option>
+                <option>1st year</option><option>2nd year</option><option>3rd year</option>
+                <option>4th year</option><option>5th year</option><option>Postgraduate</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="student_id">Student ID number</label>
+              <input type="text" id="student_id">
+            </div>
+            <button type="submit" class="btn" id="save-btn">Save changes</button>
+            <p id="profile-msg" class="form-msg" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+
+      <!-- membership history -->
+      <div style="margin-top:3rem;">
+        <h2 class="h-sub" style="font-size:1.3rem;">Membership history</h2>
+        <div id="history-wrap" style="margin-top:1rem;"></div>
+      </div>
+
+      <!-- member tools -->
+      <div style="margin-top:3rem;">
+        <h2 class="h-sub" style="font-size:1.3rem;">Your portal</h2>
+        <div class="blocks" style="margin-top:1.25rem;">
+          <div class="block"><h3><a href="events.html">Events</a></h3><p>See what is coming up and register.</p></div>
+          <div class="block"><h3><a href="apply.html">Apply</a></h3><p>Exchanges, research and voluntary projects.</p></div>
+          <div class="block"><h3><a href="propose.html">Propose a project</a></h3><p>Have an idea? Send it to the board.</p></div>
+        </div>
+      </div>
+
+      <!-- password -->
+      <div style="margin-top:3rem;">
+        <h2 class="h-sub" style="font-size:1.3rem;">Password</h2>
+        <form id="pw-form" style="max-width:430px; margin-top:1rem;">
+          <div class="form-field">
+            <label for="new_password">New password</label>
+            <input type="password" id="new_password" autocomplete="new-password">
+            <span class="hint">At least 8 characters, with a letter and a number.</span>
+          </div>
+          <div class="form-field">
+            <label for="new_password2">Confirm new password</label>
+            <input type="password" id="new_password2" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-outline" id="pw-btn">Change password</button>
+          <p id="pw-msg" class="form-msg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <!-- staff tools -->
+      <div id="staff-tools" hidden style="margin-top:3rem;">
+        <h2 class="h-sub" style="font-size:1.3rem;">Board tools</h2>
+        <p style="margin-top:0.4rem; color:var(--gray-text); font-size:0.92rem;"
+           id="role-note"></p>
+        <div class="blocks" style="margin-top:1.25rem;" id="tool-links"></div>
+      </div>
+
+      <p style="margin-top:3rem;">
+        <button type="button" class="btn btn-outline" id="signout-btn">Sign out</button>
+      </p>
+
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <img src="assets/lads_logo.png" alt="LADS">
+      <h4>LADS</h4>
+      <p>Lebanese Association of Dental Students<br>Faculty of Dentistry, Beirut Arab University<br>Tarik El Jadida, Riad El Solh 11072809<br>Beirut, Lebanon</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="join.html">Membership</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/lebaneseassociationofdentalstudents" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.linkedin.com/company/lebanese-association-of-dental-students" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:info@ladslb.org">info@ladslb.org</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015. GOOGLE FOR NONPROFITS CHARITY ID 1658. <a href="about.html#transparency" style="text-decoration:underline;">ORGANISATION DETAILS</a></p>
+  </div>
+</footer>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  if(!btn) return;
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function current(){
+    var set = root.getAttribute('data-theme');
+    if(set) return set;
+    return mq.matches ? 'dark' : 'light';
+  }
+  function paint(){
+    var dark = current()==='dark';
+    btn.querySelector('.moon').style.display = dark ? 'none' : 'block';
+    btn.querySelector('.sun').style.display  = dark ? 'block' : 'none';
+  }
+  var saved=null; try{saved=localStorage.getItem('lads-theme');}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  paint();
+  mq.addEventListener && mq.addEventListener('change', paint);
+  btn.addEventListener('click', function(){
+    var next = current()==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{localStorage.setItem('lads-theme', next);}catch(e){}
+    paint();
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+
+import { sb, requireAuth, getProfile, getMemberships, signOut,
+         duesYear, DUES_LABEL, ROLE_LABEL, isStaff, updatePassword,
+         passwordProblem, authMessage, fmtDate, escapeHtml, say } from "./js/portal.js";
+
+const $ = id => document.getElementById(id);
+
+const session = await requireAuth();
+if (session) {
+  const profile = await getProfile();
+  if (!profile) {
+    $("loading").textContent =
+      "We could not load your record. Please sign out and try again.";
+  } else {
+    render(profile, await getMemberships());
+  }
+}
+
+function render(profile, memberships) {
+  $("loading").hidden = true;
+  $("dash").hidden = false;
+
+  const firstName = (profile.full_name || "").trim().split(" ")[0];
+  $("greeting").textContent = firstName ? `Welcome, ${firstName}.` : "Your account.";
+
+  // --- dues -------------------------------------------------------------
+  const year = duesYear();
+  const current = memberships.find(m => m.academic_year === year);
+  const status = current ? current.status : "unpaid";
+
+  $("dues-status").textContent = `${DUES_LABEL[status]} for ${year}`;
+
+  const detail = $("dues-detail");
+  const action = $("dues-action");
+
+  if (status === "paid") {
+    const renews = `1 September ${year.split("/")[1]}`;
+    detail.textContent = current.paid_on
+      ? `Paid on ${fmtDate(current.paid_on)}. Your membership runs to the end of the ${year} academic year, and renews on ${renews}.`
+      : `Your membership runs to the end of the ${year} academic year, and renews on ${renews}.`;
+    action.innerHTML = "";
+  } else if (status === "pending_verification") {
+    detail.textContent =
+      "We have received your payment and the Treasurer is verifying it. " +
+      "You will get an email once it is confirmed.";
+    action.innerHTML = "";
+  } else if (status === "waived") {
+    detail.textContent = `Your dues for ${year} have been waived.`;
+    action.innerHTML = "";
+  } else {
+    detail.textContent =
+      `Membership is 10 USD for the ${year} academic year. ` +
+      "Registration and payment open in September.";
+    action.innerHTML = '<a href="join.html" class="btn">How to pay</a>';
+  }
+
+  // --- profile ----------------------------------------------------------
+  $("full_name").value     = profile.full_name || "";
+  $("email").value         = profile.email || "";
+  $("phone").value         = profile.phone || "";
+  $("university").value    = profile.university || "";
+  $("academic_year").value = profile.academic_year || "";
+  $("student_id").value    = profile.student_id || "";
+
+  $("profile-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = $("save-btn");
+    const msg = $("profile-msg");
+    btn.disabled = true;
+    say(msg, "Saving…");
+    const { error } = await sb.from("profiles").update({
+      full_name:     $("full_name").value.trim(),
+      phone:         $("phone").value.trim() || null,
+      university:    $("university").value || null,
+      academic_year: $("academic_year").value || null,
+      student_id:    $("student_id").value.trim() || null,
+    }).eq("id", profile.id);
+    btn.disabled = false;
+    if (error) { say(msg, "Could not save: " + error.message, "error"); return; }
+    say(msg, "Saved.", "success");
+    const n = $("full_name").value.trim().split(" ")[0];
+    if (n) $("greeting").textContent = `Welcome, ${n}.`;
+  });
+
+  // --- history ----------------------------------------------------------
+  const wrap = $("history-wrap");
+  if (!memberships.length) {
+    wrap.innerHTML =
+      '<p style="color:var(--gray-text);">No membership record yet. ' +
+      'Your first year will appear here once your dues are confirmed.</p>';
+  } else {
+    wrap.innerHTML =
+      '<table class="board board--data"><tbody>' +
+      memberships.map(m => `<tr>
+        <td>${escapeHtml(m.academic_year)}</td>
+        <td>${escapeHtml(DUES_LABEL[m.status] || m.status)}${
+          m.paid_on ? " &middot; " + escapeHtml(fmtDate(m.paid_on)) : ""}</td>
+      </tr>`).join("") +
+      '</tbody></table>';
+  }
+
+  // --- staff ------------------------------------------------------------
+  if (isStaff(profile)) {
+    $("staff-tools").hidden = false;
+    $("role-note").textContent = "You are signed in as: " + (ROLE_LABEL[profile.role] || profile.role);
+    const tools = [];
+    if (["treasurer","executive"].includes(profile.role))
+      tools.push(["Dues &amp; payments", "Verify member payments.", "admin-dues.html"]);
+    if (profile.role === "executive")
+      tools.push(["Members &amp; roles", "View members and assign roles.", "admin-members.html"]);
+    tools.push(["Events", "Create and publish events.", "admin-events.html"]);
+    if (["committee_head","executive"].includes(profile.role))
+      tools.push(["Review", "Applications and project proposals.", "admin-review.html"]);
+    $("tool-links").innerHTML = tools.map(([t,d,h]) =>
+      `<div class="block"><h3><a href="${h}">${t}</a></h3><p>${d}</p></div>`).join("");
+  }
+
+  $("pw-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = $("pw-msg"), btn = $("pw-btn");
+    const pw = $("new_password").value;
+    const problem = passwordProblem(pw);
+    if (problem) return say(msg, problem, "error");
+    if (pw !== $("new_password2").value) return say(msg, "The two passwords do not match.", "error");
+    btn.disabled = true;
+    say(msg, "Saving\u2026");
+    const { error } = await updatePassword(pw);
+    btn.disabled = false;
+    if (error) return say(msg, authMessage(error), "error");
+    $("pw-form").reset();
+    say(msg, "Password changed.", "success");
+  });
+
+  $("signout-btn").addEventListener("click", signOut);
+}
+
+</script>
+</body>
+</html>

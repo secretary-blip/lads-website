@@ -1,0 +1,17 @@
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+.env.*
+*.log
+.netlify/
+
+# Never commit credentials. The Supabase publishable key in js/portal.js is
+# safe and belongs in the repository: it identifies the project and grants
+# nothing on its own, because every table has row-level security.
+#
+# These are NOT safe and must never appear here:
+#   the Supabase service_role key
+#   the Resend API key
+#   any Google Workspace password or app password
+# They live in Supabase settings and in the password manager.

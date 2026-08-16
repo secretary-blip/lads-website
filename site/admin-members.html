@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Members and roles | LADS</title>
+<meta name="description" content="View members and assign board roles.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#C00000">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  .stats { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); margin-top:1.5rem; }
+  .stat { background:var(--grey-soft); border:1px solid var(--line); padding:1.1rem 1.2rem; }
+  .stat .n { font-size:2rem; font-weight:700; line-height:1.1; }
+  .stat .k { font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-text); margin-top:0.3rem; }
+
+  .tabs { display:flex; gap:0; border-bottom:1px solid var(--line); margin-top:2.5rem; flex-wrap:wrap; }
+  .tab { background:none; border:0; border-bottom:2px solid transparent; padding:0.8rem 1.1rem;
+         font-family:inherit; font-size:0.95rem; font-weight:600; color:var(--gray-text); cursor:pointer; }
+  .tab[aria-selected="true"] { color:var(--red); border-bottom-color:var(--red); }
+  .tab .count { font-size:0.78rem; background:var(--red); color:#fff; border-radius:999px;
+                padding:0.1rem 0.45rem; margin-left:0.4rem; vertical-align:middle; }
+
+  .rec { border:1px solid var(--line); padding:1.25rem; margin-top:1rem; }
+  .rec-top { display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; align-items:flex-start; }
+  .rec h3 { font-size:1.1rem; margin:0; }
+  .rec dl { display:grid; grid-template-columns:auto 1fr; gap:0.35rem 1rem; margin:0.9rem 0 0; font-size:0.9rem; }
+  .rec dt { color:var(--gray-text); }
+  .rec dd { margin:0; }
+  .rec .btn-row { margin-top:1.1rem; }
+  .rec .body { margin-top:0.9rem; font-size:0.95rem; line-height:1.65; white-space:pre-wrap; }
+
+  .pill { display:inline-block; font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
+          padding:0.2rem 0.55rem; border:1px solid var(--line); color:var(--gray-text); white-space:nowrap; }
+  .pill.ok   { border-color:#1a7f37; color:#1a7f37; }
+  .pill.wait { border-color:#9a6700; color:#9a6700; }
+  .pill.no   { border-color:var(--red); color:var(--red); }
+
+  .toolbar { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-top:1.5rem; }
+  .toolbar input, .toolbar select { padding:0.6rem 0.7rem; font-family:inherit; font-size:0.92rem; }
+
+  .muted { color:var(--gray-text); }
+  .stack > * + * { margin-top:1.5rem; }
+
+  @media (max-width:640px){ .rec dl { grid-template-columns:1fr; gap:0.15rem; } .rec dt { margin-top:0.5rem; } }
+
+  /* Dark mode, written twice as css/style.css does: once for the system
+     preference, once for the manual toggle. The greens and ambers that pass
+     contrast on white fail badly on #121212, so they get their own values. */
+  @media (prefers-color-scheme: dark){
+    html:not([data-theme="light"]) .stat { background:var(--panel); border-color:var(--line); }
+    html:not([data-theme="light"]) .rec  { border-color:var(--line); }
+    html:not([data-theme="light"]) .pill.ok   { border-color:#4ADE80; color:#4ADE80; }
+    html:not([data-theme="light"]) .pill.wait { border-color:#E3B341; color:#E3B341; }
+  }
+  html[data-theme="dark"] .stat { background:var(--panel); border-color:var(--line); }
+  html[data-theme="dark"] .rec  { border-color:var(--line); }
+  html[data-theme="dark"] .pill.ok   { border-color:#4ADE80; color:#4ADE80; }
+  html[data-theme="dark"] .pill.wait { border-color:#E3B341; color:#E3B341; }
+</style>
+</head>
+<body>
+<header>
+  <div class="nav-wrap">
+    <a class="logo" href="index.html"><img src="assets/lads_logo.png" alt="LADS, Lebanese Association of Dental Students"></a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-controls="nav" aria-expanded="false" onclick="var n=document.getElementById('nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o);">&#9776;</button>
+    <nav id="nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="account.html" data-portal-link class="active">Portal</a></li>
+        <li><a href="join.html" class="btn-join">Join LADS</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-label="Switch between light and dark mode" title="Switch theme">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    </button>
+  </div>
+</header>
+<main id="main">
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Board tools</p>
+      <h1 class="h-sec">Members and roles.</h1>
+    </div>
+
+    <p id="loading" class="muted" style="margin-top:2rem;">Loading&hellip;</p>
+
+    <div id="denied" hidden class="notice" style="margin-top:2rem;">
+      <p><strong>This page is for the Executive Committee.</strong></p>
+      <p style="margin-top:0.5rem;">Roles control who can see payment records and member data, so only the executive can change them.</p>
+      <p style="margin-top:1rem;"><a href="account.html" class="btn btn-outline">Back to your account</a></p>
+    </div>
+
+    <div id="app" hidden>
+      <div class="stats" id="stats"></div>
+
+      <div class="toolbar">
+        <input type="search" id="q" placeholder="Search name or email" aria-label="Search members">
+        <select id="role-filter" aria-label="Filter by role">
+          <option value="">All roles</option>
+          <option value="member">Members</option>
+          <option value="committee_head">Committee heads</option>
+          <option value="treasurer">Treasurer</option>
+          <option value="executive">Executive</option>
+        </select>
+        <select id="uni-filter" aria-label="Filter by university">
+          <option value="">All universities</option>
+          <option value="BAU">BAU</option>
+          <option value="LU">LU</option>
+          <option value="USJ">USJ</option>
+        </select>
+      </div>
+
+      <div id="list" style="margin-top:1.5rem;"></div>
+
+      <p style="margin-top:3rem;"><a href="account.html" class="btn btn-outline">Back to your account</a></p>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <img src="assets/lads_logo.png" alt="LADS">
+      <h4>LADS</h4>
+      <p>Lebanese Association of Dental Students<br>Faculty of Dentistry, Beirut Arab University<br>Tarik El Jadida, Riad El Solh 11072809<br>Beirut, Lebanon</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="join.html">Membership</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/lebaneseassociationofdentalstudents" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.linkedin.com/company/lebanese-association-of-dental-students" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:info@ladslb.org">info@ladslb.org</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015. GOOGLE FOR NONPROFITS CHARITY ID 1658. <a href="about.html#transparency" style="text-decoration:underline;">ORGANISATION DETAILS</a></p>
+  </div>
+</footer>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  if(!btn) return;
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function current(){
+    var set = root.getAttribute('data-theme');
+    if(set) return set;
+    return mq.matches ? 'dark' : 'light';
+  }
+  function paint(){
+    var dark = current()==='dark';
+    btn.querySelector('.moon').style.display = dark ? 'none' : 'block';
+    btn.querySelector('.sun').style.display  = dark ? 'block' : 'none';
+  }
+  var saved=null; try{saved=localStorage.getItem('lads-theme');}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  paint();
+  mq.addEventListener && mq.addEventListener('change', paint);
+  btn.addEventListener('click', function(){
+    var next = current()==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{localStorage.setItem('lads-theme', next);}catch(e){}
+    paint();
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+
+import { sb, requireAuth, getProfile, ROLE_LABEL, fmtDate, escapeHtml, say } from "./js/portal.js";
+const $ = id => document.getElementById(id);
+
+const session = await requireAuth();
+let me = null, people = [], committees = [];
+
+if (session) {
+  me = await getProfile();
+  if (!me || me.role !== "executive") {
+    $("loading").hidden = true;
+    $("denied").hidden = false;
+  } else {
+    const { data } = await sb.from("committees").select("id,name").order("sort_order");
+    committees = data || [];
+    await load();
+    $("loading").hidden = true;
+    $("app").hidden = false;
+    ["q", "role-filter", "uni-filter"].forEach(id =>
+      $(id).addEventListener(id === "q" ? "input" : "change", render));
+  }
+}
+
+async function load() {
+  const { data, error } = await sb.from("profiles").select("*")
+    .eq("archived", false).order("full_name");
+  if (error) { console.error(error); return; }
+  people = data || [];
+  render();
+}
+
+function render() {
+  const q = ($("q").value || "").toLowerCase().trim();
+  const rf = $("role-filter").value;
+  const uf = $("uni-filter").value;
+
+  const counts = { member: 0, committee_head: 0, treasurer: 0, executive: 0 };
+  people.forEach(p => { if (counts[p.role] !== undefined) counts[p.role]++; });
+
+  $("stats").innerHTML = [
+    [people.length, "Accounts"],
+    [counts.member, "Members"],
+    [counts.committee_head, "Heads"],
+    [counts.executive + counts.treasurer, "Executive"],
+  ].map(([n, k]) => '<div class="stat"><div class="n">' + n + '</div><div class="k">' + k + '</div></div>').join("");
+
+  const rows = people.filter(p => {
+    if (rf && p.role !== rf) return false;
+    if (uf && p.university !== uf) return false;
+    if (!q) return true;
+    return (p.full_name || "").toLowerCase().includes(q) ||
+           (p.email || "").toLowerCase().includes(q);
+  });
+
+  $("list").innerHTML = rows.length ? rows.map(p => {
+    const isMe = p.id === me.id;
+    return '<div class="rec" data-id="' + p.id + '">' +
+      '<div class="rec-top"><div>' +
+        '<h3>' + escapeHtml(p.full_name || "Name not set") + (isMe ? ' <span class="muted" style="font-weight:400; font-size:0.9rem;">(you)</span>' : '') + '</h3>' +
+        '<p class="muted" style="font-size:0.9rem; margin-top:0.2rem;">' + escapeHtml(p.email) +
+          (p.university ? ' &middot; ' + escapeHtml(p.university) : '') +
+          (p.academic_year ? ' &middot; ' + escapeHtml(p.academic_year) : '') +
+        '</p>' +
+      '</div><span class="pill">' + escapeHtml(ROLE_LABEL[p.role] || p.role) + '</span></div>' +
+      '<dl><dt>Joined</dt><dd>' + escapeHtml(fmtDate(p.created_at)) + '</dd>' +
+        (p.phone ? '<dt>Phone</dt><dd>' + escapeHtml(p.phone) + '</dd>' : '') +
+      '</dl>' +
+      '<div class="toolbar" style="margin-top:1rem;">' +
+        '<select data-field="role" aria-label="Role">' +
+          ["member","committee_head","treasurer","executive"].map(r =>
+            '<option value="' + r + '"' + (p.role === r ? " selected" : "") + '>' +
+            escapeHtml(ROLE_LABEL[r]) + '</option>').join("") +
+        '</select>' +
+        '<select data-field="committee" aria-label="Committee"' +
+          (p.role === "committee_head" ? "" : " hidden") + '>' +
+          '<option value="">No committee</option>' +
+          committees.map(c => '<option value="' + c.id + '"' +
+            (p.committee_id === c.id ? " selected" : "") + '>' + escapeHtml(c.name) + '</option>').join("") +
+        '</select>' +
+        '<button type="button" class="btn" data-act="save">Save</button>' +
+      '</div>' +
+      '<p class="form-msg" data-msg role="status" aria-live="polite"></p>' +
+    '</div>';
+  }).join("") : '<p class="muted">Nobody matches.</p>';
+}
+
+/* Show the committee picker only when the role needs one. */
+document.addEventListener("change", (e) => {
+  const sel = e.target.closest('[data-field="role"]');
+  if (!sel) return;
+  const card = sel.closest(".rec");
+  card.querySelector('[data-field="committee"]').hidden = sel.value !== "committee_head";
+});
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest('[data-act="save"]');
+  if (!btn) return;
+  const card = btn.closest(".rec");
+  const id = card.dataset.id;
+  const msg = card.querySelector("[data-msg]");
+  const role = card.querySelector('[data-field="role"]').value;
+  const committee = card.querySelector('[data-field="committee"]').value || null;
+
+  if (role === "committee_head" && !committee)
+    return say(msg, "Choose which committee they lead.", "error");
+
+  /* Removing your own executive role locks you out of this page, and if you are
+     the only executive it locks everyone out permanently. */
+  if (id === me.id && role !== "executive") {
+    const others = people.filter(p => p.role === "executive" && p.id !== me.id).length;
+    const warning = others
+      ? "This removes your own executive access. You will not be able to open this page again. Continue?"
+      : "You are the only executive. Removing your own role will leave nobody able to assign roles, and it cannot be undone from the website. Continue?";
+    if (!confirm(warning)) return;
+  }
+
+  btn.disabled = true;
+  say(msg, "Saving\u2026");
+
+  const { error } = await sb.from("profiles")
+    .update({ role, committee_id: role === "committee_head" ? committee : null })
+    .eq("id", id);
+
+  btn.disabled = false;
+  if (error) return say(msg, "Could not save: " + error.message, "error");
+  say(msg, "Saved.", "success");
+  await load();
+});
+
+</script>
+</body>
+</html>

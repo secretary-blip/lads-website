@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# The member portal holds personal data and payment records.
+# Nothing under it should ever appear in search results.
+Disallow: /account.html
+Disallow: /login.html
+Disallow: /signup.html
+Disallow: /forgot-password.html
+Disallow: /reset-password.html
+Disallow: /auth-callback.html
+Disallow: /events.html
+Disallow: /apply.html
+Disallow: /propose.html
+Disallow: /admin-
+
+Sitemap: https://ladslb.org/sitemap.xml
