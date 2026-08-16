@@ -57,10 +57,26 @@ payments. Everything else still works.
 New snippet, run this:
 
 ```sql
-select * from public.dues_summary();
+select routine_name
+from information_schema.routines
+where routine_schema = 'public'
+  and routine_name in (
+    'academic_year_of','current_academic_year','dues_year_of',
+    'approve_registration','reject_registration','dues_summary',
+    'handle_new_user','guard_role_changes','guard_applications',
+    'guard_proposals','guard_event_registrations','guard_event_capacity')
+order by routine_name;
 ```
 
-A single row of zeros is a pass. An error means something above did not run.
+**12 rows is a pass.** Fewer means one of the three files did not finish; the
+names that are missing tell you which one.
+
+Do **not** test with `select * from public.dues_summary();`. It fails with
+*"Board members only"*, and that is correct behaviour rather than a fault. In the
+SQL Editor you are connected as the database owner, not as a signed-in member, so
+`auth.uid()` is empty and the function cannot tell that you are on the board. It
+refuses, which is exactly what it would do to anyone else querying it directly.
+That function only works from the website, signed in.
 
 ---
 
