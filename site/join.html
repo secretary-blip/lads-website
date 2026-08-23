@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/portal.css">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
@@ -96,26 +97,42 @@
 
       <div>
         <p class="eyebrow">How to Join</p>
-        <h2 class="h-sub">Three steps, about five minutes.</h2>
-        <div class="steps" style="margin-top:1.75rem;">
-          <div class="step">
-            <div>
-              <h4>Pay your dues through whish</h4>
-              <p>Membership is <strong>$10 USD per academic year</strong>. From September, send payment via the whish app to the number below and take a screenshot of the confirmation.</p>
-            </div>
+        <h2 class="h-sub">Two things, in this order.</h2>
+        <p style="margin-top:1rem; color:var(--gray-text); max-width:58ch;">
+          Registering and creating a portal account are separate steps, and they
+          have to happen in that order. Register first so the Treasurer has your
+          payment; make your account afterwards to see it confirmed.
+        </p>
+
+        <div class="p-steps">
+          <div class="p-step">
+            <span class="num">1</span>
+            <h3>Pay your dues through whish</h3>
+            <p>Membership is <strong>$10 USD per academic year</strong>. From September,
+               send payment through the whish app to the number in the panel, and
+               screenshot the confirmation.</p>
           </div>
-          <div class="step">
-            <div>
-              <h4>Fill the registration form</h4>
-              <p>Complete the form below with your details and upload your payment screenshot.</p>
-            </div>
+          <div class="p-step">
+            <span class="num">2</span>
+            <h3>Fill in the form below</h3>
+            <p>Your details, your payment screenshot, and a few questions about what
+               you would actually like to do with LADS.</p>
           </div>
-          <div class="step">
-            <div>
-              <h4>Get confirmed</h4>
-              <p>Our Treasurer verifies your payment and you receive your membership confirmation by email.</p>
-            </div>
+          <div class="p-step">
+            <span class="num">3</span>
+            <h3>Create your portal account</h3>
+            <p>Use the <strong>same email address</strong>. Your membership links up on
+               its own, and you can then see your dues, register for events and apply
+               for projects.</p>
           </div>
+        </div>
+
+        <div class="notice" style="margin-top:1.75rem;">
+          <h3>Do not create your account first</h3>
+          <p>An account created before you register will simply show
+             <strong>Not paid</strong> until the Treasurer confirms your payment. Nothing
+             is lost if you do it the other way round, but registering first means it
+             is right immediately.</p>
         </div>
 
         <h2 class="h-sub" style="margin-top:clamp(2.5rem,6vw,4rem);">Registration Form</h2>
@@ -177,19 +194,209 @@
           </fieldset>
 
           <fieldset>
-            <legend>Committees</legend>
+            <legend>What would you like to do?</legend>
+            <p class="hint" style="margin-bottom:1rem;">
+              Tick anything that appeals. This is what we use to invite you to things,
+              so pick honestly rather than picking everything.
+            </p>
+            <div class="checks" id="interests" role="group">
+              <label><input type="checkbox" name="interest" value="volunteering"> Volunteering and outreach</label>
+              <label><input type="checkbox" name="interest" value="public_health"> Public health campaigns</label>
+              <label><input type="checkbox" name="interest" value="exchange"> Exchange and IVPs</label>
+              <label><input type="checkbox" name="interest" value="research"> Research</label>
+              <label><input type="checkbox" name="interest" value="conferences"> Conferences and workshops</label>
+              <label><input type="checkbox" name="interest" value="fundraising"> Fundraising and sponsorship</label>
+              <label><input type="checkbox" name="interest" value="content"> Content, design and social media</label>
+              <label><input type="checkbox" name="interest" value="events"> Events and student life</label>
+              <label><input type="checkbox" name="interest" value="training"> Training and soft skills</label>
+            </div>
+          </fieldset>
+
+          <!-- Follow-ups. Hidden until the matching interest is ticked, so the
+               form stays short for someone who only wants to attend things. -->
+
+          <fieldset id="f-volunteering" hidden>
+            <legend>About volunteering</legend>
             <div class="form-field">
-              <label id="committees-label">Interested in joining a committee? (optional)</label>
-              <div class="checks" id="committees" role="group" aria-labelledby="committees-label">
-            <label><input type="checkbox" value="Scientific"> Scientific</label>
-            <label><input type="checkbox" value="Fundraising"> Fundraising</label>
-            <label><input type="checkbox" value="Exchange"> Exchange</label>
-            <label><input type="checkbox" value="Training"> Training</label>
-            <label><input type="checkbox" value="Public Health"> Public Health</label>
-            <label><input type="checkbox" value="Voluntary"> Voluntary</label>
-            <label><input type="checkbox" value="Activities"> Activities</label>
-            <label><input type="checkbox" value="Editorial"> Editorial</label>
-            <label><input type="checkbox" value="Social Media"> Social Media</label>
+              <label id="lbl-regions">Where could you volunteer?</label>
+              <div class="checks" id="regions" role="group" aria-labelledby="lbl-regions">
+                <label><input type="checkbox" name="region" value="Beirut"> Beirut</label>
+                <label><input type="checkbox" name="region" value="Mount Lebanon"> Mount Lebanon</label>
+                <label><input type="checkbox" name="region" value="North"> North</label>
+                <label><input type="checkbox" name="region" value="South"> South</label>
+                <label><input type="checkbox" name="region" value="Bekaa"> Bekaa</label>
+                <label><input type="checkbox" name="region" value="Akkar"> Akkar</label>
+                <label><input type="checkbox" name="region" value="Nabatieh"> Nabatieh</label>
+                <label><input type="checkbox" name="region" value="Anywhere"> Anywhere in Lebanon</label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="v_area">Which area do you live in?</label>
+              <input type="text" id="v_area" placeholder="Tarik El Jadida, Beirut">
+              <span class="hint">So we can group volunteers who can travel together.</span>
+            </div>
+            <div class="form-field">
+              <label for="v_transport">Do you have your own transport?</label>
+              <select id="v_transport">
+                <option value="">Select&hellip;</option>
+                <option>Yes, and I could take others</option>
+                <option>Yes, just myself</option>
+                <option>No, I would need a lift</option>
+                <option>No, but I can use public transport</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="v_before">Have you volunteered with LADS before?</label>
+              <select id="v_before">
+                <option value="">Select&hellip;</option>
+                <option>Yes, more than once</option>
+                <option>Yes, once</option>
+                <option>No, this would be my first time</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label id="lbl-vhelp">Could you help with any of these?</label>
+              <div class="checks" id="v_help" role="group" aria-labelledby="lbl-vhelp">
+                <label><input type="checkbox" name="vhelp" value="Contact schools"> Contacting schools</label>
+                <label><input type="checkbox" name="vhelp" value="Contact clinics"> Contacting clinics or dispensaries</label>
+                <label><input type="checkbox" name="vhelp" value="Plan events"> Helping plan events</label>
+                <label><input type="checkbox" name="vhelp" value="Equipment"> Sourcing equipment or supplies</label>
+                <label><input type="checkbox" name="vhelp" value="Translate"> Translating on site</label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset id="f-public_health" hidden>
+            <legend>About public health work</legend>
+            <div class="form-field">
+              <label for="ph_when">When are you usually free?</label>
+              <select id="ph_when">
+                <option value="">Select&hellip;</option>
+                <option>Weekends only</option>
+                <option>Weekdays only</option>
+                <option>Both</option>
+                <option>Depends on the term</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label id="lbl-ph">What appeals most?</label>
+              <div class="checks" id="ph_kind" role="group" aria-labelledby="lbl-ph">
+                <label><input type="checkbox" name="phkind" value="School visits"> School visits</label>
+                <label><input type="checkbox" name="phkind" value="Screenings"> Community screenings</label>
+                <label><input type="checkbox" name="phkind" value="Awareness campaigns"> Awareness campaigns</label>
+                <label><input type="checkbox" name="phkind" value="Content"> Producing health material</label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset id="f-exchange" hidden>
+            <legend>About exchange and voluntary projects</legend>
+            <div class="form-field">
+              <label for="x_languages">Which languages do you speak?</label>
+              <input type="text" id="x_languages" placeholder="Arabic, English, French">
+            </div>
+            <div class="form-field">
+              <label for="x_clinical">Have you started clinical years?</label>
+              <select id="x_clinical">
+                <option value="">Select&hellip;</option>
+                <option>Yes</option>
+                <option>Not yet, but soon</option>
+                <option>No</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="x_passport">Do you have a valid passport?</label>
+              <select id="x_passport">
+                <option value="">Select&hellip;</option>
+                <option>Yes, valid for over a year</option>
+                <option>Yes, but expiring soon</option>
+                <option>No, but I can get one</option>
+                <option>No</option>
+              </select>
+              <span class="hint">Exchange placements are often confirmed at short notice.</span>
+            </div>
+          </fieldset>
+
+          <fieldset id="f-fundraising" hidden>
+            <legend>About fundraising</legend>
+            <div class="form-field">
+              <label for="fr_contacts">Do you have contacts who might sponsor us?</label>
+              <select id="fr_contacts">
+                <option value="">Select&hellip;</option>
+                <option>Yes, dental clinics or labs</option>
+                <option>Yes, companies outside dentistry</option>
+                <option>Yes, both</option>
+                <option>No, but I am happy to approach people</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="fr_comfort">How do you feel about approaching sponsors directly?</label>
+              <select id="fr_comfort">
+                <option value="">Select&hellip;</option>
+                <option>Confident, I have done it before</option>
+                <option>Willing to learn</option>
+                <option>I would rather help behind the scenes</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <fieldset id="f-content" hidden>
+            <legend>About content and design</legend>
+            <div class="form-field">
+              <label id="lbl-skills">What can you do?</label>
+              <div class="checks" id="c_skills" role="group" aria-labelledby="lbl-skills">
+                <label><input type="checkbox" name="cskill" value="Graphic design"> Graphic design</label>
+                <label><input type="checkbox" name="cskill" value="Photography"> Photography</label>
+                <label><input type="checkbox" name="cskill" value="Video"> Video and editing</label>
+                <label><input type="checkbox" name="cskill" value="Writing"> Writing</label>
+                <label><input type="checkbox" name="cskill" value="Social media"> Running social accounts</label>
+                <label><input type="checkbox" name="cskill" value="Illustration"> Illustration</label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="c_portfolio">Anywhere we can see your work? (optional)</label>
+              <input type="url" id="c_portfolio" placeholder="https://instagram.com/yourwork">
+            </div>
+          </fieldset>
+
+          <fieldset id="f-research" hidden>
+            <legend>About research</legend>
+            <div class="form-field">
+              <label for="r_experience">Have you done research before?</label>
+              <select id="r_experience">
+                <option value="">Select&hellip;</option>
+                <option>Yes, published or presented</option>
+                <option>Yes, as part of a project</option>
+                <option>No, but I want to learn</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <!-- The workforce question. Deliberately separate from interests:
+               being a deputy head is a commitment, not a preference. -->
+          <fieldset>
+            <legend>Joining the workforce</legend>
+            <div class="form-field">
+              <label for="workforce">Would you like to join the workforce as a deputy head?</label>
+              <select id="workforce">
+                <option value="no">No, not this year</option>
+                <option value="yes">Yes, I would like to</option>
+              </select>
+              <span class="hint">
+                Deputy heads work directly with a committee head through the year and
+                often stand for head the year after. It is a real time commitment.
+              </span>
+            </div>
+
+            <div id="workforce-block" hidden>
+              <p class="hint" style="margin-bottom:1rem;">
+                Here is what each committee actually does. Pick the one you want to work with.
+              </p>
+              <div id="committee-list" class="rows"></div>
+              <div class="form-field" style="margin-top:1.25rem;">
+                <label for="wf_motivation">Why that committee?</label>
+                <textarea id="wf_motivation" rows="4"
+                  placeholder="A couple of sentences is plenty. What draws you to it, and what you would bring."></textarea>
               </div>
             </div>
           </fieldset>
@@ -268,7 +475,49 @@ form.addEventListener('submit', async (e) => {
       if (upErr) throw upErr;
     }
 
-    const committees = [...document.querySelectorAll('#committees input:checked')].map(c => c.value);
+    const interests = [...document.querySelectorAll('#interests input:checked')].map(c => c.value);
+
+    /* Only send the follow-up answers for interests actually ticked. Storing
+       answers to questions the person never saw would be noise for whoever
+       reads this later. */
+    const details = {};
+    const ticked  = new Set(interests);
+    const val  = id => (document.getElementById(id).value || '').trim() || null;
+    const many = sel => [...document.querySelectorAll(sel + ' input:checked')].map(c => c.value);
+
+    if (ticked.has('volunteering')) details.volunteering = {
+      regions: many('#regions'),
+      area: val('v_area'),
+      transport: val('v_transport'),
+      before: val('v_before'),
+      can_help: many('#v_help'),
+    };
+    if (ticked.has('public_health')) details.public_health = {
+      availability: val('ph_when'),
+      kinds: many('#ph_kind'),
+    };
+    if (ticked.has('exchange')) details.exchange = {
+      languages: val('x_languages'),
+      clinical: val('x_clinical'),
+      passport: val('x_passport'),
+    };
+    if (ticked.has('fundraising')) details.fundraising = {
+      contacts: val('fr_contacts'),
+      comfort: val('fr_comfort'),
+    };
+    if (ticked.has('content')) details.content = {
+      skills: many('#c_skills'),
+      portfolio: val('c_portfolio'),
+    };
+    if (ticked.has('research')) details.research = {
+      experience: val('r_experience'),
+    };
+
+    const wantsWorkforce = document.getElementById('workforce').value === 'yes';
+    const chosen = document.querySelector('input[name="wf_committee"]:checked');
+
+    if (wantsWorkforce && !chosen)
+      throw new Error('Please choose which committee you would like to work with.');
 
     const { error } = await sb.from('registrations').insert({
       full_name: document.getElementById('full_name').value.trim(),
@@ -279,7 +528,12 @@ form.addEventListener('submit', async (e) => {
       student_id: document.getElementById('student_id').value.trim() || null,
       payment_method: methodSel.value,
       payment_proof_path: proofPath,
-      committee_interest: committees.length ? committees : null
+      interests: interests.length ? interests : null,
+      interest_details: details,
+      workforce: wantsWorkforce,
+      workforce_committee: wantsWorkforce ? chosen.value : null,
+      workforce_motivation: wantsWorkforce
+        ? (document.getElementById('wf_motivation').value.trim() || null) : null
     });
     if (error) throw error;
 
@@ -352,6 +606,98 @@ form.addEventListener('submit', async (e) => {
     paint();
   });
 })();
+
+/* ---------------------------------------------------------------- survey */
+
+/* Show a follow-up section only when its interest is ticked. Someone who just
+   wants to come to workshops should not have to scroll past questions about
+   transport to Akkar. */
+const FOLLOWUPS = ['volunteering','public_health','exchange','fundraising','content','research'];
+
+function syncFollowups() {
+  const ticked = new Set(
+    [...document.querySelectorAll('#interests input:checked')].map(c => c.value)
+  );
+  FOLLOWUPS.forEach(key => {
+    const el = document.getElementById('f-' + key);
+    if (el) el.hidden = !ticked.has(key);
+  });
+}
+document.querySelectorAll('#interests input').forEach(cb =>
+  cb.addEventListener('change', syncFollowups));
+syncFollowups();
+
+/* "Anywhere in Lebanon" makes the individual regions meaningless, so clear
+   them rather than storing a contradiction. */
+const anywhere = document.querySelector('#regions input[value="Anywhere"]');
+if (anywhere) {
+  anywhere.addEventListener('change', () => {
+    if (!anywhere.checked) return;
+    document.querySelectorAll('#regions input').forEach(cb => {
+      if (cb !== anywhere) cb.checked = false;
+    });
+  });
+  document.querySelectorAll('#regions input').forEach(cb => {
+    if (cb === anywhere) return;
+    cb.addEventListener('change', () => { if (cb.checked) anywhere.checked = false; });
+  });
+}
+
+/* ------------------------------------------------------------- workforce */
+
+const wfSelect = document.getElementById('workforce');
+const wfBlock  = document.getElementById('workforce-block');
+let committeesLoaded = false;
+
+wfSelect.addEventListener('change', async () => {
+  const yes = wfSelect.value === 'yes';
+  wfBlock.hidden = !yes;
+  if (yes && !committeesLoaded) {
+    committeesLoaded = true;
+    await loadCommittees();
+  }
+});
+
+async function loadCommittees() {
+  const list = document.getElementById('committee-list');
+  list.innerHTML = '<p class="hint">Loading committees\u2026</p>';
+
+  const { data, error } = await sb
+    .from('committees')
+    .select('id, name, description')
+    .order('sort_order');
+
+  if (error || !data || !data.length) {
+    /* If the read fails the person should still be able to apply, so fall back
+       to names without descriptions rather than blocking them. */
+    console.error(error);
+    const fallback = [
+      ['scientific','Scientific'], ['fundraising','Fundraising'], ['exchange','Exchange'],
+      ['training','Training'], ['public_health','Public Health'], ['voluntary','Voluntary'],
+      ['activities','Activities'], ['editorial','Editorial'], ['social_media','Social Media'],
+    ];
+    list.innerHTML = fallback.map(([id,name]) => committeeRow(id, name, '')).join('');
+    return;
+  }
+  list.innerHTML = data.map(c => committeeRow(c.id, c.name, c.description || '')).join('');
+}
+
+function esc(t) {
+  return String(t ?? '').replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function committeeRow(id, name, description) {
+  return '<label class="row" style="display:flex; gap:0.9rem; align-items:flex-start; ' +
+         'padding:1rem; border:1px solid var(--grey); border-radius:4px; ' +
+         'margin-bottom:0.6rem; cursor:pointer;">' +
+    '<input type="radio" name="wf_committee" value="' + esc(id) + '" ' +
+      'style="width:20px; height:20px; accent-color:var(--red); flex:none; margin-top:0.15rem;">' +
+    '<span><strong>' + esc(name) + '</strong>' +
+      (description ? '<br><span class="hint" style="margin-top:0.25rem;">' + esc(description) + '</span>' : '') +
+    '</span>' +
+  '</label>';
+}
 </script>
 </body>
 </html>

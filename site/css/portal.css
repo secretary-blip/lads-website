@@ -1,0 +1,154 @@
+/* ==========================================================================
+   LADS Member Portal
+   Loaded after style.css on portal pages only. The public site is untouched.
+
+   Goal: everything the member needs, visible without scrolling or hunting.
+   The first screen answers "am I paid up, and what can I do", because that
+   is why people open the portal at all.
+   ========================================================================== */
+
+/* --- surfaces -------------------------------------------------------------
+   Light mode has no --panel token, so define portal-local ones and remap
+   them in dark mode. Same two-block pattern as style.css: once for the system
+   preference, once for the manual toggle. */
+:root{
+  --p-card:#FFFFFF;
+  --p-tint:#F7F7F7;
+  --p-line:#E4E4E4;
+  --p-ink:#111111;
+  --p-dim:#5A5A5A;
+  --p-ok:#1A7F37;
+  --p-wait:#9A6700;
+  --p-shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 24px -16px rgba(0,0,0,.25);
+}
+@media (prefers-color-scheme: dark){
+  html:not([data-theme="light"]){
+    --p-card:#1C1C1C; --p-tint:#191919; --p-line:#333333;
+    --p-ink:#EDEDED;  --p-dim:#A9A9A9;
+    --p-ok:#4ADE80;   --p-wait:#E3B341;
+    --p-shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.9);
+  }
+}
+html[data-theme="dark"]{
+  --p-card:#1C1C1C; --p-tint:#191919; --p-line:#333333;
+  --p-ink:#EDEDED;  --p-dim:#A9A9A9;
+  --p-ok:#4ADE80;   --p-wait:#E3B341;
+  --p-shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.9);
+}
+
+/* --- status banner ------------------------------------------------------ */
+.p-status{
+  border:1px solid var(--p-line); border-left:6px solid var(--red);
+  background:var(--p-card); box-shadow:var(--p-shadow);
+  border-radius:6px; padding:clamp(1.4rem,3.5vw,2rem);
+  display:grid; gap:1.25rem; align-items:center;
+  grid-template-columns:1fr auto;
+}
+.p-status.is-paid{ border-left-color:var(--p-ok); }
+.p-status.is-wait{ border-left-color:var(--p-wait); }
+.p-status .k{
+  font-size:0.74rem; letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--p-dim); font-weight:700;
+}
+.p-status h2{ font-size:clamp(1.5rem,3.6vw,2rem); margin-top:0.35rem; line-height:1.15; }
+.p-status p{ margin-top:0.6rem; color:var(--p-dim); font-size:0.96rem; max-width:52ch; }
+.p-status .p-act{ display:flex; gap:0.6rem; flex-wrap:wrap; }
+@media (max-width:720px){
+  .p-status{ grid-template-columns:1fr; }
+}
+
+/* --- at-a-glance tiles -------------------------------------------------- */
+.p-tiles{
+  display:grid; gap:1rem; margin-top:1.25rem;
+  grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
+}
+.p-tile{
+  background:var(--p-card); border:1px solid var(--p-line); border-radius:6px;
+  padding:1.15rem 1.25rem;
+}
+.p-tile .n{ font-size:1.9rem; font-weight:700; line-height:1.05; color:var(--p-ink); }
+.p-tile .n.sm{ font-size:1.15rem; }
+.p-tile .k{
+  font-size:0.74rem; letter-spacing:0.09em; text-transform:uppercase;
+  color:var(--p-dim); margin-top:0.35rem; font-weight:700;
+}
+
+/* --- action cards ------------------------------------------------------- */
+.p-actions{
+  display:grid; gap:1rem; margin-top:1.25rem;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+}
+.p-action{
+  display:block; background:var(--p-card); border:1px solid var(--p-line);
+  border-radius:6px; padding:1.35rem; text-decoration:none; color:inherit;
+  transition:border-color .12s ease, transform .12s ease, box-shadow .12s ease;
+}
+.p-action:hover{
+  border-color:var(--red); transform:translateY(-2px); box-shadow:var(--p-shadow);
+}
+.p-action h3{ font-size:1.05rem; color:var(--p-ink); }
+.p-action p{ margin-top:0.4rem; font-size:0.9rem; color:var(--p-dim); line-height:1.5; }
+.p-action .arrow{ color:var(--red); font-weight:700; margin-top:0.7rem; display:inline-block; font-size:0.9rem; }
+
+/* --- section headings --------------------------------------------------- */
+.p-sec{ margin-top:clamp(2.5rem,6vw,3.5rem); }
+.p-sec > h2{
+  font-size:1.25rem; padding-bottom:0.7rem; border-bottom:1px solid var(--p-line);
+}
+
+/* --- panels ------------------------------------------------------------- */
+.p-panel{
+  background:var(--p-card); border:1px solid var(--p-line); border-radius:6px;
+  padding:clamp(1.25rem,3vw,1.75rem); margin-top:1.25rem;
+}
+
+/* --- auth pages ---------------------------------------------------------- */
+.auth-card{
+  max-width:480px; margin:0 auto;
+  background:var(--p-card); border:1px solid var(--p-line); border-radius:8px;
+  box-shadow:var(--p-shadow); padding:clamp(1.75rem,5vw,2.5rem);
+}
+.auth-card h1{ font-size:clamp(1.7rem,4.5vw,2.2rem); }
+.auth-card .form-field{ margin-bottom:1.15rem; }
+.auth-card .btn{ width:100%; margin-top:0.5rem; }
+.auth-alt{ max-width:480px; margin:1.25rem auto 0; text-align:center; font-size:0.94rem; color:var(--p-dim); }
+.auth-alt a{ color:var(--red); font-weight:600; }
+
+/* Password fields need room for the Show button without the text sliding
+   underneath it. */
+.pw-wrap{ position:relative; }
+.pw-wrap input{ padding-right:5rem; }
+.pw-toggle{
+  position:absolute; right:0.5rem; top:50%; transform:translateY(-50%);
+  background:none; border:0; font-family:inherit; font-size:0.85rem; font-weight:600;
+  color:var(--p-dim); cursor:pointer; padding:0.55rem 0.6rem; border-radius:4px;
+}
+.pw-toggle:hover{ color:var(--red); background:var(--p-tint); }
+.pw-rules{ font-size:0.85rem; color:var(--p-dim); margin-top:0.45rem; }
+
+/* --- steps -------------------------------------------------------------- */
+.p-steps{ display:grid; gap:1rem; margin-top:1.25rem; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+.p-step{ background:var(--p-tint); border:1px solid var(--p-line); border-radius:6px; padding:1.2rem; }
+.p-step .num{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:30px; height:30px; border-radius:50%;
+  background:var(--red); color:#fff; font-weight:700; font-size:0.9rem;
+}
+.p-step h3{ font-size:1rem; margin-top:0.7rem; color:var(--p-ink); }
+.p-step p{ font-size:0.9rem; color:var(--p-dim); margin-top:0.35rem; line-height:1.5; }
+
+/* --- misc --------------------------------------------------------------- */
+.p-muted{ color:var(--p-dim); }
+.p-pill{
+  display:inline-block; font-size:0.72rem; letter-spacing:0.07em; text-transform:uppercase;
+  font-weight:700; padding:0.28rem 0.65rem; border-radius:999px;
+  border:1px solid var(--p-line); color:var(--p-dim); white-space:nowrap;
+}
+.p-pill.ok{ border-color:var(--p-ok); color:var(--p-ok); }
+.p-pill.wait{ border-color:var(--p-wait); color:var(--p-wait); }
+.p-pill.no{ border-color:var(--red); color:var(--red); }
+
+/* Auth page layout. These pages previously carried their own inline <style>,
+   which loaded after this file and quietly won every conflict. Now they do not. */
+.auth-card .sec-head{ margin-bottom:0.5rem; }
+.auth-card > p{ color:var(--p-dim); }

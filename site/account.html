@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/portal.css">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
@@ -53,66 +54,102 @@
 
 <section>
   <div class="wrap">
+
     <div class="sec-head">
       <p class="eyebrow">Member Portal</p>
       <h1 class="h-sec" id="greeting">Your account.</h1>
     </div>
 
-    <div id="loading" style="margin-top:2rem; color:var(--gray-text);">Loading your record…</div>
+    <p id="loading" class="p-muted" style="margin-top:2rem;">Loading your record&hellip;</p>
 
     <div id="dash" hidden>
 
-      <!-- dues status -->
-      <div class="panel" id="dues-panel" style="margin-top:2rem;">
-        <p class="eyebrow">Membership</p>
-        <h2 id="dues-status" style="font-size:1.6rem; margin-top:0.4rem;"></h2>
-        <p id="dues-detail" style="margin-top:0.6rem; color:var(--gray-text);"></p>
-        <div id="dues-action" style="margin-top:1.1rem;"></div>
+      <!-- everything that matters, without scrolling -->
+      <div class="p-status" id="status-card" style="margin-top:1.5rem;">
+        <div>
+          <p class="k" id="status-year"></p>
+          <h2 id="dues-status"></h2>
+          <p id="dues-detail"></p>
+        </div>
+        <div class="p-act" id="dues-action"></div>
       </div>
 
-      <!-- profile -->
-      <div class="split" style="margin-top:2.5rem;">
-        <div>
-          <h2 class="h-sub" style="font-size:1.3rem;">Your details</h2>
-          <p style="margin-top:0.5rem; color:var(--gray-text); font-size:0.92rem;">
+      <div class="p-tiles" id="tiles"></div>
+
+      <div class="p-actions">
+        <a class="p-action" href="events.html">
+          <h3>Events</h3>
+          <p>See what is coming up and register.</p>
+          <span class="arrow">Browse events &rarr;</span>
+        </a>
+        <a class="p-action" href="apply.html">
+          <h3>Apply</h3>
+          <p>Exchanges, research programmes and voluntary projects.</p>
+          <span class="arrow">Start an application &rarr;</span>
+        </a>
+        <a class="p-action" href="propose.html">
+          <h3>Propose a project</h3>
+          <p>Have an idea for LADS? Send it to the board.</p>
+          <span class="arrow">Share an idea &rarr;</span>
+        </a>
+      </div>
+
+      <!-- board tools -->
+      <div id="staff-tools" hidden class="p-sec">
+        <h2>Board tools</h2>
+        <p class="p-muted" style="margin-top:0.6rem; font-size:0.92rem;" id="role-note"></p>
+        <div class="p-actions" id="tool-links"></div>
+      </div>
+
+      <!-- membership history -->
+      <div class="p-sec">
+        <h2>Membership history</h2>
+        <div class="p-panel" id="history-wrap"></div>
+      </div>
+
+      <!-- details -->
+      <div class="p-sec">
+        <h2>Your details</h2>
+        <div class="p-panel">
+          <p class="p-muted" style="font-size:0.92rem; margin-bottom:1.25rem;">
             Keep these current so we can reach you about events and renewals.
           </p>
-        </div>
-        <div>
           <form id="profile-form">
-            <div class="form-field">
-              <label for="full_name">Full name</label>
-              <input type="text" id="full_name" required>
-            </div>
-            <div class="form-field">
-              <label for="email">Email</label>
-              <input type="email" id="email" disabled>
-              <span class="hint">Your sign-in address. Contact us to change it.</span>
-            </div>
-            <div class="form-field">
-              <label for="phone">Phone number</label>
-              <input type="tel" id="phone" placeholder="76 123 456">
-            </div>
-            <div class="form-field">
-              <label for="university">University</label>
-              <select id="university">
-                <option value="">Select…</option>
-                <option value="BAU">Beirut Arab University (BAU)</option>
-                <option value="LU">Lebanese University (LU)</option>
-                <option value="USJ">Université Saint-Joseph (USJ)</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label for="academic_year">Academic year</label>
-              <select id="academic_year">
-                <option value="">Select…</option>
-                <option>1st year</option><option>2nd year</option><option>3rd year</option>
-                <option>4th year</option><option>5th year</option><option>Postgraduate</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label for="student_id">Student ID number</label>
-              <input type="text" id="student_id">
+            <div class="form-2">
+              <div class="form-field">
+                <label for="full_name">Full name</label>
+                <input type="text" id="full_name" required>
+              </div>
+              <div class="form-field">
+                <label for="email">Email</label>
+                <input type="email" id="email" disabled>
+                <span class="hint">Your sign-in address. Contact us to change it.</span>
+              </div>
+              <div class="form-field">
+                <label for="phone">Phone number</label>
+                <input type="tel" id="phone" placeholder="76 123 456">
+              </div>
+              <div class="form-field">
+                <label for="student_id">Student ID number</label>
+                <input type="text" id="student_id">
+              </div>
+              <div class="form-field">
+                <label for="university">University</label>
+                <select id="university">
+                  <option value="">Select&hellip;</option>
+                  <option value="BAU">Beirut Arab University (BAU)</option>
+                  <option value="LU">Lebanese University (LU)</option>
+                  <option value="USJ">Universit&eacute; Saint-Joseph (USJ)</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="academic_year">Year of study</label>
+                <select id="academic_year">
+                  <option value="">Select&hellip;</option>
+                  <option>1st year</option><option>2nd year</option><option>3rd year</option>
+                  <option>4th year</option><option>5th year</option><option>Postgraduate</option>
+                </select>
+              </div>
             </div>
             <button type="submit" class="btn" id="save-btn">Save changes</button>
             <p id="profile-msg" class="form-msg" role="status" aria-live="polite"></p>
@@ -120,49 +157,33 @@
         </div>
       </div>
 
-      <!-- membership history -->
-      <div style="margin-top:3rem;">
-        <h2 class="h-sub" style="font-size:1.3rem;">Membership history</h2>
-        <div id="history-wrap" style="margin-top:1rem;"></div>
-      </div>
-
-      <!-- member tools -->
-      <div style="margin-top:3rem;">
-        <h2 class="h-sub" style="font-size:1.3rem;">Your portal</h2>
-        <div class="blocks" style="margin-top:1.25rem;">
-          <div class="block"><h3><a href="events.html">Events</a></h3><p>See what is coming up and register.</p></div>
-          <div class="block"><h3><a href="apply.html">Apply</a></h3><p>Exchanges, research and voluntary projects.</p></div>
-          <div class="block"><h3><a href="propose.html">Propose a project</a></h3><p>Have an idea? Send it to the board.</p></div>
+      <!-- password -->
+      <div class="p-sec">
+        <h2>Password</h2>
+        <div class="p-panel">
+          <form id="pw-form" style="max-width:460px;">
+            <div class="form-field">
+              <label for="new_password">New password</label>
+              <div class="pw-wrap">
+                <input type="password" id="new_password" autocomplete="new-password">
+                <button type="button" class="pw-toggle" data-toggle="new_password">Show</button>
+              </div>
+              <p class="pw-rules">At least 8 characters, with a letter and a number.</p>
+            </div>
+            <div class="form-field">
+              <label for="new_password2">Confirm new password</label>
+              <div class="pw-wrap">
+                <input type="password" id="new_password2" autocomplete="new-password">
+                <button type="button" class="pw-toggle" data-toggle="new_password2">Show</button>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-outline" id="pw-btn">Change password</button>
+            <p id="pw-msg" class="form-msg" role="status" aria-live="polite"></p>
+          </form>
         </div>
       </div>
 
-      <!-- password -->
-      <div style="margin-top:3rem;">
-        <h2 class="h-sub" style="font-size:1.3rem;">Password</h2>
-        <form id="pw-form" style="max-width:430px; margin-top:1rem;">
-          <div class="form-field">
-            <label for="new_password">New password</label>
-            <input type="password" id="new_password" autocomplete="new-password">
-            <span class="hint">At least 8 characters, with a letter and a number.</span>
-          </div>
-          <div class="form-field">
-            <label for="new_password2">Confirm new password</label>
-            <input type="password" id="new_password2" autocomplete="new-password">
-          </div>
-          <button type="submit" class="btn btn-outline" id="pw-btn">Change password</button>
-          <p id="pw-msg" class="form-msg" role="status" aria-live="polite"></p>
-        </form>
-      </div>
-
-      <!-- staff tools -->
-      <div id="staff-tools" hidden style="margin-top:3rem;">
-        <h2 class="h-sub" style="font-size:1.3rem;">Board tools</h2>
-        <p style="margin-top:0.4rem; color:var(--gray-text); font-size:0.92rem;"
-           id="role-note"></p>
-        <div class="blocks" style="margin-top:1.25rem;" id="tool-links"></div>
-      </div>
-
-      <p style="margin-top:3rem;">
+      <p style="margin-top:2.5rem;">
         <button type="button" class="btn btn-outline" id="signout-btn">Sign out</button>
       </p>
 
@@ -245,6 +266,7 @@ if (session) {
       "We could not load your record. Please sign out and try again.";
   } else {
     render(profile, await getMemberships());
+    loadCounts();
   }
 }
 
@@ -255,38 +277,41 @@ function render(profile, memberships) {
   const firstName = (profile.full_name || "").trim().split(" ")[0];
   $("greeting").textContent = firstName ? `Welcome, ${firstName}.` : "Your account.";
 
-  // --- dues -------------------------------------------------------------
+  /* --- status banner, the whole point of the page ---------------------- */
   const year = duesYear();
   const current = memberships.find(m => m.academic_year === year);
   const status = current ? current.status : "unpaid";
 
-  $("dues-status").textContent = `${DUES_LABEL[status]} for ${year}`;
+  $("status-year").textContent = `Membership ${year}`;
+  $("dues-status").textContent = DUES_LABEL[status] || status;
 
+  const card = $("status-card");
   const detail = $("dues-detail");
   const action = $("dues-action");
 
   if (status === "paid") {
+    card.classList.add("is-paid");
     const renews = `1 September ${year.split("/")[1]}`;
     detail.textContent = current.paid_on
-      ? `Paid on ${fmtDate(current.paid_on)}. Your membership runs to the end of the ${year} academic year, and renews on ${renews}.`
-      : `Your membership runs to the end of the ${year} academic year, and renews on ${renews}.`;
-    action.innerHTML = "";
+      ? `Paid on ${fmtDate(current.paid_on)}. Your membership runs to the end of the ${year} academic year and renews on ${renews}.`
+      : `Your membership runs to the end of the ${year} academic year and renews on ${renews}.`;
+    action.innerHTML = '<a href="events.html" class="btn">See upcoming events</a>';
   } else if (status === "pending_verification") {
+    card.classList.add("is-wait");
     detail.textContent =
-      "We have received your payment and the Treasurer is verifying it. " +
-      "You will get an email once it is confirmed.";
+      "We have your payment and the Treasurer is checking it. You will get an email as soon as it is confirmed, usually within a few days.";
     action.innerHTML = "";
   } else if (status === "waived") {
-    detail.textContent = `Your dues for ${year} have been waived.`;
-    action.innerHTML = "";
+    card.classList.add("is-paid");
+    detail.textContent = `Your dues for ${year} have been waived. You have full member access.`;
+    action.innerHTML = '<a href="events.html" class="btn">See upcoming events</a>';
   } else {
     detail.textContent =
-      `Membership is 10 USD for the ${year} academic year. ` +
-      "Registration and payment open in September.";
-    action.innerHTML = '<a href="join.html" class="btn">How to pay</a>';
+      `Membership is 10 USD for the ${year} academic year. Register and pay, and this page updates as soon as the Treasurer confirms it.`;
+    action.innerHTML = '<a href="join.html" class="btn">Register and pay</a>';
   }
 
-  // --- profile ----------------------------------------------------------
+  /* --- profile ---------------------------------------------------------- */
   $("full_name").value     = profile.full_name || "";
   $("email").value         = profile.email || "";
   $("phone").value         = profile.phone || "";
@@ -296,10 +321,9 @@ function render(profile, memberships) {
 
   $("profile-form").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const btn = $("save-btn");
-    const msg = $("profile-msg");
+    const btn = $("save-btn"), msg = $("profile-msg");
     btn.disabled = true;
-    say(msg, "Saving…");
+    say(msg, "Saving\u2026");
     const { error } = await sb.from("profiles").update({
       full_name:     $("full_name").value.trim(),
       phone:         $("phone").value.trim() || null,
@@ -314,38 +338,50 @@ function render(profile, memberships) {
     if (n) $("greeting").textContent = `Welcome, ${n}.`;
   });
 
-  // --- history ----------------------------------------------------------
+  /* --- history ---------------------------------------------------------- */
   const wrap = $("history-wrap");
   if (!memberships.length) {
     wrap.innerHTML =
-      '<p style="color:var(--gray-text);">No membership record yet. ' +
-      'Your first year will appear here once your dues are confirmed.</p>';
+      '<p class="p-muted">No membership record yet. Your first year appears here once your dues are confirmed.</p>';
   } else {
     wrap.innerHTML =
       '<table class="board board--data"><tbody>' +
-      memberships.map(m => `<tr>
-        <td>${escapeHtml(m.academic_year)}</td>
-        <td>${escapeHtml(DUES_LABEL[m.status] || m.status)}${
-          m.paid_on ? " &middot; " + escapeHtml(fmtDate(m.paid_on)) : ""}</td>
-      </tr>`).join("") +
+      memberships.map(m => {
+        const cls = m.status === "paid" ? "ok" : m.status === "pending_verification" ? "wait" : "no";
+        return `<tr>
+          <td><strong>${escapeHtml(m.academic_year)}</strong></td>
+          <td><span class="p-pill ${cls}">${escapeHtml(DUES_LABEL[m.status] || m.status)}</span></td>
+          <td>${m.paid_on ? escapeHtml(fmtDate(m.paid_on)) : "&mdash;"}</td>
+        </tr>`;
+      }).join("") +
       '</tbody></table>';
   }
 
-  // --- staff ------------------------------------------------------------
+  /* --- board tools ------------------------------------------------------ */
   if (isStaff(profile)) {
     $("staff-tools").hidden = false;
-    $("role-note").textContent = "You are signed in as: " + (ROLE_LABEL[profile.role] || profile.role);
+    $("role-note").textContent = "Signed in as " + (ROLE_LABEL[profile.role] || profile.role);
     const tools = [];
     if (["treasurer","executive"].includes(profile.role))
-      tools.push(["Dues &amp; payments", "Verify member payments.", "admin-dues.html"]);
+      tools.push(["Dues and payments", "Verify member payments and see who has paid.", "admin-dues.html", "Open"]);
     if (profile.role === "executive")
-      tools.push(["Members &amp; roles", "View members and assign roles.", "admin-members.html"]);
-    tools.push(["Events", "Create and publish events.", "admin-events.html"]);
+      tools.push(["Members and roles", "View every member and assign board roles.", "admin-members.html", "Open"]);
+    tools.push(["Events", "Create, publish and take attendance.", "admin-events.html", "Open"]);
     if (["committee_head","executive"].includes(profile.role))
-      tools.push(["Review", "Applications and project proposals.", "admin-review.html"]);
-    $("tool-links").innerHTML = tools.map(([t,d,h]) =>
-      `<div class="block"><h3><a href="${h}">${t}</a></h3><p>${d}</p></div>`).join("");
+      tools.push(["Review", "Applications and project ideas waiting on you.", "admin-review.html", "Open"]);
+    $("tool-links").innerHTML = tools.map(([t,d,h,a]) =>
+      `<a class="p-action" href="${h}"><h3>${t}</h3><p>${d}</p><span class="arrow">${a} &rarr;</span></a>`).join("");
   }
+
+  /* --- password --------------------------------------------------------- */
+  document.querySelectorAll("[data-toggle]").forEach(b => {
+    b.addEventListener("click", () => {
+      const f = $(b.dataset.toggle);
+      const showing = f.type === "text";
+      f.type = showing ? "password" : "text";
+      b.textContent = showing ? "Show" : "Hide";
+    });
+  });
 
   $("pw-form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -364,6 +400,23 @@ function render(profile, memberships) {
   });
 
   $("signout-btn").addEventListener("click", signOut);
+}
+
+/* Counts for the tiles. Separate from render so a slow or failing count never
+   holds up the part of the page the member actually came for. */
+async function loadCounts() {
+  const [ev, ap, pr] = await Promise.all([
+    sb.from("event_registrations").select("id", { count: "exact", head: true }).eq("cancelled", false),
+    sb.from("applications").select("id", { count: "exact", head: true }),
+    sb.from("proposals").select("id", { count: "exact", head: true }),
+  ]);
+  const tiles = [
+    [ev.count ?? 0, "Events joined"],
+    [ap.count ?? 0, "Applications"],
+    [pr.count ?? 0, "Ideas submitted"],
+  ];
+  $("tiles").innerHTML = tiles.map(([n,k]) =>
+    `<div class="p-tile"><div class="n">${n}</div><div class="k">${k}</div></div>`).join("");
 }
 
 </script>

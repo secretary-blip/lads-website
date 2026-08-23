@@ -361,14 +361,32 @@ legend{
   display:block;margin-bottom:0.45rem;font-size:0.85rem;font-weight:700;letter-spacing:0.02em;
 }
 .hint{display:block;font-weight:400;color:var(--gray-text);font-size:0.8rem;margin-top:0.2rem;}
-input[type="text"],input[type="email"],input[type="tel"],select,input[type="file"]{
-  width:100%;min-height:52px;padding:0.8rem 0.9rem;
-  font-family:var(--f);font-size:1rem;color:var(--black);
-  background:var(--white);border:1px solid #B9B9B9;border-radius:2px;
+/* Every text-entry control, not a hand-picked few. The old rule listed
+   text, email, tel, select and file only, so password, number, date and
+   textarea silently fell back to the browser's tiny default styling.
+   Adding a field type to a form should not require editing this list. */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+select,
+textarea,
+input[type="file"]{
+  width:100%;min-height:56px;padding:0.95rem 1rem;
+  font-family:var(--f);font-size:1.02rem;line-height:1.4;color:var(--black);
+  background:var(--white);border:1px solid #B9B9B9;border-radius:4px;
+  transition:border-color .12s ease, box-shadow .12s ease;
 }
+textarea{min-height:120px;resize:vertical;}
 select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--black) 50%),linear-gradient(135deg,var(--black) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:2.75rem;}
-input:hover,select:hover{border-color:var(--black);}
-input:focus,select:focus{border-color:var(--red);outline:3px solid rgba(192,0,0,.22);outline-offset:0;}
+input:hover,select:hover,textarea:hover{border-color:var(--black);}
+input:focus,select:focus,textarea:focus{border-color:var(--red);outline:3px solid rgba(192,0,0,.22);outline-offset:0;}
 input[type="file"]{padding:0.7rem;background:var(--grey-soft);}
 .checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.5rem;}
 .checks label{
@@ -568,10 +586,10 @@ footer li{margin-bottom:0.55rem;}
   }
   .notice h3{font-size:1.15rem;color:var(--red);}
   .notice p{margin-top:0.6rem;font-size:0.97rem;line-height:1.65;}
-  .notice a{color:var(--red);font-weight:600;}
+  .notice a:not(.btn){color:var(--red);font-weight:600;}
   html:not([data-theme="light"]) .notice{background:var(--panel);border-color:var(--red);}
   html:not([data-theme="light"]) .notice h3,
-  html:not([data-theme="light"]) .notice a{color:var(--red);}
+  html:not([data-theme="light"]) .notice a:not(.btn){color:var(--red);}
   html:not([data-theme="light"]) .notice p{color:var(--text);}
 
   /* --- rules that use --black as text/border on a light surface --- */
@@ -737,10 +755,10 @@ html[data-theme="dark"] .nav-toggle:hover{border-color:var(--red);color:var(--re
 }
 .notice h3{font-size:1.15rem;color:var(--red);}
 .notice p{margin-top:0.6rem;font-size:0.97rem;line-height:1.65;}
-.notice a{color:var(--red);font-weight:600;}
+.notice a:not(.btn){color:var(--red);font-weight:600;}
 html[data-theme="dark"] .notice{background:var(--panel);border-color:var(--red);}
 html[data-theme="dark"] .notice h3,
-html[data-theme="dark"] .notice a{color:var(--red);}
+html[data-theme="dark"] .notice a:not(.btn){color:var(--red);}
 html[data-theme="dark"] .notice p{color:var(--text);}
 
 /* --- rules that use --black as text/border on a light surface --- */
