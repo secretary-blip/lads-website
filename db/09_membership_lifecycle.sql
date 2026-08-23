@@ -1,38 +1,51 @@
 -- =============================================================================
--- LADS PORTAL, STAGE 10: MEMBERSHIP LIFECYCLE
--- Run AFTER 09_add_rejected_status.sql, as a separate snippet. Safe to re-run.
+-- LADS PORTAL, STAGE 9: MEMBERSHIP LIFECYCLE
+-- Run after 08. One snippet. Safe to re-run.
 --
 -- WHAT CHANGES
 --
--- Until now a membership row only existed once a payment had been confirmed.
--- That left a real gap: somebody who registered, paid, and created an account
--- saw "Not paid" on their own page while they waited. Wrong, and exactly the
--- sort of thing that produces a message to the General Secretary.
+-- A membership row now exists as soon as we know who someone is, instead of
+-- only after their payment has been confirmed.
 --
--- Now the membership row is created as soon as we know who the person is, and
--- it carries the state:
+-- The gap this closes: somebody who registered, paid, and created an account
+-- saw "Not paid" on their own page while they waited for the Treasurer. Wrong,
+-- and the sort of thing that produces a message to the General Secretary in the
+-- middle of September.
+--
+-- Uses only the four statuses that already exist. No new enum value, so this is
+-- a single migration.
 --
 --   pending_verification   registered, waiting on the Treasurer
---   paid                   confirmed
---   rejected               could not be verified, the member needs to act
---   waived                 dues waived by the board
+--   paid                   payment confirmed
+--   unpaid                 not paid, or a payment we could not verify
+--   waived                 the board decided this member owes nothing
 --
--- payment_verified on the registration stays false unless money was actually
--- confirmed. Membership status is what members and the board read;
--- payment_verified is the raw fact about the payment.
+-- A payment that could not be verified is recorded as `unpaid`, because that is
+-- what it factually is, with a member-visible explanation in memberships.notes.
 --
--- The row is created whichever way round things happen:
---   register, then sign up   -> handle_new_user
---   sign up, then register   -> registration_creates_membership
+-- It is deliberately NOT recorded as `waived`. Waived means the board decided
+-- someone owes nothing, and the site treats it as full membership: events.html
+-- unlocks members-only events for `paid` and `waived` alike. Filing rejections
+-- under waived would hand full access to people whose payment was never
+-- verified, and would inflate the Waived figure in the Treasurer's totals with
+-- decisions the board never made.
+--
+-- One row per member per academic year, forever, enforced by the unique
+-- constraint on (profile_id, academic_year).
 -- =============================================================================
 
 
-
 -- ---------------------------------------------------------------------------
--- 2. ONE PLACE THAT CREATES OR UPDATES A MEMBERSHIP FROM A REGISTRATION
+-- 1. ONE FUNCTION THAT CREATES OR UPDATES A MEMBERSHIP
 --
--- Three different events need this exact logic, so it lives in one function
--- rather than being written out three times and drifting apart.
+-- Three events need exactly this logic. Writing it out three times is how a
+-- system ends up disagreeing with itself about who has paid.
+--
+-- Note what this function does NOT do: it never writes to registrations.
+-- payment_verified is the record of money actually received, and only the
+-- Treasurer's decision may change it. Creating an account, in particular, must
+-- never touch it, or signing up after a confirmed payment would wipe the fact
+-- that the money arrived.
 -- ---------------------------------------------------------------------------
 create or replace function public.sync_membership_from_registration(
   p_profile_id uuid,
@@ -43,6 +56,7 @@ language plpgsql security definer set search_path = public
 as $$
 declare
   new_status payment_status;
+  new_note   text;
   yr         text;
 begin
   if p_profile_id is null or p_reg.id is null then
@@ -51,38 +65,47 @@ begin
 
   yr := public.dues_year_of(p_reg.created_at::date);
 
-  new_status := case
-    when p_reg.payment_verified then 'paid'::payment_status
-    when p_reg.rejected         then 'rejected'::payment_status
-    else 'pending_verification'::payment_status
-  end;
+  if p_reg.payment_verified then
+    new_status := 'paid'::payment_status;
+    new_note   := null;
+  elsif p_reg.rejected then
+    new_status := 'unpaid'::payment_status;
+    -- Member-facing, and deliberately not the reason the Treasurer typed.
+    -- That stays private on the registration.
+    new_note   := 'We could not verify this payment. Please send a clear '
+               || 'screenshot of the transfer, showing the date and reference, '
+               || 'to info@ladslb.org and we will sort it out.';
+  else
+    new_status := 'pending_verification'::payment_status;
+    new_note   := null;
+  end if;
 
   insert into public.memberships
     (profile_id, academic_year, status, amount_usd, paid_on,
-     method, proof_path, verified_by, verified_at)
+     method, proof_path, verified_by, verified_at, notes)
   values
     (p_profile_id, yr, new_status, 10.00,
      case when p_reg.payment_verified then coalesce(p_reg.verified_at::date, current_date) end,
      p_reg.payment_method, p_reg.payment_proof_path,
-     p_reg.verified_by, p_reg.verified_at)
+     p_reg.verified_by, p_reg.verified_at, new_note)
   on conflict (profile_id, academic_year) do update
      set status      = excluded.status,
          method      = coalesce(excluded.method, memberships.method),
          proof_path  = coalesce(excluded.proof_path, memberships.proof_path),
-         -- Never clear a payment date that was already recorded. If a payment
-         -- was confirmed and later queried, the date it arrived is still a fact.
+         -- A recorded payment date is a fact. If a payment was confirmed and
+         -- later queried, the day the money arrived does not stop being true.
          paid_on     = coalesce(excluded.paid_on, memberships.paid_on),
          verified_by = coalesce(excluded.verified_by, memberships.verified_by),
-         verified_at = coalesce(excluded.verified_at, memberships.verified_at)
-     -- Do not touch a membership the board has waived. A waiver is a decision,
-     -- and a later form submission should not quietly undo it.
+         verified_at = coalesce(excluded.verified_at, memberships.verified_at),
+         notes       = excluded.notes
+     -- Never overwrite a waiver. That is a board decision, and a student
+     -- re-submitting the form should not quietly undo it.
      where memberships.status <> 'waived'::payment_status;
 end $$;
 
 
 -- ---------------------------------------------------------------------------
--- 3. NEW REGISTRATION, WHEN THE PERSON ALREADY HAS AN ACCOUNT
--- Covers: signed up first, registered afterwards.
+-- 2. REGISTERED, AND ALREADY HAS AN ACCOUNT
 -- ---------------------------------------------------------------------------
 create or replace function public.registration_creates_membership()
 returns trigger
@@ -109,9 +132,9 @@ create trigger registration_creates_membership_trg
 
 
 -- ---------------------------------------------------------------------------
--- 4. NEW ACCOUNT, WHEN THE PERSON ALREADY REGISTERED
--- Covers: registered first, signed up afterwards. Replaces the version in 03,
--- which only back-filled already-verified registrations.
+-- 3. SIGNED UP, AND ALREADY REGISTERED
+--
+-- Reads the registration. Never writes to it.
 -- ---------------------------------------------------------------------------
 create or replace function public.handle_new_user()
 returns trigger
@@ -127,7 +150,7 @@ begin
     uni := null;
   end if;
 
-  -- role is never read from metadata. It comes from the browser, so anyone
+  -- role is never read from metadata. That comes from the browser, so anyone
   -- could claim to be an executive. It always defaults to 'member'.
   insert into public.profiles (id, email, full_name, phone, university, academic_year)
   values (
@@ -140,8 +163,6 @@ begin
   )
   on conflict (id) do nothing;
 
-  -- Any registration for this email, whatever its state. Rejected ones included,
-  -- so the member can see that something went wrong rather than seeing nothing.
   select * into r
     from public.registrations
    where lower(email) = lower(new.email)
@@ -170,9 +191,8 @@ create trigger on_auth_user_created
 
 
 -- ---------------------------------------------------------------------------
--- 5. APPROVING A PAYMENT
--- Now only records the decision. The membership row already exists in most
--- cases, so this updates it rather than creating it from nothing.
+-- 4. THE TREASURER CONFIRMS A PAYMENT
+-- Sets payment_verified true, and the membership to paid.
 -- ---------------------------------------------------------------------------
 create or replace function public.approve_registration(
   reg_id uuid,
@@ -208,8 +228,8 @@ begin
    limit 1;
 
   if p_id is null then
-    -- No account yet. handle_new_user will create the membership, already
-    -- marked paid, the moment they sign up.
+    -- No account yet. handle_new_user creates the membership, already marked
+    -- paid, the moment they sign up.
     return 'verified_no_account';
   end if;
 
@@ -219,10 +239,10 @@ end $$;
 
 
 -- ---------------------------------------------------------------------------
--- 6. REJECTING A PAYMENT
--- The membership row stays and becomes 'rejected', so the member can see that
--- something needs doing instead of the record silently vanishing.
--- payment_verified stays false, because no money was confirmed.
+-- 5. THE TREASURER CANNOT VERIFY A PAYMENT
+-- payment_verified stays false. The membership becomes unpaid with an
+-- explanation the member can read. The row is kept, so they can see that
+-- something needs doing rather than the record simply never appearing.
 -- ---------------------------------------------------------------------------
 create or replace function public.reject_registration(
   reg_id uuid,
@@ -266,29 +286,30 @@ end $$;
 
 
 -- ---------------------------------------------------------------------------
--- 7. BACK-FILL WHAT ALREADY EXISTS
--- Everyone who has both a registration and an account, but no membership row
--- because the old logic only created one after confirmation.
+-- 6. BACK-FILL
+-- Everyone who already has both a registration and an account but no membership
+-- row, because the old logic only created one after confirmation.
 -- ---------------------------------------------------------------------------
 do $$
 declare rec record;
 begin
   for rec in
-    select distinct on (p.id) p.id as profile_id, r.*
+    select distinct on (p.id) p.id as profile_id, r.id as reg_id
       from public.registrations r
       join public.profiles p on lower(p.email) = lower(r.email)
      order by p.id, r.created_at desc
   loop
     perform public.sync_membership_from_registration(
       rec.profile_id,
-      (select x from public.registrations x where x.id = rec.id));
+      (select x from public.registrations x where x.id = rec.reg_id));
   end loop;
 end $$;
 
 
 -- =============================================================================
 -- CHECK IT
---   select m.academic_year, m.status, p.full_name, p.email
---     from public.memberships m join public.profiles p on p.id = m.profile_id
+--   select p.full_name, p.email, m.academic_year, m.status, m.notes
+--     from public.memberships m
+--     join public.profiles p on p.id = m.profile_id
 --    order by p.full_name;
 -- =============================================================================

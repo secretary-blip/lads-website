@@ -175,7 +175,6 @@ export const DUES_LABEL = {
   unpaid: "Not paid",
   pending_verification: "Awaiting verification",
   waived: "Waived",
-  rejected: "Payment not verified",
 };
 
 /* ------------------------------------------------------------------ utils */

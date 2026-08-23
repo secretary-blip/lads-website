@@ -301,21 +301,19 @@ function render(profile, memberships) {
     detail.textContent =
       "We have your payment and the Treasurer is checking it. You will get an email as soon as it is confirmed, usually within a few days.";
     action.innerHTML = "";
-  } else if (status === "rejected") {
-    card.classList.add("is-wait");
-    card.style.borderLeftColor = "var(--red)";
-    detail.textContent =
-      "We could not match your payment to our transfer records. This usually means " +
-      "the screenshot was unclear, or the transfer had not gone through yet. Nothing " +
-      "is lost, send us a clear screenshot showing the date and reference and we will " +
-      "sort it out.";
-    action.innerHTML =
-      '<a href="mailto:info@ladslb.org?subject=Payment%20verification" class="btn">Email us your receipt</a>' +
-      '<a href="join.html" class="btn btn-outline">Register again</a>';
   } else if (status === "waived") {
     card.classList.add("is-paid");
     detail.textContent = `Your dues for ${year} have been waived. You have full member access.`;
     action.innerHTML = '<a href="events.html" class="btn">See upcoming events</a>';
+  } else if (current && current.notes) {
+    /* Not paid, and the Treasurer left an explanation. Almost always a payment
+       that could not be matched to the transfer records. Show them what to do
+       rather than a bare "Not paid" they cannot act on. */
+    card.style.borderLeftColor = "var(--red)";
+    detail.textContent = current.notes;
+    action.innerHTML =
+      '<a href="mailto:info@ladslb.org?subject=Payment%20verification" class="btn">Send us your receipt</a>' +
+      '<a href="join.html" class="btn btn-outline">Register again</a>';
   } else {
     detail.textContent =
       `Membership is 10 USD for the ${year} academic year. Register and pay, and this page updates as soon as the Treasurer confirms it.`;
