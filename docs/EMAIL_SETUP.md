@@ -67,39 +67,38 @@ Do not add them, and do not put either of them anywhere else.
 
 ## 4. Point the database at it
 
-Supabase → **Database** → **Webhooks** → **Create a new hook**.
+**Do this in SQL, not in the dashboard.** Open `db/06_email_hooks.sql`, replace
+`WEBHOOK_SECRET_HERE` with your secret from step 1, paste it into a new SQL
+snippet, and run it.
 
-You are creating **two**, both on the `registrations` table.
+Then confirm it worked:
 
-### Hook one, new registrations
+```sql
+select trigger_name, event_manipulation, action_timing
+from information_schema.triggers
+where event_object_table = 'registrations'
+order by trigger_name;
+```
 
-| Field | Value |
-|---|---|
-| Name | `notify_new_registration` |
-| Table | `registrations` |
-| Events | **Insert** only |
-| Type | HTTP Request |
-| Method | `POST` |
-| URL | `https://fazswkdinsbqymgwlebr.supabase.co/functions/v1/notify` |
+Two rows: `notify_new_registration` on INSERT, `notify_payment_decision` on UPDATE.
 
-HTTP Headers, add one:
+### Why not the dashboard
 
-| Header | Value |
-|---|---|
-| `x-webhook-secret` | the random string from step 1 |
+Supabase → Integrations → Database Webhooks builds the same thing through a form,
+and it looks easier. Two reasons not to use it:
 
-### Hook two, payment decisions
+**It fires on every update.** There is no way to say "only when the payment is
+actually confirmed". So every time the Treasurer edits a note or corrects a
+typo, the member receives another "your membership is confirmed" email. The SQL
+version has a `WHEN` clause and fires once, on the real transition.
 
-Same as above, with two changes:
+**It lives only in the dashboard.** Nobody inheriting this project would know to
+look for it. The SQL file sits in `db/` next to everything else, is re-runnable,
+and explains itself.
 
-| Field | Value |
-|---|---|
-| Name | `notify_payment_decision` |
-| Events | **Update** only |
-
-Everything else identical, including the header.
-
----
+**If you already created the hooks in the dashboard**, delete them before running
+the SQL, or every email goes out twice. Integrations → Database Webhooks → delete
+both.
 
 ## 5. Test it
 
