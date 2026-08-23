@@ -222,6 +222,41 @@ update storage.buckets
  where id = 'payment-proofs';
 
 
+-- ---------------------------------------------------------------------------
+-- FIX 6: THE ROLE GUARD MUST NOT LOCK OUT THE DATABASE OWNER
+--
+-- guard_role_changes (in 03_auth_update.sql) refuses any role change unless
+-- is_exec() is true. In the SQL Editor there is no signed-in user, so auth.uid()
+-- is null, is_exec() is false, and the guard blocks the one person trying to fix
+-- things. If the only executive ever demoted themselves, nobody could put it
+-- back, from anywhere.
+--
+-- A guard meant for the public API should not apply to the database owner, who
+-- already has unrestricted access by definition. So: enforce it when there is an
+-- authenticated user, skip it when there is not.
+-- ---------------------------------------------------------------------------
+create or replace function public.guard_role_changes()
+returns trigger
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if new.role is distinct from old.role or
+     new.committee_id is distinct from old.committee_id then
+    -- auth.uid() is null in the SQL Editor, in migrations, and for the service
+    -- role. All three are already trusted contexts.
+    if auth.uid() is not null and not public.is_exec() then
+      raise exception 'Only the Executive Committee may change roles';
+    end if;
+  end if;
+  return new;
+end $$;
+
+drop trigger if exists guard_role_changes_trg on public.profiles;
+create trigger guard_role_changes_trg
+  before update on public.profiles
+  for each row execute function public.guard_role_changes();
+
+
 -- =============================================================================
 -- REVIEWED AND DELIBERATELY LEFT AS THEY ARE
 --
