@@ -30,7 +30,8 @@ declare
     'approve_registration','reject_registration','dues_summary',
     'guard_role_changes','guard_applications','guard_proposals',
     'guard_event_registrations','guard_event_capacity',
-    'notify_registration_change','interest_counts'];
+    'notify_registration_change','interest_counts',
+    'sync_membership_from_registration','registration_creates_membership'];
   n int;
   txt text;
 begin
@@ -91,7 +92,7 @@ begin
   for t in select unnest(array[
       'guard_role_changes_trg','guard_applications_trg','guard_proposals_trg',
       'guard_event_registrations_trg','guard_event_capacity_trg',
-      'on_auth_user_created'])
+      'on_auth_user_created','registration_creates_membership_trg'])
   loop
     if exists (select 1 from pg_trigger where tgname = t and not tgisinternal) then
       return query select 'Guards'::text, t, 'PASS'::text, 'Active'::text;

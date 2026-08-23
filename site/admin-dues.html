@@ -361,7 +361,8 @@ function detailBlock(r) {
 function statusPill(status) {
   const cls = status === "paid" ? "paid"
             : status === "pending_verification" ? "wait"
-            : status === "waived" ? "" : "no";
+            : status === "waived" ? ""
+            : "no";   // unpaid and rejected both read as a problem
   return '<span class="pill ' + cls + '">' + escapeHtml(DUES_LABEL[status] || status) + '</span>';
 }
 
