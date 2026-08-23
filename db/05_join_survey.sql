@@ -103,3 +103,21 @@ end $$;
 -- =============================================================================
 -- Expect "Success. No rows returned."
 -- =============================================================================
+
+
+-- ---------------------------------------------------------------------------
+-- SIGNED-IN PEOPLE MUST BE ABLE TO REGISTER TOO
+--
+-- The original policy was `for insert to anon`, written when nobody had an
+-- account. Now that accounts exist, a member who signs up first and registers
+-- afterwards is role `authenticated`, not `anon`, so no insert policy matched
+-- and the form failed with a row-level security violation.
+--
+-- That is the exact order we now recommend on the Join page, so it would have
+-- hit a large share of members in September.
+-- ---------------------------------------------------------------------------
+drop policy if exists "anyone can register" on public.registrations;
+drop policy if exists registrations_insert on public.registrations;
+create policy registrations_insert on public.registrations
+  for insert to anon, authenticated
+  with check (true);
