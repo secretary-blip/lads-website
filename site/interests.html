@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-116JSZSGZN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-116JSZSGZN');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your interests | LADS</title>
+<meta name="description" content="Tell LADS what you would like to be involved in.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/portal.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#C00000">
+
+<meta name="robots" content="noindex">
+</head>
+<body>
+<header>
+  <div class="nav-wrap">
+    <a class="logo" href="index.html"><img src="assets/lads_logo.png" alt="LADS, Lebanese Association of Dental Students"></a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-controls="nav" aria-expanded="false" onclick="var n=document.getElementById('nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o);">&#9776;</button>
+    <nav id="nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="account.html" data-portal-link class="active">Portal</a></li>
+        <li><a href="join.html" class="btn-join">Join LADS</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-label="Switch between light and dark mode" title="Switch theme">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    </button>
+  </div>
+</header>
+<main id="main">
+
+<section>
+  <div class="wrap" style="max-width:760px;">
+    <div class="sec-head">
+      <p class="eyebrow">Member Portal</p>
+      <h1 class="h-sec">What would you like to do?</h1>
+    </div>
+
+    <p class="p-muted" style="margin-top:0.75rem; max-width:60ch;">
+      This is how the board decides who to invite to what. Tick honestly rather
+      than ticking everything, and change it whenever you like. Nothing here
+      commits you to anything.
+    </p>
+
+    <p id="loading" class="p-muted" style="margin-top:2rem;">Loading&hellip;</p>
+
+    <div id="app" hidden>
+      <form id="form" class="p-panel" style="margin-top:1.5rem;">
+        <fieldset>
+          <legend>What would you like to do?</legend>
+          <p class="hint" style="margin-bottom:1rem;">
+            Tick anything that appeals. This is what we use to invite you to things,
+            so pick honestly rather than picking everything.
+          </p>
+          <div class="checks" id="interests" role="group">
+            <label><input type="checkbox" name="interest" value="volunteering"> Volunteering and outreach</label>
+            <label><input type="checkbox" name="interest" value="public_health"> Public health campaigns</label>
+            <label><input type="checkbox" name="interest" value="exchange"> Exchange and IVPs</label>
+            <label><input type="checkbox" name="interest" value="research"> Research</label>
+            <label><input type="checkbox" name="interest" value="conferences"> Conferences and workshops</label>
+            <label><input type="checkbox" name="interest" value="fundraising"> Fundraising and sponsorship</label>
+            <label><input type="checkbox" name="interest" value="content"> Content, design and social media</label>
+            <label><input type="checkbox" name="interest" value="events"> Events and student life</label>
+            <label><input type="checkbox" name="interest" value="training"> Training and soft skills</label>
+          </div>
+        </fieldset>
+
+        <!-- Follow-ups. Hidden until the matching interest is ticked, so the
+             form stays short for someone who only wants to attend things. -->
+
+        <fieldset id="f-volunteering" hidden>
+          <legend>About volunteering</legend>
+          <div class="form-field">
+            <label id="lbl-regions">Where could you volunteer?</label>
+            <div class="checks" id="regions" role="group" aria-labelledby="lbl-regions">
+              <label><input type="checkbox" name="region" value="Beirut"> Beirut</label>
+              <label><input type="checkbox" name="region" value="Mount Lebanon"> Mount Lebanon</label>
+              <label><input type="checkbox" name="region" value="North"> North</label>
+              <label><input type="checkbox" name="region" value="South"> South</label>
+              <label><input type="checkbox" name="region" value="Bekaa"> Bekaa</label>
+              <label><input type="checkbox" name="region" value="Akkar"> Akkar</label>
+              <label><input type="checkbox" name="region" value="Nabatieh"> Nabatieh</label>
+              <label><input type="checkbox" name="region" value="Anywhere"> Anywhere in Lebanon</label>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="v_area">Which area do you live in?</label>
+            <input type="text" id="v_area" placeholder="Tarik El Jadida, Beirut">
+            <span class="hint">So we can group volunteers who can travel together.</span>
+          </div>
+          <div class="form-field">
+            <label for="v_transport">Do you have your own transport?</label>
+            <select id="v_transport">
+              <option value="">Select&hellip;</option>
+              <option>Yes, and I could take others</option>
+              <option>Yes, just myself</option>
+              <option>No, I would need a lift</option>
+              <option>No, but I can use public transport</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="v_before">Have you volunteered with LADS before?</label>
+            <select id="v_before">
+              <option value="">Select&hellip;</option>
+              <option>Yes, more than once</option>
+              <option>Yes, once</option>
+              <option>No, this would be my first time</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label id="lbl-vhelp">Could you help with any of these?</label>
+            <div class="checks" id="v_help" role="group" aria-labelledby="lbl-vhelp">
+              <label><input type="checkbox" name="vhelp" value="Contact schools"> Contacting schools</label>
+              <label><input type="checkbox" name="vhelp" value="Contact clinics"> Contacting clinics or dispensaries</label>
+              <label><input type="checkbox" name="vhelp" value="Plan events"> Helping plan events</label>
+              <label><input type="checkbox" name="vhelp" value="Equipment"> Sourcing equipment or supplies</label>
+              <label><input type="checkbox" name="vhelp" value="Translate"> Translating on site</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset id="f-public_health" hidden>
+          <legend>About public health work</legend>
+          <div class="form-field">
+            <label for="ph_when">When are you usually free?</label>
+            <select id="ph_when">
+              <option value="">Select&hellip;</option>
+              <option>Weekends only</option>
+              <option>Weekdays only</option>
+              <option>Both</option>
+              <option>Depends on the term</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label id="lbl-ph">What appeals most?</label>
+            <div class="checks" id="ph_kind" role="group" aria-labelledby="lbl-ph">
+              <label><input type="checkbox" name="phkind" value="School visits"> School visits</label>
+              <label><input type="checkbox" name="phkind" value="Screenings"> Community screenings</label>
+              <label><input type="checkbox" name="phkind" value="Awareness campaigns"> Awareness campaigns</label>
+              <label><input type="checkbox" name="phkind" value="Content"> Producing health material</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset id="f-exchange" hidden>
+          <legend>About exchange and voluntary projects</legend>
+          <div class="form-field">
+            <label for="x_languages">Which languages do you speak?</label>
+            <input type="text" id="x_languages" placeholder="Arabic, English, French">
+          </div>
+          <div class="form-field">
+            <label for="x_clinical">Have you started clinical years?</label>
+            <select id="x_clinical">
+              <option value="">Select&hellip;</option>
+              <option>Yes</option>
+              <option>Not yet, but soon</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="x_passport">Do you have a valid passport?</label>
+            <select id="x_passport">
+              <option value="">Select&hellip;</option>
+              <option>Yes, valid for over a year</option>
+              <option>Yes, but expiring soon</option>
+              <option>No, but I can get one</option>
+              <option>No</option>
+            </select>
+            <span class="hint">Exchange placements are often confirmed at short notice.</span>
+          </div>
+        </fieldset>
+
+        <fieldset id="f-fundraising" hidden>
+          <legend>About fundraising</legend>
+          <div class="form-field">
+            <label for="fr_contacts">Do you have contacts who might sponsor us?</label>
+            <select id="fr_contacts">
+              <option value="">Select&hellip;</option>
+              <option>Yes, dental clinics or labs</option>
+              <option>Yes, companies outside dentistry</option>
+              <option>Yes, both</option>
+              <option>No, but I am happy to approach people</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="fr_comfort">How do you feel about approaching sponsors directly?</label>
+            <select id="fr_comfort">
+              <option value="">Select&hellip;</option>
+              <option>Confident, I have done it before</option>
+              <option>Willing to learn</option>
+              <option>I would rather help behind the scenes</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset id="f-content" hidden>
+          <legend>About content and design</legend>
+          <div class="form-field">
+            <label id="lbl-skills">What can you do?</label>
+            <div class="checks" id="c_skills" role="group" aria-labelledby="lbl-skills">
+              <label><input type="checkbox" name="cskill" value="Graphic design"> Graphic design</label>
+              <label><input type="checkbox" name="cskill" value="Photography"> Photography</label>
+              <label><input type="checkbox" name="cskill" value="Video"> Video and editing</label>
+              <label><input type="checkbox" name="cskill" value="Writing"> Writing</label>
+              <label><input type="checkbox" name="cskill" value="Social media"> Running social accounts</label>
+              <label><input type="checkbox" name="cskill" value="Illustration"> Illustration</label>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="c_portfolio">Anywhere we can see your work? (optional)</label>
+            <input type="url" id="c_portfolio" placeholder="https://instagram.com/yourwork">
+          </div>
+        </fieldset>
+
+        <fieldset id="f-research" hidden>
+          <legend>About research</legend>
+          <div class="form-field">
+            <label for="r_experience">Have you done research before?</label>
+            <select id="r_experience">
+              <option value="">Select&hellip;</option>
+              <option>Yes, published or presented</option>
+              <option>Yes, as part of a project</option>
+              <option>No, but I want to learn</option>
+            </select>
+          </div>
+        </fieldset>
+
+
+        <button type="submit" class="btn" id="submit">Save</button>
+        <p id="msg" class="form-msg" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="notice" style="margin-top:2rem;">
+        <h3>Want to help run a committee?</h3>
+        <p>Deputy heads work directly with a committee head through the year, and
+           often stand for head the year after. It is a real commitment, and it
+           has its own application.</p>
+        <p style="margin-top:1rem;"><a href="apply.html" class="btn">Apply to a committee</a></p>
+      </div>
+
+      <p style="margin-top:2.5rem;">
+        <a href="account.html" class="btn btn-outline">Back to your account</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <img src="assets/lads_logo.png" alt="LADS">
+      <h4>LADS</h4>
+      <p>Lebanese Association of Dental Students<br>Faculty of Dentistry, Beirut Arab University<br>Tarik El Jadida, Riad El Solh 11072809<br>Beirut, Lebanon</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="join.html">Membership</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/lebaneseassociationofdentalstudents" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.linkedin.com/company/lebanese-association-of-dental-students" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:info@ladslb.org">info@ladslb.org</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015. GOOGLE FOR NONPROFITS CHARITY ID 1658. <a href="about.html#transparency" style="text-decoration:underline;">ORGANISATION DETAILS</a></p>
+  </div>
+</footer>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  if(!btn) return;
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function current(){
+    var set = root.getAttribute('data-theme');
+    if(set) return set;
+    return mq.matches ? 'dark' : 'light';
+  }
+  function paint(){
+    var dark = current()==='dark';
+    btn.querySelector('.moon').style.display = dark ? 'none' : 'block';
+    btn.querySelector('.sun').style.display  = dark ? 'block' : 'none';
+  }
+  var saved=null; try{saved=localStorage.getItem('lads-theme');}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  paint();
+  mq.addEventListener && mq.addEventListener('change', paint);
+  btn.addEventListener('click', function(){
+    var next = current()==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{localStorage.setItem('lads-theme', next);}catch(e){}
+    paint();
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+
+import { sb, requireAuth, getProfile, say } from "./js/portal.js";
+const $ = id => document.getElementById(id);
+
+const FOLLOWUPS = ['volunteering','public_health','exchange','fundraising','content','research'];
+
+const session = await requireAuth();
+let profile = null;
+
+if (session) {
+  profile = await getProfile();
+  fill(profile);
+  syncFollowups();
+  $("loading").hidden = true;
+  $("app").hidden = false;
+}
+
+function syncFollowups() {
+  const ticked = new Set(
+    [...document.querySelectorAll('#interests input:checked')].map(c => c.value));
+  FOLLOWUPS.forEach(k => {
+    const el = document.getElementById('f-' + k);
+    if (el) el.hidden = !ticked.has(k);
+  });
+}
+document.querySelectorAll('#interests input').forEach(cb =>
+  cb.addEventListener('change', syncFollowups));
+
+/* "Anywhere in Lebanon" makes the individual regions meaningless. */
+const anywhere = document.querySelector('#regions input[value="Anywhere"]');
+if (anywhere) {
+  anywhere.addEventListener('change', () => {
+    if (!anywhere.checked) return;
+    document.querySelectorAll('#regions input').forEach(cb => {
+      if (cb !== anywhere) cb.checked = false;
+    });
+  });
+  document.querySelectorAll('#regions input').forEach(cb => {
+    if (cb === anywhere) return;
+    cb.addEventListener('change', () => { if (cb.checked) anywhere.checked = false; });
+  });
+}
+
+function setChecks(sel, values) {
+  const want = new Set(values || []);
+  document.querySelectorAll(sel + ' input').forEach(cb => { cb.checked = want.has(cb.value); });
+}
+function setVal(id, v) { const el = $(id); if (el) el.value = v || ""; }
+
+function fill(p) {
+  setChecks('#interests', p.interests);
+  const d = p.interest_details || {};
+  const v = d.volunteering || {};
+  setChecks('#regions', v.regions); setChecks('#v_help', v.can_help);
+  setVal('v_area', v.area); setVal('v_transport', v.transport); setVal('v_before', v.before);
+  const ph = d.public_health || {};
+  setVal('ph_when', ph.availability); setChecks('#ph_kind', ph.kinds);
+  const x = d.exchange || {};
+  setVal('x_languages', x.languages); setVal('x_clinical', x.clinical); setVal('x_passport', x.passport);
+  const fr = d.fundraising || {};
+  setVal('fr_contacts', fr.contacts); setVal('fr_comfort', fr.comfort);
+  const c = d.content || {};
+  setChecks('#c_skills', c.skills); setVal('c_portfolio', c.portfolio);
+  const r = d.research || {};
+  setVal('r_experience', r.experience);
+}
+
+$("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = $("submit"), msg = $("msg");
+  const val  = id => (($(id) && $(id).value) || '').trim() || null;
+  const many = sel => [...document.querySelectorAll(sel + ' input:checked')].map(c => c.value);
+
+  const interests = many('#interests');
+  const ticked = new Set(interests);
+  const details = {};
+
+  /* Only store answers to questions they actually saw. Keeping answers to
+     hidden questions would be noise for whoever reads this later. */
+  if (ticked.has('volunteering')) details.volunteering = {
+    regions: many('#regions'), area: val('v_area'), transport: val('v_transport'),
+    before: val('v_before'), can_help: many('#v_help') };
+  if (ticked.has('public_health')) details.public_health = {
+    availability: val('ph_when'), kinds: many('#ph_kind') };
+  if (ticked.has('exchange')) details.exchange = {
+    languages: val('x_languages'), clinical: val('x_clinical'), passport: val('x_passport') };
+  if (ticked.has('fundraising')) details.fundraising = {
+    contacts: val('fr_contacts'), comfort: val('fr_comfort') };
+  if (ticked.has('content')) details.content = {
+    skills: many('#c_skills'), portfolio: val('c_portfolio') };
+  if (ticked.has('research')) details.research = { experience: val('r_experience') };
+
+  btn.disabled = true;
+  say(msg, "Saving\u2026");
+
+  const { error } = await sb.from("profiles").update({
+    interests: interests.length ? interests : null,
+    interest_details: details,
+  }).eq("id", session.user.id);
+
+  btn.disabled = false;
+  if (error) return say(msg, "Could not save: " + error.message, "error");
+  say(msg, "Saved. Thank you, this genuinely helps.", "success");
+});
+
+</script>
+</body>
+</html>

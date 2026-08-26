@@ -9,6 +9,8 @@ Disallow: /signup.html
 Disallow: /forgot-password.html
 Disallow: /reset-password.html
 Disallow: /auth-callback.html
+Disallow: /pay.html
+Disallow: /interests.html
 Disallow: /events.html
 Disallow: /apply.html
 Disallow: /propose.html

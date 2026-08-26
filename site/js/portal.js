@@ -128,12 +128,23 @@ export async function getProfile() {
 export const ROLE_LABEL = {
   member: "Member",
   committee_head: "Committee Head",
-  treasurer: "Treasurer",
-  executive: "Executive Committee",
+  admin: "Administrator",
+  super_admin: "Executive Committee",
 };
 
+/** Admins and above. Can see payments and every member. */
+export function isAdmin(profile) {
+  return !!profile && ["admin", "super_admin"].includes(profile.role);
+}
+
+/** Anyone with a board responsibility. Committee heads included, and they can
+    review applications to their own committee without seeing payments. */
 export function isStaff(profile) {
-  return profile && ["committee_head", "treasurer", "executive"].includes(profile.role);
+  return !!profile && ["committee_head", "admin", "super_admin"].includes(profile.role);
+}
+
+export function isCommitteeHead(profile) {
+  return !!profile && profile.role === "committee_head";
 }
 
 /* ------------------------------------------------------------- membership */
@@ -171,11 +182,19 @@ export async function getMemberships() {
 }
 
 export const DUES_LABEL = {
-  paid: "Paid",
-  unpaid: "Not paid",
+  unpaid:   "Not paid",
+  pending:  "Awaiting verification",
+  paid:     "Paid",
+  rejected: "Payment not verified",
+  // Retired, kept so historical rows still render a sensible word.
   pending_verification: "Awaiting verification",
-  waived: "Waived",
+  waived:   "Paid",
 };
+
+/** Does this membership grant member privileges? Only a confirmed payment. */
+export function isPaidUp(membership) {
+  return !!membership && membership.status === "paid";
+}
 
 /* ------------------------------------------------------------------ utils */
 
@@ -198,3 +217,61 @@ export function say(el, message, kind = "info") {
   el.textContent = message;
   el.className = "form-msg " + kind;
 }
+
+/* -------------------------------------------------------------- membership */
+
+/**
+ * The member creates their own membership row and attaches proof.
+ *
+ * The database will not let them set `paid`, or touch verified_by, verified_at
+ * or paid_on: guard_membership refuses. This function only ever asks for what a
+ * member is allowed to ask for, but the refusal is what actually protects it.
+ */
+export async function submitPayment({ academicYear, method, file }) {
+  const session = await getSession();
+  if (!session) throw new Error("Please sign in first.");
+
+  let proofPath = null;
+
+  if (file) {
+    if (file.size > 5 * 1024 * 1024) throw new Error("The file must be under 5MB.");
+    const ext = (file.name.split(".").pop() || "png").toLowerCase();
+    /* The folder is the permission. Storage policy only lets someone read and
+       write inside a folder named after their own user id, so the path itself
+       is what stops one member opening another member's receipt. */
+    proofPath = `${session.user.id}/${Date.now()}.${ext}`;
+    const { error: upErr } = await sb.storage
+      .from("payment-proofs")
+      .upload(proofPath, file, { upsert: false });
+    if (upErr) throw upErr;
+  }
+
+  const row = {
+    profile_id: session.user.id,
+    academic_year: academicYear,
+    status: file ? "pending" : "unpaid",
+    method: method || null,
+    proof_path: proofPath,
+  };
+
+  /* One row per person per year, so re-submitting updates rather than
+     duplicating. The unique constraint would refuse a second row anyway. */
+  const { error } = await sb
+    .from("memberships")
+    .upsert(row, { onConflict: "profile_id,academic_year" });
+
+  if (error) throw error;
+  return proofPath;
+}
+
+/** A signed link to a stored proof. Expires, so it cannot be shared onward. */
+export async function proofUrl(path, seconds = 300) {
+  if (!path) return null;
+  const { data, error } = await sb.storage
+    .from("payment-proofs")
+    .createSignedUrl(path, seconds);
+  if (error) { console.error(error); return null; }
+  return data.signedUrl;
+}
+
+export const METHODS = ["whish", "Bank transfer", "OMT", "Cash"];

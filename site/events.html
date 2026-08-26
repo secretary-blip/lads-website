@@ -106,7 +106,7 @@
       <div id="dues-warn" hidden class="notice" style="margin-top:1.5rem;">
         <h3>Some events are for paid members</h3>
         <p id="dues-warn-text"></p>
-        <p style="margin-top:1rem;"><a href="join.html" class="btn">How to pay your dues</a></p>
+        <p style="margin-top:1rem;"><a href="pay.html" class="btn">Pay your dues</a></p>
       </div>
 
       <div class="tabs" role="tablist">
@@ -200,7 +200,7 @@ if (session) {
   profile = await getProfile();
   const ms = await getMemberships();
   const cur = ms.find(m => m.academic_year === duesYear());
-  paidUp = !!cur && ["paid", "waived"].includes(cur.status);
+  paidUp = !!cur && cur.status === "paid";   // only a confirmed payment
   await loadCommittees();
   await load();
   $("loading").hidden = true;

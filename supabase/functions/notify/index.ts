@@ -1,9 +1,10 @@
 // =============================================================================
 // LADS, registration notifications
 //
-// Called by two Supabase Database Webhooks on public.registrations:
-//   INSERT  -> tell the Treasurer somebody registered
-//   UPDATE  -> tell the member their payment was confirmed, or was not
+// Called by database triggers on public.memberships:
+//   status -> pending    tell the Treasurer a payment is waiting
+//   status -> paid       tell the member they are confirmed
+//   status -> rejected   tell the member what to send instead
 //
 // Why this exists: without it the Treasurer has to remember to open the portal,
 // and members are left guessing whether their transfer arrived. In September,
@@ -28,34 +29,40 @@ const FROM      = "LADS <noreply@ladslb.org>";
 const REPLY_TO  = "info@ladslb.org";
 const PORTAL    = "https://ladslb.org";
 
-type Registration = {
+/* A membership row. The member's name and email are not on it, so the function
+   looks them up. Denormalising them onto the membership would mean two copies
+   of an email address that can be changed in one place. */
+type Membership = {
   id: string;
+  profile_id: string;
+  academic_year: string;
+  status: "unpaid" | "pending" | "paid" | "rejected";
+  method: string | null;
+  amount_usd: number;
+  notes: string | null;
+};
+
+type Person = {
   full_name: string;
   email: string;
   phone: string | null;
   university: string | null;
   academic_year: string | null;
-  payment_method: string;
-  payment_verified: boolean;
-  rejected: boolean;
-  workforce: boolean;
-  workforce_committee: string | null;
-  interests: string[] | null;
 };
 
 type Payload = {
   type: "INSERT" | "UPDATE" | "DELETE";
   table: string;
-  record: Registration;
-  old_record: Registration | null;
+  record: Membership;
+  old_record: Membership | null;
 };
 
-/* Who should hear about new registrations. Read live from the database rather
+/* Who should hear about payments. Read live from the database rather
    than hard-coded, so when the Treasurer changes next year nobody has to
    remember this file exists. */
 async function boardEmails(): Promise<string[]> {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/profiles?select=email&role=in.(treasurer,executive)`,
+    `${SUPABASE_URL}/rest/v1/profiles?select=email&role=in.(admin,super_admin)`,
     { headers: { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` } },
   );
   if (!res.ok) {
@@ -65,6 +72,17 @@ async function boardEmails(): Promise<string[]> {
   const rows = (await res.json()) as { email: string }[];
   const list = rows.map((r) => r.email).filter(Boolean);
   return list.length ? list : ["info@ladslb.org"];
+}
+
+async function person(profileId: string): Promise<Person | null> {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/profiles?id=eq.${profileId}` +
+    `&select=full_name,email,phone,university,academic_year`,
+    { headers: { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` } },
+  );
+  if (!res.ok) { console.error("Could not read profile:", await res.text()); return null; }
+  const rows = (await res.json()) as Person[];
+  return rows[0] ?? null;
 }
 
 async function sendEmail(to: string[], subject: string, html: string) {
@@ -123,35 +141,45 @@ Deno.serve(async (req) => {
   const rec = payload.record;
   const old = payload.old_record;
 
-  // ---------------------------------------------------------------- INSERT
-  if (payload.type === "INSERT") {
+  // A membership only becomes interesting when it enters or leaves review.
+  const nowPending  = rec.status === "pending";
+  const wasPending  = old?.status === "pending";
+  const becamePaid  = rec.status === "paid"     && old?.status !== "paid";
+  const becameNo    = rec.status === "rejected" && old?.status !== "rejected";
+  const newlyPending = nowPending && (payload.type === "INSERT" || !wasPending);
+
+  if (!newlyPending && !becamePaid && !becameNo) {
+    return new Response("nothing to do");
+  }
+
+  const who = await person(rec.profile_id);
+  if (!who) return new Response("no profile", { status: 200 });
+
+  // ------------------------------------------------- payment submitted
+  if (newlyPending) {
     const to = await boardEmails();
     const rows = [
-      ["Name", rec.full_name],
-      ["Email", rec.email],
-      ["Phone", rec.phone ?? "Not given"],
-      ["University", `${rec.university ?? ""} ${rec.academic_year ?? ""}`.trim()],
-      ["Payment method", rec.payment_method],
-      ["Interests", (rec.interests ?? []).join(", ") || "None selected"],
+      ["Name", who.full_name],
+      ["Email", who.email],
+      ["Phone", who.phone ?? "Not given"],
+      ["University", `${who.university ?? ""} ${who.academic_year ?? ""}`.trim()],
+      ["Year", rec.academic_year],
+      ["Method", rec.method ?? "Not given"],
+      ["Amount", `$${Number(rec.amount_usd ?? 10).toFixed(2)}`],
     ];
-    if (rec.workforce) {
-      rows.push(["Workforce", `Wants to be a deputy head${
-        rec.workforce_committee ? `, ${rec.workforce_committee.replace(/_/g, " ")}` : ""}`]);
-    }
-
     await sendEmail(
       to,
-      `New registration: ${rec.full_name}`,
+      `Payment to verify: ${who.full_name}`,
       shell(
-        "Someone has registered",
+        "A payment is waiting",
         `<table style="width:100%;border-collapse:collapse;font-size:14px;">
           ${rows.map(([k, v]) => `<tr>
             <td style="padding:6px 12px 6px 0;color:#666;vertical-align:top;white-space:nowrap;">${esc(k)}</td>
             <td style="padding:6px 0;"><strong>${esc(v)}</strong></td></tr>`).join("")}
         </table>
         <p style="font-size:14px;color:#666;margin-top:18px;">
-          Their payment screenshot is on the dues page. Confirming it there updates
-          their account immediately and sends them a confirmation email.
+          Their screenshot is on the dues page. Confirming it there updates their
+          account immediately and sends them a confirmation.
         </p>`,
         { text: "Review this payment", href: `${PORTAL}/admin-dues.html` },
       ),
@@ -159,44 +187,41 @@ Deno.serve(async (req) => {
     return new Response("ok");
   }
 
-  // ---------------------------------------------------------------- UPDATE
-  if (payload.type === "UPDATE" && old) {
-    // Confirmed: was not verified, now is.
-    if (!old.payment_verified && rec.payment_verified) {
-      await sendEmail(
-        [rec.email],
-        "Your LADS membership is confirmed",
-        shell(
-          `Welcome to LADS, ${esc(rec.full_name.split(" ")[0])}.`,
-          `<p style="font-size:15px;">Your payment has been verified and your membership
-             is active for this academic year.</p>
-           <p style="font-size:15px;">Create your portal account, or sign in if you already
-             have one, to see your membership, register for events, and apply for exchanges
-             and voluntary projects. Use <strong>${esc(rec.email)}</strong>, the same address
-             you registered with, and everything links up on its own.</p>`,
-          { text: "Open the member portal", href: `${PORTAL}/signup.html` },
-        ),
-      );
-      return new Response("ok");
-    }
+  // ------------------------------------------------- payment confirmed
+  if (becamePaid) {
+    await sendEmail(
+      [who.email],
+      "Your LADS membership is confirmed",
+      shell(
+        `Welcome to LADS, ${esc((who.full_name || "").split(" ")[0])}.`,
+        `<p style="font-size:15px;">Your payment has been verified and your
+           membership is active for ${esc(rec.academic_year)}.</p>
+         <p style="font-size:15px;">You can now register for members-only events,
+           apply for exchanges and voluntary projects, and put your name forward
+           for a committee.</p>`,
+        { text: "Open the member portal", href: `${PORTAL}/account.html` },
+      ),
+    );
+    return new Response("ok");
+  }
 
-    // Could not verify: newly rejected.
-    if (!old.rejected && rec.rejected) {
-      await sendEmail(
-        [rec.email],
-        "We could not confirm your LADS payment",
-        shell(
-          "We need to check something",
-          `<p style="font-size:15px;">Thank you for registering. Our Treasurer could not
-             match your payment to the transfer records, which usually means the screenshot
-             was unclear or the transfer is still in progress.</p>
-           <p style="font-size:15px;">Nothing is lost. Reply to this email with a clear
-             screenshot of the confirmation, including the date and reference, and we will
-             sort it out.</p>`,
-        ),
-      );
-      return new Response("ok");
-    }
+  // ------------------------------------------------- could not verify
+  if (becameNo) {
+    await sendEmail(
+      [who.email],
+      "We could not confirm your LADS payment",
+      shell(
+        "We need to check something",
+        `<p style="font-size:15px;">${esc(rec.notes ??
+            "Our Treasurer could not match your payment to the transfer records. " +
+            "That usually means the screenshot was unclear, or the transfer had " +
+            "not gone through yet.")}</p>
+         <p style="font-size:15px;">Nothing is lost. Upload a clearer screenshot,
+           showing the date and reference, and we will sort it out.</p>`,
+        { text: "Send a new screenshot", href: `${PORTAL}/pay.html` },
+      ),
+    );
+    return new Response("ok");
   }
 
   return new Response("nothing to do");

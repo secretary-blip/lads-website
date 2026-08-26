@@ -211,7 +211,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
 
-import { sb, requireAuth, getProfile, fmtDate, escapeHtml, say } from "./js/portal.js";
+import { sb, requireAuth, getProfile, isAdmin, isCommitteeHead,
+         fmtDate, escapeHtml, say } from "./js/portal.js";
 const $ = id => document.getElementById(id);
 
 const APP_STATUS = {
@@ -228,7 +229,7 @@ let profile = null, apps = [], props = [], committees = {};
 
 if (session) {
   profile = await getProfile();
-  const allowed = profile && ["committee_head", "executive"].includes(profile.role);
+  const allowed = isAdmin(profile) || isCommitteeHead(profile);
   if (!allowed) {
     $("loading").hidden = true;
     $("denied").hidden = false;
@@ -238,7 +239,7 @@ if (session) {
 
     /* The database already limits a committee head to their own committee.
        This line only explains that, it does not enforce it. */
-    $("scope-note").textContent = profile.role === "executive"
+    $("scope-note").textContent = isAdmin(profile)
       ? "You are seeing everything submitted across all committees."
       : "You are seeing submissions for " +
         (committees[profile.committee_id] || "your committee") + " only.";
@@ -300,7 +301,7 @@ function renderApps() {
         '<div class="btn-row">' +
           (a.status === "submitted"
             ? '<button type="button" class="btn btn-outline" data-act="set" data-to="under_review">Mark under review</button>' : '') +
-          '<button type="button" class="btn" data-act="set" data-to="accepted">Accept</button>' +
+          '<button type="button" class="btn" data-act="set" data-to="accepted">Accept and assign</button>' +
           '<button type="button" class="btn btn-outline" data-act="set" data-to="rejected">Do not accept</button>' +
         '</div>') +
       '<p class="form-msg" data-msg role="status" aria-live="polite"></p>' +
@@ -346,11 +347,11 @@ document.addEventListener("click", async (e) => {
   const card = btn.closest(".rec");
   const msg = card.querySelector("[data-msg]");
   const to = btn.dataset.to;
-  const table = card.dataset.kind === "application" ? "applications" : "proposals";
+  const isApplication = card.dataset.kind === "application";
 
-  /* A decision the applicant can see should come with a reason. Optional, but
-     asked for every time, because "rejected" with no explanation is the thing
-     students remember about an organisation. */
+  /* A decision the applicant can see should come with a reason. Asked every
+     time, because "rejected" with no explanation is the thing students
+     remember about an organisation. */
   let note = null;
   if (["accepted", "rejected", "approved", "declined"].includes(to)) {
     note = prompt("Add a note for them, optional. They will see this.");
@@ -360,18 +361,39 @@ document.addEventListener("click", async (e) => {
   card.querySelectorAll("button").forEach(b => b.disabled = true);
   say(msg, "Saving\u2026");
 
-  const patch = { status: to, reviewer_id: session.user.id };
-  if (note) patch.reviewer_note = note.trim() || null;
-  if (["accepted", "rejected", "approved", "declined", "implemented"].includes(to))
-    patch.decided_at = new Date().toISOString();
-  if (table === "applications") patch.updated_at = new Date().toISOString();
-
-  const { error } = await sb.from(table).update(patch).eq("id", card.dataset.id);
-  if (error) {
+  try {
+    if (isApplication && to === "accepted") {
+      /* accept_application also sets profiles.committee_id. Doing it in the
+         database means the assignment cannot be forgotten by a page. */
+      const { error } = await sb.rpc("accept_application", { app_id: card.dataset.id });
+      if (error) throw error;
+      if (note && note.trim()) {
+        await sb.from("applications")
+          .update({ reviewer_note: note.trim() })
+          .eq("id", card.dataset.id);
+      }
+    } else if (isApplication && to === "rejected") {
+      const { error } = await sb.rpc("reject_application", {
+        app_id: card.dataset.id,
+        note: note && note.trim() ? note.trim() : null,
+      });
+      if (error) throw error;
+    } else {
+      const patch = { status: to, reviewer_id: session.user.id };
+      if (note && note.trim()) patch.reviewer_note = note.trim();
+      if (["accepted","rejected","approved","declined","implemented"].includes(to))
+        patch.decided_at = new Date().toISOString();
+      if (isApplication) patch.updated_at = new Date().toISOString();
+      const table = isApplication ? "applications" : "proposals";
+      const { error } = await sb.from(table).update(patch).eq("id", card.dataset.id);
+      if (error) throw error;
+    }
+    await load();
+  } catch (err) {
+    console.error(err);
     card.querySelectorAll("button").forEach(b => b.disabled = false);
-    return say(msg, "Could not save: " + error.message, "error");
+    say(msg, "Could not save: " + (err.message || "unknown error"), "error");
   }
-  await load();
 });
 
 $("app-filter").addEventListener("change", renderApps);

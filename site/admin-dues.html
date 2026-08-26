@@ -2,9 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-116JSZSGZN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-116JSZSGZN');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dues and payments | LADS</title>
-<meta name="description" content="Treasurer tools for the Lebanese Association of Dental Students.">
+<meta name="description" content="Treasurer tools.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,68 +24,27 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#C00000">
-<meta name="robots" content="noindex, nofollow">
 
+<meta name="robots" content="noindex">
 <style>
-  .stats { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); margin-top:1.5rem; }
-  .stat { background:var(--grey-soft); border:1px solid var(--line); padding:1.1rem 1.2rem; }
-  .stat .n { font-size:2rem; font-weight:700; line-height:1.1; }
-  .stat .k { font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-text); margin-top:0.3rem; }
-
-  .tabs { display:flex; gap:0; border-bottom:1px solid var(--line); margin-top:2.5rem; flex-wrap:wrap; }
-  .tab { background:none; border:0; border-bottom:2px solid transparent; padding:0.8rem 1.1rem;
-         font-family:inherit; font-size:0.95rem; font-weight:600; color:var(--gray-text); cursor:pointer; }
-  .tab[aria-selected="true"] { color:var(--red); border-bottom-color:var(--red); }
-  .tab .count { font-size:0.78rem; background:var(--red); color:#fff; border-radius:999px;
-                padding:0.1rem 0.45rem; margin-left:0.4rem; vertical-align:middle; }
-
-  .rec { border:1px solid var(--line); padding:1.25rem; margin-top:1rem; }
+  .rec { border:1px solid var(--p-line); border-radius:6px; padding:1.25rem; margin-top:1rem; background:var(--p-card); }
   .rec-top { display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; align-items:flex-start; }
   .rec h3 { font-size:1.1rem; margin:0; }
   .rec dl { display:grid; grid-template-columns:auto 1fr; gap:0.35rem 1rem; margin:0.9rem 0 0; font-size:0.9rem; }
-  .rec dt { color:var(--gray-text); }
+  .rec dt { color:var(--p-dim); }
   .rec dd { margin:0; }
-  .rec .btn-row { margin-top:1.1rem; }
-
-  .pill { display:inline-block; font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
-          padding:0.2rem 0.55rem; border:1px solid var(--line); color:var(--gray-text); white-space:nowrap; }
-  .pill.paid { border-color:#1a7f37; color:#1a7f37; }
-  .pill.wait { border-color:#9a6700; color:#9a6700; }
-  .pill.no   { border-color:var(--red); color:var(--red); }
-
-  .toolbar { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-top:1.5rem; }
-  /* No colours here on purpose: the global input rules in style.css already
-     handle both light and dark. Overriding them is what broke dark mode before. */
-  .toolbar input, .toolbar select { padding:0.6rem 0.7rem; font-family:inherit; font-size:0.92rem; }
-
-  dialog.proof { border:1px solid var(--line); background:var(--white); color:var(--black);
-                 padding:0; max-width:min(620px,92vw); }
-  dialog.proof h3 { color:var(--black); }
-  dialog.proof::backdrop { background:rgba(0,0,0,0.6); }
-  dialog.proof .inner { padding:1.5rem; }
-  dialog.proof img { max-width:100%; height:auto; display:block; border:1px solid var(--line); }
-
-  .muted { color:var(--gray-text); }
-  @media (max-width:640px){ .rec dl { grid-template-columns:1fr; gap:0.15rem; } .rec dt { margin-top:0.5rem; } }
-
-  /* ---- dark mode ----------------------------------------------------------
-     Written twice, once for the system preference and once for the manual
-     toggle, exactly as css/style.css does it. The pill colours need their own
-     values: the greens and ambers that pass contrast on white fail on #121212. */
-  @media (prefers-color-scheme: dark){
-    html:not([data-theme="light"]) .stat { background:var(--panel); border-color:var(--line); }
-    html:not([data-theme="light"]) .rec  { border-color:var(--line); }
-    html:not([data-theme="light"]) .pill.paid { border-color:#4ADE80; color:#4ADE80; }
-    html:not([data-theme="light"]) .pill.wait { border-color:#E3B341; color:#E3B341; }
-    html:not([data-theme="light"]) dialog.proof { background:var(--panel); color:var(--text); }
-    html:not([data-theme="light"]) dialog.proof h3 { color:var(--text); }
-  }
-  html[data-theme="dark"] .stat { background:var(--panel); border-color:var(--line); }
-  html[data-theme="dark"] .rec  { border-color:var(--line); }
-  html[data-theme="dark"] .pill.paid { border-color:#4ADE80; color:#4ADE80; }
-  html[data-theme="dark"] .pill.wait { border-color:#E3B341; color:#E3B341; }
-  html[data-theme="dark"] dialog.proof { background:var(--panel); color:var(--text); }
-  html[data-theme="dark"] dialog.proof h3 { color:var(--text); }
+  .rec .btn-row { margin-top:1.1rem; display:flex; gap:0.6rem; flex-wrap:wrap; }
+  .tabs { display:flex; border-bottom:1px solid var(--p-line); margin-top:2.5rem; flex-wrap:wrap; }
+  .tab { background:none; border:0; border-bottom:2px solid transparent; padding:0.8rem 1.1rem;
+         font-family:inherit; font-size:0.95rem; font-weight:600; color:var(--p-dim); cursor:pointer; }
+  .tab[aria-selected="true"] { color:var(--red); border-bottom-color:var(--red); }
+  .tab .count { font-size:0.78rem; background:var(--red); color:#fff; border-radius:999px;
+                padding:0.1rem 0.45rem; margin-left:0.4rem; }
+  dialog.proof { border:1px solid var(--p-line); background:var(--p-card); color:var(--p-ink);
+                 padding:0; max-width:min(620px,92vw); border-radius:8px; }
+  dialog.proof::backdrop { background:rgba(0,0,0,.6); }
+  dialog.proof img { max-width:100%; height:auto; display:block; border:1px solid var(--p-line); }
+  @media (max-width:640px){ .rec dl { grid-template-columns:1fr; } .rec dt { margin-top:0.5rem; } }
 </style>
 </head>
 <body>
@@ -112,76 +79,63 @@
       <h1 class="h-sec">Dues and payments.</h1>
     </div>
 
-    <p id="loading" class="muted" style="margin-top:2rem;">Loading&hellip;</p>
+    <p id="loading" class="p-muted" style="margin-top:2rem;">Loading&hellip;</p>
 
     <div id="denied" hidden class="notice" style="margin-top:2rem;">
-      <p><strong>This page is for the Treasurer and the Executive Committee.</strong></p>
+      <p><strong>This page is for administrators.</strong></p>
       <p style="margin-top:0.5rem;">If you should have access, ask an Executive Committee member to update your role.</p>
       <p style="margin-top:1rem;"><a href="account.html" class="btn btn-outline">Back to your account</a></p>
     </div>
 
     <div id="app" hidden>
-
-      <p class="muted" style="margin-top:0.75rem;">
-        Academic year <strong id="ay-label"></strong>. Confirmed payments appear in the member's own
-        account automatically, including for people who have not created an account yet.
+      <p class="p-muted" style="margin-top:0.75rem;">
+        Academic year <strong id="ay"></strong>. Confirming a payment updates the
+        member's own page immediately and emails them.
       </p>
 
-      <div class="stats" id="stats"></div>
+      <div class="p-tiles" id="tiles"></div>
 
       <div class="tabs" role="tablist">
-        <button class="tab" id="tab-pending" role="tab" aria-selected="true" aria-controls="pane-pending">
-          Awaiting verification<span class="count" id="c-pending" hidden>0</span>
+        <button class="tab" id="tab-wait" role="tab" aria-selected="true" aria-controls="pane-wait">
+          Awaiting verification<span class="count" id="c-wait" hidden>0</span>
         </button>
-        <button class="tab" id="tab-members" role="tab" aria-selected="false" aria-controls="pane-members">
-          Member records
-        </button>
-        <button class="tab" id="tab-done" role="tab" aria-selected="false" aria-controls="pane-done">
-          Processed
+        <button class="tab" id="tab-all" role="tab" aria-selected="false" aria-controls="pane-all">
+          All members
         </button>
       </div>
 
-      <div id="pane-pending" role="tabpanel" aria-labelledby="tab-pending">
-        <div id="pending-list" style="margin-top:1.5rem;"></div>
+      <div id="pane-wait" role="tabpanel" aria-labelledby="tab-wait">
+        <div id="list-wait" style="margin-top:1.5rem;"></div>
       </div>
 
-      <div id="pane-members" role="tabpanel" aria-labelledby="tab-members" hidden>
-        <div class="toolbar">
-          <input type="search" id="member-search" placeholder="Search name or email" aria-label="Search members">
-          <select id="member-filter" aria-label="Filter by status">
+      <div id="pane-all" role="tabpanel" aria-labelledby="tab-all" hidden>
+        <div class="toolbar" style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem;">
+          <input type="search" id="q" placeholder="Search name or email" aria-label="Search">
+          <select id="f" aria-label="Filter by status">
             <option value="">All statuses</option>
+            <option value="pending">Awaiting verification</option>
             <option value="paid">Paid</option>
-            <option value="pending_verification">Awaiting verification</option>
+            <option value="rejected">Not verified</option>
             <option value="unpaid">Not paid</option>
-            <option value="waived">Waived</option>
           </select>
         </div>
-        <div id="members-list" style="margin-top:1.5rem;"></div>
+        <div id="list-all" style="margin-top:1.5rem;"></div>
       </div>
 
-      <div id="pane-done" role="tabpanel" aria-labelledby="tab-done" hidden>
-        <div id="done-list" style="margin-top:1.5rem;"></div>
-      </div>
-
-      <p style="margin-top:3rem;">
-        <a href="account.html" class="btn btn-outline">Back to your account</a>
-      </p>
+      <p style="margin-top:3rem;"><a href="account.html" class="btn btn-outline">Back to your account</a></p>
     </div>
   </div>
 </section>
 
-</main>
-
-<dialog class="proof" id="proof-dlg">
-  <div class="inner">
-    <h3 class="h-sub" style="font-size:1.15rem;" id="proof-title">Payment proof</h3>
-    <div id="proof-body" style="margin-top:1rem;"></div>
-    <p style="margin-top:1.25rem;">
-      <button type="button" class="btn btn-outline" id="proof-close">Close</button>
-    </p>
+<dialog class="proof" id="dlg">
+  <div style="padding:1.5rem;">
+    <h3 class="h-sub" style="font-size:1.15rem;" id="dlg-title">Payment proof</h3>
+    <div id="dlg-body" style="margin-top:1rem;"></div>
+    <p style="margin-top:1.25rem;"><button type="button" class="btn btn-outline" id="dlg-close">Close</button></p>
   </div>
 </dialog>
 
+</main>
 <footer>
   <div class="wrap foot-grid">
     <div>
@@ -212,7 +166,6 @@
     <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015. GOOGLE FOR NONPROFITS CHARITY ID 1658. <a href="about.html#transparency" style="text-decoration:underline;">ORGANISATION DETAILS</a></p>
   </div>
 </footer>
-
 <script>
 (function(){
   var root=document.documentElement, btn=document.getElementById('themeBtn');
@@ -240,334 +193,203 @@
   });
 })();
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
 
-import { sb, requireAuth, getProfile, duesYear,
-         DUES_LABEL, fmtDate, escapeHtml } from "./js/portal.js";
+import { sb, requireAuth, getProfile, isAdmin, duesYear, DUES_LABEL,
+         proofUrl, fmtDate, escapeHtml, say } from "./js/portal.js";
 
 const $ = id => document.getElementById(id);
 const YEAR = duesYear();
 
-/* The database refuses these queries for anyone else regardless of this check.
-   It exists so the page can explain itself instead of showing empty lists. */
+/* The database refuses these queries for anyone else regardless. This check
+   only lets the page explain itself instead of showing empty lists. */
 const session = await requireAuth();
+let rows = [];
+
 if (session) {
   const profile = await getProfile();
-  if (!profile || !["treasurer", "executive"].includes(profile.role)) {
+  if (!isAdmin(profile)) {
     $("loading").hidden = true;
     $("denied").hidden = false;
   } else {
     $("loading").hidden = true;
     $("app").hidden = false;
-    $("ay-label").textContent = YEAR;
-    await refresh();
+    $("ay").textContent = YEAR;
+    await load();
     wireTabs();
   }
 }
 
-let pending = [], processed = [], members = [];
-
-async function refresh() {
-  await Promise.all([loadStats(), loadRegistrations(), loadMembers()]);
-}
-
-async function loadStats() {
-  const { data, error } = await sb.rpc("dues_summary", { ay: YEAR });
-  if (error) { console.error(error); return; }
-  const s = (data && data[0]) || { paid:0, pending:0, unpaid:0, waived:0, total_usd:0 };
-  $("stats").innerHTML = [
-    [s.paid, "Paid"],
-    [s.pending, "Awaiting"],
-    [s.unpaid, "Not paid"],
-    [s.waived, "Waived"],
-    ["$" + Number(s.total_usd || 0).toFixed(0), "Collected"],
-  ].map(([n, k]) => '<div class="stat"><div class="n">' + escapeHtml(n) +
-      '</div><div class="k">' + k + '</div></div>').join("");
-}
-
-async function loadRegistrations() {
-  const { data, error } = await sb
-    .from("registrations")
-    .select("*")
-    .order("created_at", { ascending: false });
-  if (error) { console.error(error); return; }
-  pending   = data.filter(r => !r.payment_verified && !r.rejected);
-  processed = data.filter(r =>  r.payment_verified ||  r.rejected);
-  renderPending();
-  renderProcessed();
-}
-
-async function loadMembers() {
+async function load() {
   const { data, error } = await sb
     .from("memberships")
-    .select("*, profiles(full_name, email, university, academic_year)")
-    .eq("academic_year", YEAR)
+    .select("*, profiles!memberships_profile_id_fkey(full_name, email, university, academic_year, phone)")
     .order("created_at", { ascending: false });
-  if (error) { console.error(error); return; }
-  members = data;
-  renderMembers();
-}
 
-
-/* The Join form asks what people want to DO, not which committee they want to
-   sit on. These render those answers so the board can act on them: who can get
-   to Akkar, who has a car, who can telephone a school. */
-const INTEREST_LABEL = {
-  volunteering: "Volunteering and outreach",
-  public_health: "Public health campaigns",
-  exchange: "Exchange and IVPs",
-  research: "Research",
-  conferences: "Conferences and workshops",
-  fundraising: "Fundraising and sponsorship",
-  content: "Content, design and social media",
-  events: "Events and student life",
-  training: "Training and soft skills",
-};
-
-function interestLine(r) {
-  const list = r.interests || [];
-  if (!list.length) return '<span class="muted">None selected</span>';
-  return list.map(i => escapeHtml(INTEREST_LABEL[i] || i)).join(", ");
-}
-
-/* Renders whatever is in interest_details without knowing its shape, so a
-   future board can add questions to the form and they appear here with no
-   change to this page. */
-function detailBlock(r) {
-  const d = r.interest_details || {};
-  const keys = Object.keys(d);
-  if (!keys.length) return "";
-
-  const rows = keys.map(area => {
-    const answers = d[area] || {};
-    const inner = Object.keys(answers).map(q => {
-      let v = answers[q];
-      if (Array.isArray(v)) v = v.join(", ");
-      if (v === null || v === undefined || v === "") return "";
-      return '<dt>' + escapeHtml(q.replace(/_/g, " ")) + '</dt><dd>' + escapeHtml(v) + '</dd>';
-    }).join("");
-    if (!inner) return "";
-    return '<div style="margin-top:0.9rem;">' +
-      '<p class="muted" style="font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; font-weight:700;">' +
-        escapeHtml(INTEREST_LABEL[area] || area) + '</p>' +
-      '<dl style="margin-top:0.35rem;">' + inner + '</dl></div>';
-  }).join("");
-
-  return rows ? '<div style="border-top:1px solid var(--line); margin-top:1rem; padding-top:0.5rem;">' + rows + '</div>' : "";
-}
-
-function statusPill(status) {
-  const cls = status === "paid" ? "paid"
-            : status === "pending_verification" ? "wait"
-            : status === "waived" ? ""
-            : "no";   // unpaid and rejected both read as a problem
-  return '<span class="pill ' + cls + '">' + escapeHtml(DUES_LABEL[status] || status) + '</span>';
-}
-
-function renderPending() {
-  const el = $("pending-list");
-  const c  = $("c-pending");
-  c.hidden = pending.length === 0;
-  c.textContent = pending.length;
-
-  if (!pending.length) {
-    el.innerHTML = '<p class="muted">Nothing waiting. Every registration has been processed.</p>';
+  if (error) {
+    console.error(error);
+    $("list-wait").innerHTML =
+      '<p class="form-msg error">Could not load memberships: ' + escapeHtml(error.message) + '</p>';
     return;
   }
-
-  el.innerHTML = pending.map(r =>
-    '<div class="rec" data-id="' + r.id + '">' +
-      '<div class="rec-top"><div>' +
-        '<h3>' + escapeHtml(r.full_name) + '</h3>' +
-        '<p class="muted" style="font-size:0.9rem; margin-top:0.2rem;">Submitted ' +
-          escapeHtml(fmtDate(r.created_at)) + '</p>' +
-      '</div><span class="pill wait">Awaiting</span></div>' +
-      '<dl>' +
-        '<dt>Email</dt><dd>' + escapeHtml(r.email) + '</dd>' +
-        '<dt>Phone</dt><dd>' + escapeHtml(r.phone || "") + '</dd>' +
-        '<dt>University</dt><dd>' + escapeHtml(r.university || "") + ' &middot; ' + escapeHtml(r.academic_year || "") + '</dd>' +
-        '<dt>Student ID</dt><dd>' + escapeHtml(r.student_id || "Not given") + '</dd>' +
-        '<dt>Method</dt><dd>' + escapeHtml(r.payment_method) + '</dd>' +
-        '<dt>Interests</dt><dd>' + interestLine(r) + '</dd>' +
-        (r.workforce ? '<dt>Workforce</dt><dd><strong>Wants to be a deputy head</strong>' +
-            (r.workforce_committee ? ', ' + escapeHtml(r.workforce_committee.replace(/_/g, " ")) : '') +
-            (r.workforce_motivation ? '<br><span class="muted">' + escapeHtml(r.workforce_motivation) + '</span>' : '') +
-          '</dd>' : '') +
-      '</dl>' +
-      detailBlock(r) +
-      '<div class="btn-row">' +
-        (r.payment_proof_path
-          ? '<button type="button" class="btn btn-outline" data-act="proof" data-path="' +
-              escapeHtml(r.payment_proof_path) + '" data-name="' + escapeHtml(r.full_name) + '">View proof</button>'
-          : '<span class="muted" style="font-size:0.88rem;">No screenshot, paid in cash</span>') +
-        '<button type="button" class="btn" data-act="approve">Confirm payment</button>' +
-        '<button type="button" class="btn btn-outline" data-act="reject">Cannot verify</button>' +
-      '</div>' +
-      '<p class="form-msg" data-msg role="status" aria-live="polite"></p>' +
-    '</div>').join("");
+  rows = data || [];
+  render();
 }
 
-function renderProcessed() {
-  const el = $("done-list");
-  if (!processed.length) {
-    el.innerHTML = '<p class="muted">Nothing processed yet.</p>';
-    return;
-  }
-  el.innerHTML =
-    '<table class="board board--data"><tbody>' +
-    processed.map(r =>
-      '<tr><td>' + escapeHtml(r.full_name) +
-        '<br><span class="muted" style="font-size:0.85rem;">' + escapeHtml(r.email) + '</span></td>' +
-      '<td>' + escapeHtml(r.payment_method) + '</td>' +
-      '<td>' + (r.rejected ? '<span class="pill no">Not verified</span>'
-                           : '<span class="pill paid">Confirmed</span>') +
-        (r.verified_at ? '<br><span class="muted" style="font-size:0.85rem;">' +
-                          escapeHtml(fmtDate(r.verified_at)) + '</span>' : '') +
-      '</td></tr>').join("") +
-    '</tbody></table>';
+const waiting = () => rows.filter(m =>
+  m.status === "pending" || m.status === "pending_verification");
+
+function render() {
+  const thisYear = rows.filter(m => m.academic_year === YEAR);
+  const n = s => thisYear.filter(m => m.status === s).length;
+  const collected = thisYear
+    .filter(m => m.status === "paid")
+    .reduce((t, m) => t + Number(m.amount_usd || 0), 0);
+
+  $("tiles").innerHTML = [
+    [n("paid"), "Paid"],
+    [waiting().filter(m => m.academic_year === YEAR).length, "Awaiting"],
+    [n("rejected"), "Not verified"],
+    [n("unpaid"), "Not paid"],
+    ["$" + collected.toFixed(0), "Collected"],
+  ].map(([v, k]) =>
+    `<div class="p-tile"><div class="n">${escapeHtml(v)}</div><div class="k">${k}</div></div>`).join("");
+
+  const w = waiting();
+  $("c-wait").hidden = !w.length;
+  $("c-wait").textContent = w.length;
+  $("list-wait").innerHTML = w.length
+    ? w.map(card).join("")
+    : '<p class="p-muted">Nothing waiting. Every payment has been dealt with.</p>';
+
+  renderAll();
 }
 
-function renderMembers() {
-  const el = $("members-list");
-  const q  = ($("member-search").value || "").toLowerCase().trim();
-  const f  = $("member-filter").value;
-
-  const rows = members.filter(m => {
+function renderAll() {
+  const q = ($("q").value || "").toLowerCase().trim();
+  const f = $("f").value;
+  const list = rows.filter(m => {
     if (f && m.status !== f) return false;
     if (!q) return true;
     const p = m.profiles || {};
-    return (p.full_name || "").toLowerCase().includes(q) ||
-           (p.email || "").toLowerCase().includes(q);
+    return (p.full_name || "").toLowerCase().includes(q)
+        || (p.email || "").toLowerCase().includes(q);
   });
+  $("list-all").innerHTML = list.length
+    ? list.map(card).join("")
+    : '<p class="p-muted">Nobody matches.</p>';
+}
 
-  if (!rows.length) {
-    el.innerHTML = '<p class="muted">No membership records match. Records appear here once a payment is confirmed, or once a member signs in.</p>';
-    return;
-  }
+function pill(status) {
+  const cls = status === "paid" ? "ok"
+            : (status === "pending" || status === "pending_verification") ? "wait" : "no";
+  return `<span class="p-pill ${cls}">${escapeHtml(DUES_LABEL[status] || status)}</span>`;
+}
 
-  el.innerHTML = rows.map(m => {
-    const p = m.profiles || {};
-    return '<div class="rec" data-mid="' + m.id + '">' +
-      '<div class="rec-top"><div>' +
-        '<h3>' + escapeHtml(p.full_name || "Name not set") + '</h3>' +
-        '<p class="muted" style="font-size:0.9rem; margin-top:0.2rem;">' +
-          escapeHtml(p.email || "") + (p.university ? ' &middot; ' + escapeHtml(p.university) : '') +
-        '</p>' +
-      '</div>' + statusPill(m.status) + '</div>' +
-      '<dl>' +
-        '<dt>Paid on</dt><dd>' + (m.paid_on ? escapeHtml(fmtDate(m.paid_on)) : '&mdash;') + '</dd>' +
-        '<dt>Method</dt><dd>' + escapeHtml(m.method || "") + '</dd>' +
-        '<dt>Amount</dt><dd>$' + Number(m.amount_usd).toFixed(2) + '</dd>' +
-      '</dl>' +
-      '<div class="btn-row">' +
-        (m.proof_path ? '<button type="button" class="btn btn-outline" data-act="proof" data-path="' +
-            escapeHtml(m.proof_path) + '" data-name="' + escapeHtml(p.full_name || "") + '">View proof</button>' : '') +
-        (m.status !== "paid"   ? '<button type="button" class="btn" data-act="mark" data-to="paid">Mark paid</button>' : '') +
-        (m.status !== "waived" ? '<button type="button" class="btn btn-outline" data-act="mark" data-to="waived">Waive dues</button>' : '') +
-        (m.status === "paid"   ? '<button type="button" class="btn btn-outline" data-act="mark" data-to="unpaid">Undo, mark not paid</button>' : '') +
-      '</div>' +
-      '<p class="form-msg" data-msg role="status" aria-live="polite"></p>' +
-    '</div>';
-  }).join("");
+function card(m) {
+  const p = m.profiles || {};
+  const open = m.status === "pending" || m.status === "pending_verification";
+  return `
+  <div class="rec" data-id="${m.id}">
+    <div class="rec-top">
+      <div>
+        <h3>${escapeHtml(p.full_name || "Name not set")}</h3>
+        <p class="p-muted" style="font-size:0.9rem;margin-top:0.2rem;">
+          ${escapeHtml(p.email || "")}${p.university ? " &middot; " + escapeHtml(p.university) : ""}${p.academic_year ? " &middot; " + escapeHtml(p.academic_year) : ""}
+        </p>
+      </div>
+      ${pill(m.status)}
+    </div>
+    <dl>
+      <dt>Year</dt><dd>${escapeHtml(m.academic_year)}</dd>
+      <dt>Method</dt><dd>${escapeHtml(m.method || "Not given")}</dd>
+      <dt>Amount</dt><dd>$${Number(m.amount_usd || 0).toFixed(2)}</dd>
+      ${m.phone ? "" : ""}
+      ${p.phone ? `<dt>Phone</dt><dd>${escapeHtml(p.phone)}</dd>` : ""}
+      ${m.paid_on ? `<dt>Confirmed</dt><dd>${escapeHtml(fmtDate(m.paid_on))}</dd>` : ""}
+      ${m.notes ? `<dt>Note</dt><dd>${escapeHtml(m.notes)}</dd>` : ""}
+    </dl>
+    <div class="btn-row">
+      ${m.proof_path
+        ? `<button type="button" class="btn btn-outline" data-act="proof" data-path="${escapeHtml(m.proof_path)}" data-name="${escapeHtml(p.full_name || "")}">View proof</button>`
+        : '<span class="p-muted" style="font-size:0.88rem;align-self:center;">No screenshot</span>'}
+      ${m.status !== "paid" ? '<button type="button" class="btn" data-act="approve">Confirm payment</button>' : ""}
+      ${open ? '<button type="button" class="btn btn-outline" data-act="reject">Cannot verify</button>' : ""}
+    </div>
+    <p class="form-msg" data-msg role="status" aria-live="polite"></p>
+  </div>`;
 }
 
 document.addEventListener("click", async (e) => {
   const btn = e.target.closest("[data-act]");
   if (!btn) return;
+  const act = btn.dataset.act;
 
-  const card = btn.closest(".rec");
-  const msg  = card ? card.querySelector("[data-msg]") : null;
-  const act  = btn.dataset.act;
+  if (act === "proof") return showProof(btn.dataset.path, btn.dataset.name);
 
-  if (act === "proof") { showProof(btn.dataset.path, btn.dataset.name); return; }
-
-  const setMsg = (t, kind) => { if (msg) { msg.textContent = t; msg.className = "form-msg " + (kind || ""); } };
-  const buttons = card ? card.querySelectorAll("button") : [];
+  const rec = btn.closest(".rec");
+  const msg = rec.querySelector("[data-msg]");
+  const buttons = rec.querySelectorAll("button");
   buttons.forEach(b => b.disabled = true);
 
   try {
     if (act === "approve") {
-      setMsg("Confirming…");
-      const { data, error } = await sb.rpc("approve_registration", { reg_id: card.dataset.id });
+      say(msg, "Confirming\u2026");
+      const { error } = await sb.rpc("approve_membership", { membership_id: rec.dataset.id });
       if (error) throw error;
-      setMsg(data === "linked"
-        ? "Confirmed. It now shows in their account."
-        : "Confirmed. They have not created an account yet, so it will appear the first time they sign in.",
-        "success");
-      await refresh();
-    }
-
-    if (act === "reject") {
-      const reason = prompt("Why can this payment not be verified?\nThe member does not see this, it is for your records.");
+      say(msg, "Confirmed. Their account is updated.", "success");
+    } else {
+      const reason = prompt(
+        "What should the member be told?\nLeave blank to send the standard message asking for a clearer screenshot.");
       if (reason === null) { buttons.forEach(b => b.disabled = false); return; }
-      setMsg("Saving…");
-      const { error } = await sb.rpc("reject_registration", { reg_id: card.dataset.id, reason: reason });
+      say(msg, "Saving\u2026");
+      const { error } = await sb.rpc("reject_membership", {
+        membership_id: rec.dataset.id,
+        member_message: reason.trim() || null,
+      });
       if (error) throw error;
-      setMsg("Marked as not verified.", "success");
-      await refresh();
+      say(msg, "Recorded. They have been told what to send.", "success");
     }
-
-    if (act === "mark") {
-      const to = btn.dataset.to;
-      const uid = (await sb.auth.getUser()).data.user.id;
-      const patch = { status: to, verified_at: new Date().toISOString(), verified_by: uid };
-      if (to === "paid")   patch.paid_on = new Date().toISOString().slice(0, 10);
-      if (to === "unpaid") { patch.paid_on = null; patch.verified_at = null; patch.verified_by = null; }
-      setMsg("Saving…");
-      const { error } = await sb.from("memberships").update(patch).eq("id", card.dataset.mid);
-      if (error) throw error;
-      setMsg("Updated.", "success");
-      await refresh();
-    }
+    await load();
   } catch (err) {
     console.error(err);
-    setMsg("Could not save: " + (err.message || "unknown error"), "error");
+    say(msg, "Could not save: " + (err.message || "unknown error"), "error");
     buttons.forEach(b => b.disabled = false);
   }
 });
 
-/* Signed URLs expire after five minutes, so a screenshot cannot be shared
-   onward by copying the link out of the page. */
+/* Signed links expire after five minutes, so a receipt cannot be shared onward
+   by copying the URL out of the page. */
 async function showProof(path, name) {
-  const dlg  = $("proof-dlg");
-  const body = $("proof-body");
-  $("proof-title").textContent = name ? "Payment proof, " + name : "Payment proof";
-  body.innerHTML = '<p class="muted">Loading…</p>';
-  dlg.showModal();
-
-  const { data, error } = await sb.storage.from("payment-proofs").createSignedUrl(path, 300);
-
-  if (error || !data) {
-    body.innerHTML = '<p class="form-msg error">Could not load the screenshot: ' +
-                     escapeHtml(error ? error.message : "not found") + '</p>';
+  $("dlg-title").textContent = name ? "Payment proof, " + name : "Payment proof";
+  $("dlg-body").innerHTML = '<p class="p-muted">Loading\u2026</p>';
+  $("dlg").showModal();
+  const url = await proofUrl(path);
+  if (!url) {
+    $("dlg-body").innerHTML = '<p class="form-msg error">Could not load that file.</p>';
     return;
   }
-  body.innerHTML = /\.pdf$/i.test(path)
-    ? '<p><a href="' + data.signedUrl + '" target="_blank" rel="noopener" class="btn">Open PDF</a></p>'
-    : '<img src="' + data.signedUrl + '" alt="Payment screenshot">';
+  $("dlg-body").innerHTML = /\.pdf$/i.test(path)
+    ? `<p><a href="${url}" target="_blank" rel="noopener" class="btn">Open PDF</a></p>`
+    : `<img src="${url}" alt="Payment screenshot">`;
 }
+$("dlg-close").addEventListener("click", () => $("dlg").close());
 
-$("proof-close").addEventListener("click", () => $("proof-dlg").close());
+$("q").addEventListener("input", renderAll);
+$("f").addEventListener("change", renderAll);
 
 function wireTabs() {
-  const map = {
-    "tab-pending": "pane-pending",
-    "tab-members": "pane-members",
-    "tab-done":    "pane-done"
-  };
-  Object.keys(map).forEach(tabId => {
-    $(tabId).addEventListener("click", () => {
-      Object.keys(map).forEach(t => {
-        const on = t === tabId;
-        $(t).setAttribute("aria-selected", String(on));
-        $(map[t]).hidden = !on;
+  const map = { "tab-wait": "pane-wait", "tab-all": "pane-all" };
+  Object.keys(map).forEach(t => {
+    $(t).addEventListener("click", () => {
+      Object.keys(map).forEach(k => {
+        const on = k === t;
+        $(k).setAttribute("aria-selected", String(on));
+        $(map[k]).hidden = !on;
       });
     });
   });
-  $("member-search").addEventListener("input", renderMembers);
-  $("member-filter").addEventListener("change", renderMembers);
 }
 
 </script>

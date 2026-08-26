@@ -117,8 +117,8 @@
           <option value="">All roles</option>
           <option value="member">Members</option>
           <option value="committee_head">Committee heads</option>
-          <option value="treasurer">Treasurer</option>
-          <option value="executive">Executive</option>
+          <option value="admin">Administrator</option>
+          <option value="super_admin">Executive Committee</option>
         </select>
         <select id="uni-filter" aria-label="Filter by university">
           <option value="">All universities</option>
@@ -203,7 +203,7 @@ let me = null, people = [], committees = [];
 
 if (session) {
   me = await getProfile();
-  if (!me || me.role !== "executive") {
+  if (!me || me.role !== "super_admin") {
     $("loading").hidden = true;
     $("denied").hidden = false;
   } else {
@@ -230,14 +230,14 @@ function render() {
   const rf = $("role-filter").value;
   const uf = $("uni-filter").value;
 
-  const counts = { member: 0, committee_head: 0, treasurer: 0, executive: 0 };
+  const counts = { member: 0, committee_head: 0, admin: 0, super_admin: 0 };
   people.forEach(p => { if (counts[p.role] !== undefined) counts[p.role]++; });
 
   $("stats").innerHTML = [
     [people.length, "Accounts"],
     [counts.member, "Members"],
     [counts.committee_head, "Heads"],
-    [counts.executive + counts.treasurer, "Executive"],
+    [counts.admin + counts.super_admin, "Admins"],
   ].map(([n, k]) => '<div class="stat"><div class="n">' + n + '</div><div class="k">' + k + '</div></div>').join("");
 
   const rows = people.filter(p => {
@@ -263,7 +263,7 @@ function render() {
       '</dl>' +
       '<div class="toolbar" style="margin-top:1rem;">' +
         '<select data-field="role" aria-label="Role">' +
-          ["member","committee_head","treasurer","executive"].map(r =>
+          ["member","committee_head","admin","super_admin"].map(r =>
             '<option value="' + r + '"' + (p.role === r ? " selected" : "") + '>' +
             escapeHtml(ROLE_LABEL[r]) + '</option>').join("") +
         '</select>' +
@@ -302,11 +302,11 @@ document.addEventListener("click", async (e) => {
 
   /* Removing your own executive role locks you out of this page, and if you are
      the only executive it locks everyone out permanently. */
-  if (id === me.id && role !== "executive") {
-    const others = people.filter(p => p.role === "executive" && p.id !== me.id).length;
+  if (id === me.id && role !== "super_admin") {
+    const others = people.filter(p => p.role === "super_admin" && p.id !== me.id).length;
     const warning = others
-      ? "This removes your own executive access. You will not be able to open this page again. Continue?"
-      : "You are the only executive. Removing your own role will leave nobody able to assign roles, and it cannot be undone from the website. Continue?";
+      ? "This removes your own super admin access. You will not be able to open this page again. Continue?"
+      : "You are the only super admin. Removing your own role will leave nobody able to assign roles, and it cannot be undone from the website. Continue?";
     if (!confirm(warning)) return;
   }
 

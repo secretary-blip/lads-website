@@ -77,6 +77,11 @@
       <div class="p-tiles" id="tiles"></div>
 
       <div class="p-actions">
+        <a class="p-action" href="pay.html">
+          <h3>Membership</h3>
+          <p>Pay your dues, or check where your payment has got to.</p>
+          <span class="arrow">Open &rarr;</span>
+        </a>
         <a class="p-action" href="events.html">
           <h3>Events</h3>
           <p>See what is coming up and register.</p>
@@ -86,6 +91,11 @@
           <h3>Apply</h3>
           <p>Exchanges, research programmes and voluntary projects.</p>
           <span class="arrow">Start an application &rarr;</span>
+        </a>
+        <a class="p-action" href="interests.html">
+          <h3>Your interests</h3>
+          <p>Tell us what you would like to be involved in.</p>
+          <span class="arrow">Update &rarr;</span>
         </a>
         <a class="p-action" href="propose.html">
           <h3>Propose a project</h3>
@@ -253,7 +263,7 @@
 <script type="module">
 
 import { sb, requireAuth, getProfile, getMemberships, signOut,
-         duesYear, DUES_LABEL, ROLE_LABEL, isStaff, updatePassword,
+         duesYear, DUES_LABEL, ROLE_LABEL, isStaff, isAdmin, updatePassword,
          passwordProblem, authMessage, fmtDate, escapeHtml, say } from "./js/portal.js";
 
 const $ = id => document.getElementById(id);
@@ -296,15 +306,20 @@ function render(profile, memberships) {
       ? `Paid on ${fmtDate(current.paid_on)}. Your membership runs to the end of the ${year} academic year and renews on ${renews}.`
       : `Your membership runs to the end of the ${year} academic year and renews on ${renews}.`;
     action.innerHTML = '<a href="events.html" class="btn">See upcoming events</a>';
-  } else if (status === "pending_verification") {
+  } else if (status === "pending" || status === "pending_verification") {
     card.classList.add("is-wait");
     detail.textContent =
-      "We have your payment and the Treasurer is checking it. You will get an email as soon as it is confirmed, usually within a few days.";
-    action.innerHTML = "";
+      "We have your payment and the Treasurer is checking it against the transfer records. You will get an email as soon as it is confirmed.";
+    action.innerHTML = '<a href="pay.html" class="btn btn-outline">View or resend</a>';
   } else if (status === "waived") {
     card.classList.add("is-paid");
     detail.textContent = `Your dues for ${year} have been waived. You have full member access.`;
     action.innerHTML = '<a href="events.html" class="btn">See upcoming events</a>';
+  } else if (status === "rejected") {
+    card.style.borderLeftColor = "var(--red)";
+    detail.textContent = current.notes ||
+      "We could not match your payment to our records. Send a clearer screenshot showing the date and reference.";
+    action.innerHTML = '<a href="pay.html" class="btn">Send a new screenshot</a>';
   } else if (current && current.notes) {
     /* Not paid, and the Treasurer left an explanation. Almost always a payment
        that could not be matched to the transfer records. Show them what to do
@@ -312,12 +327,11 @@ function render(profile, memberships) {
     card.style.borderLeftColor = "var(--red)";
     detail.textContent = current.notes;
     action.innerHTML =
-      '<a href="mailto:info@ladslb.org?subject=Payment%20verification" class="btn">Send us your receipt</a>' +
-      '<a href="join.html" class="btn btn-outline">Register again</a>';
+      '<a href="pay.html" class="btn">Send a new screenshot</a>';
   } else {
     detail.textContent =
-      `Membership is 10 USD for the ${year} academic year. Register and pay, and this page updates as soon as the Treasurer confirms it.`;
-    action.innerHTML = '<a href="join.html" class="btn">Register and pay</a>';
+      `Membership is 10 USD for the ${year} academic year. Pay through whish and upload your receipt, and this page updates as soon as the Treasurer confirms it.`;
+    action.innerHTML = '<a href="pay.html" class="btn">Pay your dues</a>';
   }
 
   /* --- profile ---------------------------------------------------------- */
@@ -371,13 +385,12 @@ function render(profile, memberships) {
     $("staff-tools").hidden = false;
     $("role-note").textContent = "Signed in as " + (ROLE_LABEL[profile.role] || profile.role);
     const tools = [];
-    if (["treasurer","executive"].includes(profile.role))
+    if (isAdmin(profile))
       tools.push(["Dues and payments", "Verify member payments and see who has paid.", "admin-dues.html", "Open"]);
-    if (profile.role === "executive")
+    if (profile.role === "super_admin")
       tools.push(["Members and roles", "View every member and assign board roles.", "admin-members.html", "Open"]);
     tools.push(["Events", "Create, publish and take attendance.", "admin-events.html", "Open"]);
-    if (["committee_head","executive"].includes(profile.role))
-      tools.push(["Review", "Applications and project ideas waiting on you.", "admin-review.html", "Open"]);
+    tools.push(["Review", "Committee applications and project ideas waiting on you.", "admin-review.html", "Open"]);
     $("tool-links").innerHTML = tools.map(([t,d,h,a]) =>
       `<a class="p-action" href="${h}"><h3>${t}</h3><p>${d}</p><span class="arrow">${a} &rarr;</span></a>`).join("");
   }

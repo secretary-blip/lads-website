@@ -101,9 +101,10 @@
     </div>
 
     <p class="muted" style="margin-top:0.75rem; max-width:60ch;">
-      Apply for the IADS Dental Research Programme, International Voluntary
-      Projects, or a student exchange. Your application goes to the relevant
-      committee head, and you can follow its progress here.
+      Apply to join a committee, or to join the workforce as a deputy head. Your
+      application goes to that committee's head and to the Executive Committee,
+      and you can follow its progress here. There is no limit on how many people
+      may apply.
     </p>
 
     <p id="loading" class="muted" style="margin-top:2rem;">Loading&hellip;</p>
@@ -130,20 +131,19 @@
               <label for="kind">What are you applying for?</label>
               <select id="kind" required>
                 <option value="">Select&hellip;</option>
-                <option value="IDRP">IDRP, research programme</option>
-                <option value="IVP">IVP, international voluntary project</option>
-                <option value="exchange">Student exchange</option>
-                <option value="other">Something else</option>
+                <option value="committee">Join a committee</option>
+                <option value="workforce">Join the workforce as a deputy head</option>
               </select>
             </div>
             <div class="form-field">
               <label for="cycle">Which cycle or period?</label>
-              <input type="text" id="cycle" placeholder="Summer 2027" required>
-              <span class="hint">For example: Summer 2027, or 2026/2027.</span>
+              <input type="text" id="cycle" placeholder="2026/2027" required>
+              <span class="hint">Usually the current academic year, 2026/2027.</span>
             </div>
-            <div class="form-field" id="committee-wrap" hidden>
-              <label for="committee">Committee</label>
-              <select id="committee"><option value="">Select&hellip;</option></select>
+            <div class="form-field">
+              <label for="committee">Which committee?</label>
+              <select id="committee" required><option value="">Select&hellip;</option></select>
+              <span class="hint">Being accepted assigns you to this committee.</span>
             </div>
             <div class="form-field">
               <label for="motivation">Why do you want this place?</label>
@@ -253,7 +253,7 @@ const $ = id => document.getElementById(id);
 
 /* Which committee each kind is routed to. Kept here rather than asked of the
    member, because they should not need to know how LADS is organised to apply. */
-const ROUTE = { IDRP: "scientific", IVP: "voluntary", exchange: "exchange" };
+/* Committee is chosen by the applicant now, so there is nothing to route. */
 
 const session = await requireAuth();
 let committees = [];
@@ -273,9 +273,7 @@ if (session) {
   $("app").hidden = false;
 }
 
-$("kind").addEventListener("change", () => {
-  $("committee-wrap").hidden = $("kind").value !== "other";
-});
+
 
 async function loadMine() {
   const { data, error } = await sb.from("applications")
@@ -318,7 +316,8 @@ $("form").addEventListener("submit", async (e) => {
   if ($("motivation").value.trim().length < 40)
     return say(msg, "Please write a little more about why you want this place.", "error");
 
-  const committee = kind === "other" ? ($("committee").value || null) : ROUTE[kind];
+  const committee = $("committee").value || null;
+  if (!committee) return say(msg, "Please choose a committee.", "error");
 
   btn.disabled = true;
   say(msg, "Submitting\u2026");
@@ -337,7 +336,6 @@ $("form").addEventListener("submit", async (e) => {
 
   say(msg, "Submitted. You can follow its progress below.", "success");
   $("form").reset();
-  $("committee-wrap").hidden = true;
   await loadMine();
 });
 
