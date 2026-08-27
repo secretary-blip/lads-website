@@ -232,6 +232,11 @@ drop function if exists public.approve_registration(uuid, text) cascade;
 drop function if exists public.reject_registration(uuid, text) cascade;
 drop function if exists public.interest_counts() cascade;
 
+-- dues_summary counted 'pending_verification' and 'waived', which nothing writes
+-- any more, so it would quietly report wrong totals. The dues page now computes
+-- its own figures from the memberships it already loaded.
+drop function if exists public.dues_summary(text) cascade;
+
 do $$
 begin
   if exists (select 1 from pg_tables

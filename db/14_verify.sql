@@ -145,13 +145,16 @@ begin
   end if;
 
   -- ---- migrated data ------------------------------------------------------
-  select count(*) into n from public.memberships;
-  select count(*) into m from public.profiles;
+  select count(*) into n from public.memberships mm;
+  select count(*) into m from public.profiles pp;
   return query select 'MIG','data', 'PASS',
     m || ' profiles, ' || n || ' memberships';
 
-  select count(*) into n from public.memberships
-   where status::text in ('pending_verification','waived');
+  -- Aliased. `status` and `id` are also names of this function's output
+  -- columns, which makes them plpgsql variables inside the body, and an
+  -- unqualified reference resolves to the variable rather than the column.
+  select count(*) into n from public.memberships m
+   where m.status::text in ('pending_verification','waived');
   if n > 0 then
     return query select 'MIG','old statuses remaining','WARN',
       n || ' membership(s) still on a retired status';
@@ -159,7 +162,8 @@ begin
     return query select 'MIG','old statuses remaining','PASS','None';
   end if;
 
-  select count(*) into n from public.profiles where role::text in ('executive','treasurer');
+  select count(*) into n from public.profiles pr
+   where pr.role::text in ('executive','treasurer');
   if n > 0 then
     return query select 'MIG','old roles remaining','WARN',
       n || ' profile(s) still on a retired role';
@@ -167,8 +171,8 @@ begin
     return query select 'MIG','old roles remaining','PASS','None';
   end if;
 
-  for txt in select role::text || ' x ' || count(*)::text
-               from public.profiles group by role loop
+  for txt in select pr.role::text || ' x ' || count(*)::text
+               from public.profiles pr group by pr.role loop
     return query select 'ROLES', txt, 'INFO', '';
   end loop;
 
@@ -184,7 +188,8 @@ begin
   select count(*) into n from pg_policies where schemaname='public';
   return query select '22,23','policies','PASS', n || ' policies across public tables';
 
-  if exists (select 1 from storage.buckets where id='payment-proofs' and public=false) then
+  if exists (select 1 from storage.buckets b
+              where b.id = 'payment-proofs' and b.public = false) then
     return query select '23','payment-proofs private','PASS','Not publicly readable';
   else
     return query select '23','payment-proofs private','FAIL','Bucket is public or missing';
