@@ -230,7 +230,12 @@ async function load() {
   render();
 }
 
-const regFor = id => myRegs.find(r => r.event_id === id && !r.cancelled);
+/* Declared as a function, not a const arrow. It is called from render()
+   during the top-level await above, before a const on this line would be
+   initialised. */
+function regFor(id) {
+  return myRegs.find(r => r.event_id === id && !r.cancelled);
+}
 
 function when(e) {
   const d = new Date(e.starts_at);

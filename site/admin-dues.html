@@ -273,8 +273,12 @@ async function load() {
   render();
 }
 
-const waiting = () => rows.filter(m =>
-  m.status === "pending" || m.status === "pending_verification");
+/* A function declaration, not `const waiting = () => ...`. This is called
+   from render(), which runs during the top-level await above, and a const is
+   still in its temporal dead zone at that point. */
+function waiting() {
+  return rows.filter(m => m.status === "pending" || m.status === "pending_verification");
+}
 
 function render() {
   const thisYear = rows.filter(m => m.academic_year === YEAR);

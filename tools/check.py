@@ -120,6 +120,34 @@ def check_public_surface():
 for fn in (check_js, check_imports, check_links, check_secrets, check_public_surface):
     fn()
 
+
+# --- 6. const arrow helpers used before they exist --------------------------
+# `function f(){}` hoists. `const f = () => {}` does not: until that line runs,
+# touching f throws "Cannot access 'f' before initialization". These pages use
+# top-level await, so a lot of code runs before the bottom of the file is
+# reached, and the failure looks like a blank page rather than an error.
+def check_tdz():
+    for f in sorted(glob.glob(os.path.join(SITE, "*.html"))):
+        html = open(f, encoding="utf-8").read()
+        m = re.search(r'<script type="module">(.*?)</script>', html, re.S)
+        if not m:
+            continue
+        js = m.group(1)
+        awaits = [x.start() for x in re.finditer(r"\bawait\b", js)]
+        if not awaits:
+            continue
+        last_await = max(awaits)
+        for d in re.finditer(r"^const (\w+)\s*=\s*(?:\([^)]*\)|\w+)\s*=>", js, re.M):
+            name = d.group(1)
+            if d.start() > last_await and re.search(r"\b" + name + r"\s*\(", js[:last_await]):
+                problems.append(
+                    f"{rel(f)}: '{name}' is a const arrow declared after top-level await, "
+                    "but is called before it. Use a function declaration.")
+
+
+check_tdz()
+
+
 print(f"Checked {checked['pages']} pages, {checked['modules']} scripts, {checked['links']} links.")
 if problems:
     print(f"\n{len(problems)} problem(s):\n")
