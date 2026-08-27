@@ -249,7 +249,7 @@ export async function submitPayment({ academicYear, method, file }) {
   const row = {
     profile_id: session.user.id,
     academic_year: academicYear,
-    status: file ? "pending" : "unpaid",
+    status: "pending",
     method: method || null,
     proof_path: proofPath,
   };
