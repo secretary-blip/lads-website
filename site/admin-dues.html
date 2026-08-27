@@ -87,6 +87,15 @@
       <p style="margin-top:1rem;"><a href="account.html" class="btn btn-outline">Back to your account</a></p>
     </div>
 
+    <div id="oops" hidden class="notice" style="margin-top:2rem;">
+      <h3>Something went wrong loading this page</h3>
+      <p id="oops-msg" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+         font-size:0.85rem; white-space:pre-wrap; word-break:break-word;"></p>
+      <p style="margin-top:0.75rem; font-size:0.9rem;">
+        Screenshot this and send it on. It says exactly what the database refused.
+      </p>
+    </div>
+
     <div id="app" hidden>
       <p class="p-muted" style="margin-top:0.75rem;">
         Academic year <strong id="ay"></strong>. Confirming a payment updates the
@@ -202,6 +211,23 @@ import { sb, requireAuth, getProfile, isAdmin, duesYear, DUES_LABEL,
 const $ = id => document.getElementById(id);
 const YEAR = duesYear();
 
+/* A blank page tells you nothing and costs a round trip to diagnose. Anything
+   that goes wrong here gets printed on the page instead, in full, including the
+   fields Supabase puts in `details` and `hint` that never reach `message`. */
+function showOops(err) {
+  console.error(err);
+  const parts = [
+    err && err.message ? "message: " + err.message : String(err),
+    err && err.code    ? "code: "    + err.code    : "",
+    err && err.details ? "details: " + err.details : "",
+    err && err.hint    ? "hint: "    + err.hint    : "",
+  ].filter(Boolean);
+  $("oops-msg").textContent = parts.join("\n");
+  $("oops").hidden = false;
+  $("app").hidden = true;
+  $("loading").hidden = true;
+}
+
 /* The database refuses these queries for anyone else regardless. This check
    only lets the page explain itself instead of showing empty lists. */
 const session = await requireAuth();
@@ -216,8 +242,12 @@ if (session) {
     $("loading").hidden = true;
     $("app").hidden = false;
     $("ay").textContent = YEAR;
-    await load();
-    wireTabs();
+    try {
+      await load();
+      wireTabs();
+    } catch (err) {
+      showOops(err);
+    }
   }
 }
 
@@ -235,12 +265,7 @@ async function load() {
   ]);
 
   if (mRes.error || pRes.error) {
-    const err = mRes.error || pRes.error;
-    console.error(err);
-    $("list-wait").innerHTML =
-      '<p class="form-msg error">Could not load: ' + escapeHtml(err.message) + '</p>';
-    $("app").hidden = false;
-    return;
+    throw mRes.error || pRes.error;
   }
 
   const people = new Map((pRes.data || []).map(p => [p.id, p]));
