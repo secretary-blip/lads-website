@@ -222,18 +222,29 @@ if (session) {
 }
 
 async function load() {
-  const { data, error } = await sb
-    .from("memberships")
-    .select("*, profiles!memberships_profile_id_fkey(full_name, email, university, academic_year, phone)")
-    .order("created_at", { ascending: false });
+  /* Two separate reads, joined here.
+     `memberships` has two foreign keys to `profiles`, profile_id and
+     verified_by, so PostgREST cannot work out which one to embed and needs the
+     constraint name spelled out. Depending on a constraint name is fragile: it
+     is generated, it is invisible from the page, and if it ever differs the
+     query fails with an error that says nothing useful. Two plain reads and a
+     Map cannot break that way. */
+  const [mRes, pRes] = await Promise.all([
+    sb.from("memberships").select("*").order("created_at", { ascending: false }),
+    sb.from("profiles").select("id, full_name, email, university, academic_year, phone"),
+  ]);
 
-  if (error) {
-    console.error(error);
+  if (mRes.error || pRes.error) {
+    const err = mRes.error || pRes.error;
+    console.error(err);
     $("list-wait").innerHTML =
-      '<p class="form-msg error">Could not load memberships: ' + escapeHtml(error.message) + '</p>';
+      '<p class="form-msg error">Could not load: ' + escapeHtml(err.message) + '</p>';
+    $("app").hidden = false;
     return;
   }
-  rows = data || [];
+
+  const people = new Map((pRes.data || []).map(p => [p.id, p]));
+  rows = (mRes.data || []).map(m => ({ ...m, profiles: people.get(m.profile_id) || {} }));
   render();
 }
 
