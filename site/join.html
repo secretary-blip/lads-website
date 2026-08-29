@@ -99,10 +99,10 @@
       </div>
     </div>
 
-    <p style="margin-top:2rem;">
+    <div class="btn-row">
       <a href="signup.html" class="btn">Create your account</a>
-      <a href="login.html" class="btn btn-outline" style="margin-left:0.5rem;">Sign in</a>
-    </p>
+      <a href="login.html" class="btn btn-outline">Sign in</a>
+    </div>
   </div>
 </section>
 
@@ -135,5 +135,65 @@
   </div>
 </section>
 
+</main>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <img src="assets/lads_logo.png" alt="LADS">
+      <h4>LADS</h4>
+      <p>Lebanese Association of Dental Students<br>Faculty of Dentistry, Beirut Arab University<br>Tarik El Jadida, Riad El Solh 11072809<br>Beirut, Lebanon</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="join.html">Membership</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/lebaneseassociationofdentalstudents" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.linkedin.com/company/lebanese-association-of-dental-students" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:info@ladslb.org">info@ladslb.org</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015. GOOGLE FOR NONPROFITS CHARITY ID 1658. <a href="about.html#transparency" style="text-decoration:underline;">ORGANISATION DETAILS</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  if(!btn) return;
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function current(){
+    var set = root.getAttribute('data-theme');
+    if(set) return set;
+    return mq.matches ? 'dark' : 'light';
+  }
+  function paint(){
+    var dark = current()==='dark';
+    btn.querySelector('.moon').style.display = dark ? 'none' : 'block';
+    btn.querySelector('.sun').style.display  = dark ? 'block' : 'none';
+  }
+  var saved=null; try{saved=localStorage.getItem('lads-theme');}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  paint();
+  mq.addEventListener && mq.addEventListener('change', paint);
+  btn.addEventListener('click', function(){
+    var next = current()==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{localStorage.setItem('lads-theme', next);}catch(e){}
+    paint();
+  });
+})();
+</script>
 </body>
 </html>

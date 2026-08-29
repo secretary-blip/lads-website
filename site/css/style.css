@@ -600,7 +600,9 @@ footer li{margin-bottom:0.55rem;}
   }
 
   /* ---------- join page notice ---------- */
-  .notice-wrap{padding-top:clamp(1.5rem,4vw,2.5rem);}
+  /* The section that follows already supplies the gap. Keeping the default
+   section padding-bottom here stacked two full gaps and left a dead band. */
+.notice-wrap{padding-block:clamp(1.5rem,4vw,2.5rem) 0;}
   .notice{
     border:1px solid var(--red);border-left:6px solid var(--red);
     background:var(--grey-soft);padding:clamp(1.15rem,3vw,1.6rem);border-radius:2px;
@@ -772,7 +774,9 @@ html[data-theme="dark"] .nav-toggle:hover{border-color:var(--red);color:var(--re
 }
 
 /* ---------- join page notice ---------- */
-.notice-wrap{padding-top:clamp(1.5rem,4vw,2.5rem);}
+/* The section that follows already supplies the gap. Keeping the default
+   section padding-bottom here stacked two full gaps and left a dead band. */
+.notice-wrap{padding-block:clamp(1.5rem,4vw,2.5rem) 0;}
 .notice{
   border:1px solid var(--red);border-left:6px solid var(--red);
   background:var(--grey-soft);padding:clamp(1.15rem,3vw,1.6rem);border-radius:2px;
