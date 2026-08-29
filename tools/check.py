@@ -102,6 +102,43 @@ def check_secrets():
                 problems.append(f"{rel(f)}: looks like it contains {label}. Remove it before pushing.")
 
 
+# --- 6. Every page carries the shared chrome --------------------------------
+# join.html once shipped without its </main>, its whole footer, and the theme
+# script. Every other page had all three. Nothing here caught it: links and
+# scripts were valid, so the page passed while ending in a void and leaving the
+# theme toggle dead on that page only. Structure is not visible to a link check,
+# so check it directly.
+CHROME = [
+    (r"<header[\s>]",          "a <header>"),
+    (r"<main[\s>]",            "an opening <main>"),
+    (r"</main>",               "its closing </main>"),
+    (r"<footer[\s>]",          "a <footer>"),
+    (r"</footer>",             "its closing </footer>"),
+]
+
+
+def check_page_chrome():
+    for f in sorted(glob.glob(os.path.join(SITE, "*.html"))):
+        html = open(f, encoding="utf-8").read()
+        for pattern, label in CHROME:
+            n = len(re.findall(pattern, html))
+            if n == 0:
+                problems.append(f"{rel(f)}: is missing {label}. "
+                                "Copy the block from index.html so the page matches the others.")
+            elif n > 1 and label != "a <footer>":
+                problems.append(f"{rel(f)}: has {n} of {label}, expected one.")
+
+        # The toggle button and the code that drives it have to travel together.
+        has_button = 'id="themeBtn"' in html
+        has_script = "getElementById('themeBtn')" in html or 'getElementById("themeBtn")' in html
+        if has_button and not has_script:
+            problems.append(f"{rel(f)}: has the theme toggle button but not the script that "
+                            "runs it, so the button does nothing on this page. "
+                            "Copy the <script> from the bottom of index.html.")
+        if has_script and not has_button:
+            problems.append(f"{rel(f)}: has the theme script but no #themeBtn for it to bind to.")
+
+
 # --- 5. Nothing in site/ that should not be served --------------------------
 def check_public_surface():
     for f in glob.glob(os.path.join(SITE, "*.sql")):
@@ -117,11 +154,12 @@ def check_public_surface():
         problems.append("site/robots.txt is missing")
 
 
-for fn in (check_js, check_imports, check_links, check_secrets, check_public_surface):
+for fn in (check_js, check_imports, check_links, check_secrets,
+           check_public_surface, check_page_chrome):
     fn()
 
 
-# --- 6. const arrow helpers used before they exist --------------------------
+# --- 7. const arrow helpers used before they exist --------------------------
 # `function f(){}` hoists. `const f = () => {}` does not: until that line runs,
 # touching f throws "Cannot access 'f' before initialization". These pages use
 # top-level await, so a lot of code runs before the bottom of the file is
