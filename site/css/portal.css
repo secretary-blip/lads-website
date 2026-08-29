@@ -36,8 +36,15 @@ html[data-theme="dark"]{
   --p-shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.9);
 }
 
+/* --- portal reveal ------------------------------------------------------
+   #app / #dash start [hidden]; removing it restarts this animation, so the
+   dashboard fades in instead of snapping from the loading state. */
+@keyframes lads-reveal{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+#app,#dash{animation:lads-reveal .2s ease-out;}
+
 /* --- status banner ------------------------------------------------------ */
 .p-status{
+  transition:border-left-color .25s ease-out;
   border:1px solid var(--p-line); border-left:6px solid var(--red);
   background:var(--p-card); box-shadow:var(--p-shadow);
   border-radius:6px; padding:clamp(1.4rem,3.5vw,2rem);

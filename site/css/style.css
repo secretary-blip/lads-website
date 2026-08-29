@@ -84,8 +84,9 @@ section{padding-block:var(--sec);}
   font-family:var(--f);font-size:1rem;font-weight:700;letter-spacing:0.01em;
   background:var(--red);color:var(--white);border:2px solid var(--red);
   border-radius:2px;cursor:pointer;text-decoration:none;
-  transition:background .15s ease,color .15s ease,border-color .15s ease;
+  transition:background .15s ease,color .15s ease,border-color .15s ease,transform .12s ease-out;
 }
+.btn:active{transform:scale(.98);}
 .btn:hover{background:var(--red-dark);border-color:var(--red-dark);color:var(--white);text-decoration:none;}
 .btn-outline{background:transparent;color:var(--black);border-color:var(--black);}
 .btn-outline:hover{background:var(--black);border-color:var(--black);color:var(--white);}
@@ -112,12 +113,14 @@ header{
   font-size:1.35rem;line-height:1;color:var(--black);cursor:pointer;
 }
 nav{
-  order:4;display:none;position:absolute;top:100%;left:0;right:0;
+  order:4;position:absolute;top:100%;left:0;right:0;
   background:var(--white);border-bottom:1px solid var(--grey);
   box-shadow:0 18px 30px -22px rgba(0,0,0,.45);
+  display:grid;grid-template-rows:0fr;opacity:0;visibility:hidden;
+  transition:grid-template-rows .22s ease-out,opacity .22s ease-out,visibility .22s;
 }
-nav.open{display:block;}
-nav ul{display:flex;flex-direction:column;padding:0.5rem var(--gut) 1.25rem;}
+nav.open{grid-template-rows:1fr;opacity:1;visibility:visible;}
+nav ul{display:flex;flex-direction:column;padding:0.5rem var(--gut) 1.25rem;min-height:0;overflow:hidden;}
 nav a{
   display:block;padding:0.85rem 0;min-height:44px;
   font-size:1rem;font-weight:600;color:var(--black);
@@ -134,8 +137,9 @@ nav .btn-join:hover{background:var(--red-dark);color:var(--white);}
 
 @media (min-width:900px){
   .nav-toggle{display:none;}
-  nav{display:block;position:static;border:0;box-shadow:none;background:none;}
-  nav ul{flex-direction:row;align-items:center;gap:1.6rem;padding:0;}
+  nav{display:block;position:static;border:0;box-shadow:none;background:none;
+      grid-template-rows:none;opacity:1;visibility:visible;transition:none;}
+  nav ul{flex-direction:row;align-items:center;gap:1.6rem;padding:0;overflow:visible;}
   nav a{border:0;padding:0.4rem 0;font-size:0.94rem;position:relative;}
   nav a::after{
     content:"";position:absolute;left:0;right:100%;bottom:0;height:2px;
@@ -422,7 +426,14 @@ footer li{margin-bottom:0.55rem;}
 }
 
 @media (prefers-reduced-motion:reduce){
-  *{transition:none !important;animation:none !important;scroll-behavior:auto !important;}
+  /* Keep state changes legible: drop movement, keep colour and opacity. */
+  *{scroll-behavior:auto !important;}
+  *{transition-duration:.01ms !important;}
+  .btn,.btn:active{transform:none !important;}
+  nav{transition:opacity .15s ease !important;}
+  .form-msg{animation:none !important;}
+  #app,#dash{animation:none !important;}
+  .p-status{transition:border-left-color .2s ease !important;}
 }
 
 /* Fix: blocks on dark bands must keep dark text on their white cards */
@@ -825,7 +836,9 @@ html[data-theme="dark"] .checks label{border-color:var(--line);}
 /* ==========================================================================
    Member portal
    ========================================================================== */
-.form-msg{margin-top:1rem;font-weight:600;font-size:0.92rem;line-height:1.55;}
+@keyframes lads-msg-in{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+.form-msg{margin-top:1rem;font-weight:600;font-size:0.92rem;line-height:1.55;
+  animation:lads-msg-in .18s ease-out;}
 .form-msg:empty{display:none;}
 .form-msg.success{color:#1B7F4B;}
 .form-msg.error{color:var(--red);}

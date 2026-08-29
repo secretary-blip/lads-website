@@ -216,6 +216,12 @@ export function say(el, message, kind = "info") {
   if (!el) return;
   el.textContent = message;
   el.className = "form-msg " + kind;
+  // Replacing one message with another does not restart the CSS animation on
+  // its own, so force a reflow. Without this "Uploading..." -> "Submitted"
+  // swaps silently and the member can miss that anything happened.
+  el.style.animation = "none";
+  void el.offsetWidth;
+  el.style.animation = "";
 }
 
 /* -------------------------------------------------------------- membership */
