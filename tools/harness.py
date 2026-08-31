@@ -53,12 +53,12 @@ const PEOPLE = [
 
 window.membershipRows = function (year) {
   return [
-    { id:"x1", profile_id:"m1", academic_year:year, status:"pending", amount_usd:10,
-      method:"whish", proof_path:"payment-proofs/m1/whish.png", paid_on:null, notes:null,
-      created_at:"2026-09-14T09:12:00Z" },
     { id:"x2", profile_id:"m2", academic_year:year, status:"paid", amount_usd:10,
       method:"OMT", proof_path:"payment-proofs/m2/omt.png", paid_on:"2026-09-12", notes:null,
-      created_at:"2026-09-12T14:03:00Z" },
+      created_at:"2026-09-15T14:03:00Z" },
+    { id:"x1", profile_id:"m1", academic_year:year, status:"pending", amount_usd:10,
+      method:"whish", proof_path:"payment-proofs/m1/whish.png", paid_on:null, notes:null,
+      created_at:"2026-09-11T09:12:00Z" },
     { id:"x3", profile_id:"m3", academic_year:year, status:"rejected", amount_usd:10,
       method:"Bank transfer", proof_path:null, paid_on:null,
       notes:"The screenshot did not show the transfer reference. Please send one that does.",
