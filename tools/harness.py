@@ -18,25 +18,25 @@ import os, re, shutil, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = os.path.join(ROOT, "site")
 OUT = os.path.join(SITE, "_harness")
-PAGES = ["account.html"]
+PAGES = ["account.html", "profile.html"]
 
 FIXTURES = r"""
 const STATE = new URLSearchParams(location.search).get("state") || "paid";
 
 const PROFILES = {
   paid:   { id:"u1", full_name:"Riad Jawhar", email:"member@example.org", phone:"76 123 456",
-            student_id:"BAU-2201", university:"Beirut Arab University", academic_year:"4th year", role:"member" },
+            student_id:"BAU-2201", university:"BAU", academic_year:"4th year", role:"member" },
   unpaid: { id:"u2", full_name:"Lea Haddad", email:"lea@example.org", phone:"",
-            student_id:"", university:"Lebanese University", academic_year:"2nd year", role:"member" },
+            student_id:"", university:"LU", academic_year:"2nd year", role:"member" },
   board:  { id:"u3", full_name:"Omar Nasr", email:"treasurer@example.org", phone:"71 998 244",
-            student_id:"USJ-1904", university:"Universite Saint-Joseph", academic_year:"5th year", role:"super_admin" },
+            student_id:"USJ-1904", university:"USJ", academic_year:"5th year", role:"super_admin" },
 };
 
 const MEMBERSHIPS = {
-  paid:   [{ academic_year:"2026-2027", status:"paid",    method:"whish", created_at:"2026-09-14T10:00:00Z", verified_at:"2026-09-15T08:30:00Z" },
-           { academic_year:"2025-2026", status:"paid",    method:"Cash",  created_at:"2025-09-20T10:00:00Z", verified_at:"2025-09-22T09:00:00Z" }],
+  paid:   [{ academic_year:"2026/2027", status:"paid", method:"whish", paid_on:"2026-09-14", verified_at:"2026-09-15T08:30:00Z" },
+           { academic_year:"2025/2026", status:"paid", method:"Cash",  paid_on:"2025-09-20", verified_at:"2025-09-22T09:00:00Z" }],
   unpaid: [],
-  board:  [{ academic_year:"2026-2027", status:"pending", method:"whish", created_at:"2026-09-14T10:00:00Z", verified_at:null }],
+  board:  [{ academic_year:"2026/2027", status:"pending", method:"whish", created_at:"2026-09-14T10:00:00Z", verified_at:null }],
 };
 
 const COUNTS = { paid:[4,2,1], unpaid:[0,0,0], board:[7,3,5] };
