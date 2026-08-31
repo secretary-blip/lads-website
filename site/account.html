@@ -78,29 +78,40 @@
 
       <div class="p-actions">
         <a class="p-action" href="pay.html">
+          <svg class="p-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10.5h19"/><path d="M6.5 15h3"/></svg>
           <h3>Membership</h3>
           <p>Pay your dues, or check where your payment has got to.</p>
           <span class="arrow">Open &rarr;</span>
         </a>
         <a class="p-action" href="events.html">
+          <svg class="p-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10.5h17"/></svg>
           <h3>Events</h3>
           <p>See what is coming up and register.</p>
           <span class="arrow">Browse events &rarr;</span>
         </a>
         <a class="p-action" href="apply.html">
+          <svg class="p-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M13.8 3v5h5"/><path d="M9 13h6M9 16.5h4"/></svg>
           <h3>Apply</h3>
           <p>Exchanges, research programmes and voluntary projects.</p>
           <span class="arrow">Start an application &rarr;</span>
         </a>
         <a class="p-action" href="interests.html">
+          <svg class="p-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4 4.6 13a4.4 4.4 0 1 1 6.2-6.2l1.2 1.2 1.2-1.2A4.4 4.4 0 1 1 19.4 13z"/></svg>
           <h3>Your interests</h3>
           <p>Tell us what you would like to be involved in.</p>
           <span class="arrow">Update &rarr;</span>
         </a>
         <a class="p-action" href="propose.html">
+          <svg class="p-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.5 18.5h5M10.5 21.5h3"/><path d="M12 2.5a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.6v.5h5.2v-.5c0-.6.3-1.2.8-1.6A6 6 0 0 0 12 2.5z"/></svg>
           <h3>Propose a project</h3>
           <p>Have an idea for LADS? Send it to the board.</p>
           <span class="arrow">Share an idea &rarr;</span>
+        </a>
+        <a class="p-action" href="profile.html">
+          <svg class="p-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8.2" r="3.7"/><path d="M4.8 20.5a7.2 7.2 0 0 1 14.4 0"/></svg>
+          <h3>Your profile</h3>
+          <p>Your details, membership history and password.</p>
+          <span class="arrow">Open &rarr;</span>
         </a>
       </div>
 
@@ -110,92 +121,6 @@
         <p class="p-muted" style="margin-top:0.6rem; font-size:0.92rem;" id="role-note"></p>
         <div class="p-actions" id="tool-links"></div>
       </div>
-
-      <!-- membership history -->
-      <div class="p-sec">
-        <h2>Membership history</h2>
-        <div class="p-panel" id="history-wrap"></div>
-      </div>
-
-      <!-- details -->
-      <div class="p-sec">
-        <h2>Your details</h2>
-        <div class="p-panel">
-          <p class="p-muted" style="font-size:0.92rem; margin-bottom:1.25rem;">
-            Keep these current so we can reach you about events and renewals.
-          </p>
-          <form id="profile-form">
-            <div class="form-2">
-              <div class="form-field">
-                <label for="full_name">Full name</label>
-                <input type="text" id="full_name" required>
-              </div>
-              <div class="form-field">
-                <label for="email">Email</label>
-                <input type="email" id="email" disabled>
-                <span class="hint">Your sign-in address. Contact us to change it.</span>
-              </div>
-              <div class="form-field">
-                <label for="phone">Phone number</label>
-                <input type="tel" id="phone" placeholder="76 123 456">
-              </div>
-              <div class="form-field">
-                <label for="student_id">Student ID number</label>
-                <input type="text" id="student_id">
-              </div>
-              <div class="form-field">
-                <label for="university">University</label>
-                <select id="university">
-                  <option value="">Select&hellip;</option>
-                  <option value="BAU">Beirut Arab University (BAU)</option>
-                  <option value="LU">Lebanese University (LU)</option>
-                  <option value="USJ">Universit&eacute; Saint-Joseph (USJ)</option>
-                </select>
-              </div>
-              <div class="form-field">
-                <label for="academic_year">Year of study</label>
-                <select id="academic_year">
-                  <option value="">Select&hellip;</option>
-                  <option>1st year</option><option>2nd year</option><option>3rd year</option>
-                  <option>4th year</option><option>5th year</option><option>Postgraduate</option>
-                </select>
-              </div>
-            </div>
-            <button type="submit" class="btn" id="save-btn">Save changes</button>
-            <p id="profile-msg" class="form-msg" role="status" aria-live="polite"></p>
-          </form>
-        </div>
-      </div>
-
-      <!-- password -->
-      <div class="p-sec">
-        <h2>Password</h2>
-        <div class="p-panel">
-          <form id="pw-form" style="max-width:460px;">
-            <div class="form-field">
-              <label for="new_password">New password</label>
-              <div class="pw-wrap">
-                <input type="password" id="new_password" autocomplete="new-password">
-                <button type="button" class="pw-toggle" data-toggle="new_password">Show</button>
-              </div>
-              <p class="pw-rules">At least 8 characters, with a letter and a number.</p>
-            </div>
-            <div class="form-field">
-              <label for="new_password2">Confirm new password</label>
-              <div class="pw-wrap">
-                <input type="password" id="new_password2" autocomplete="new-password">
-                <button type="button" class="pw-toggle" data-toggle="new_password2">Show</button>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-outline" id="pw-btn">Change password</button>
-            <p id="pw-msg" class="form-msg" role="status" aria-live="polite"></p>
-          </form>
-        </div>
-      </div>
-
-      <p style="margin-top:2.5rem;">
-        <button type="button" class="btn btn-outline" id="signout-btn">Sign out</button>
-      </p>
 
     </div>
   </div>
@@ -262,9 +187,18 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
 
-import { sb, requireAuth, getProfile, getMemberships, signOut,
-         duesYear, DUES_LABEL, ROLE_LABEL, isStaff, isAdmin, updatePassword,
-         passwordProblem, authMessage, fmtDate, escapeHtml, say } from "./js/portal.js";
+import { sb, requireAuth, getProfile, getMemberships,
+         duesYear, DUES_LABEL, ROLE_LABEL, isStaff, isAdmin,
+         fmtDate } from "./js/portal.js";
+
+/* Board tool cards are built in JavaScript, so their icons live here. The
+   member cards above are in the markup. Same set, same stroke weight. */
+const ICON = {
+  events: '<svg class="p-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10.5h17"/></svg>',
+  dues: '<svg class="p-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6 12h.01M18 12h.01"/></svg>',
+  members: '<svg class="p-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8.5" r="3.2"/><path d="M3 19.5a6 6 0 0 1 12 0"/><path d="M16.5 6.2a3.2 3.2 0 0 1 0 6M18 19.5a6 6 0 0 0-2-4.5"/></svg>',
+  review: '<svg class="p-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="4.5" width="14" height="16.5" rx="2.5"/><path d="M9 4.5V3.2h6v1.3"/><path d="M9 13l2 2 4-4"/></svg>'
+};
 
 const $ = id => document.getElementById(id);
 
@@ -334,94 +268,21 @@ function render(profile, memberships) {
     action.innerHTML = '<a href="pay.html" class="btn">Pay your dues</a>';
   }
 
-  /* --- profile ---------------------------------------------------------- */
-  $("full_name").value     = profile.full_name || "";
-  $("email").value         = profile.email || "";
-  $("phone").value         = profile.phone || "";
-  $("university").value    = profile.university || "";
-  $("academic_year").value = profile.academic_year || "";
-  $("student_id").value    = profile.student_id || "";
-
-  $("profile-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const btn = $("save-btn"), msg = $("profile-msg");
-    btn.disabled = true;
-    say(msg, "Saving\u2026");
-    const { error } = await sb.from("profiles").update({
-      full_name:     $("full_name").value.trim(),
-      phone:         $("phone").value.trim() || null,
-      university:    $("university").value || null,
-      academic_year: $("academic_year").value || null,
-      student_id:    $("student_id").value.trim() || null,
-    }).eq("id", profile.id);
-    btn.disabled = false;
-    if (error) { say(msg, "Could not save: " + error.message, "error"); return; }
-    say(msg, "Saved.", "success");
-    const n = $("full_name").value.trim().split(" ")[0];
-    if (n) $("greeting").textContent = `Welcome, ${n}.`;
-  });
-
-  /* --- history ---------------------------------------------------------- */
-  const wrap = $("history-wrap");
-  if (!memberships.length) {
-    wrap.innerHTML =
-      '<p class="p-muted">No membership record yet. Your first year appears here once your dues are confirmed.</p>';
-  } else {
-    wrap.innerHTML =
-      '<table class="board board--data"><tbody>' +
-      memberships.map(m => {
-        const cls = m.status === "paid" ? "ok" : m.status === "pending_verification" ? "wait" : "no";
-        return `<tr>
-          <td><strong>${escapeHtml(m.academic_year)}</strong></td>
-          <td><span class="p-pill ${cls}">${escapeHtml(DUES_LABEL[m.status] || m.status)}</span></td>
-          <td>${m.paid_on ? escapeHtml(fmtDate(m.paid_on)) : "&mdash;"}</td>
-        </tr>`;
-      }).join("") +
-      '</tbody></table>';
-  }
-
   /* --- board tools ------------------------------------------------------ */
   if (isStaff(profile)) {
     $("staff-tools").hidden = false;
     $("role-note").textContent = "Signed in as " + (ROLE_LABEL[profile.role] || profile.role);
     const tools = [];
     if (isAdmin(profile))
-      tools.push(["Dues and payments", "Verify member payments and see who has paid.", "admin-dues.html", "Open"]);
+      tools.push(["Dues and payments", "Verify member payments and see who has paid.", "admin-dues.html", "Open", "dues"]);
     if (profile.role === "super_admin")
-      tools.push(["Members and roles", "View every member and assign board roles.", "admin-members.html", "Open"]);
-    tools.push(["Events", "Create, publish and take attendance.", "admin-events.html", "Open"]);
-    tools.push(["Review", "Committee applications and project ideas waiting on you.", "admin-review.html", "Open"]);
-    $("tool-links").innerHTML = tools.map(([t,d,h,a]) =>
-      `<a class="p-action" href="${h}"><h3>${t}</h3><p>${d}</p><span class="arrow">${a} &rarr;</span></a>`).join("");
+      tools.push(["Members and roles", "View every member and assign board roles.", "admin-members.html", "Open", "members"]);
+    tools.push(["Events", "Create, publish and take attendance.", "admin-events.html", "Open", "events"]);
+    tools.push(["Review", "Committee applications and project ideas waiting on you.", "admin-review.html", "Open", "review"]);
+    $("tool-links").innerHTML = tools.map(([t,d,h,a,icon]) =>
+      `<a class="p-action" href="${h}">${ICON[icon]}<h3>${t}</h3><p>${d}</p><span class="arrow">${a} &rarr;</span></a>`).join("");
   }
 
-  /* --- password --------------------------------------------------------- */
-  document.querySelectorAll("[data-toggle]").forEach(b => {
-    b.addEventListener("click", () => {
-      const f = $(b.dataset.toggle);
-      const showing = f.type === "text";
-      f.type = showing ? "password" : "text";
-      b.textContent = showing ? "Show" : "Hide";
-    });
-  });
-
-  $("pw-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const msg = $("pw-msg"), btn = $("pw-btn");
-    const pw = $("new_password").value;
-    const problem = passwordProblem(pw);
-    if (problem) return say(msg, problem, "error");
-    if (pw !== $("new_password2").value) return say(msg, "The two passwords do not match.", "error");
-    btn.disabled = true;
-    say(msg, "Saving\u2026");
-    const { error } = await updatePassword(pw);
-    btn.disabled = false;
-    if (error) return say(msg, authMessage(error), "error");
-    $("pw-form").reset();
-    say(msg, "Password changed.", "success");
-  });
-
-  $("signout-btn").addEventListener("click", signOut);
 }
 
 /* Counts for the tiles. Separate from render so a slow or failing count never

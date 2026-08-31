@@ -4,6 +4,7 @@ Allow: /
 # The member portal holds personal data and payment records.
 # Nothing under it should ever appear in search results.
 Disallow: /account.html
+Disallow: /profile.html
 Disallow: /login.html
 Disallow: /signup.html
 Disallow: /forgot-password.html
