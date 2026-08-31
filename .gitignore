@@ -15,3 +15,4 @@ node_modules/
 #   the Resend API key
 #   any Google Workspace password or app password
 # They live in Supabase settings and in the password manager.
+site/_harness/
