@@ -18,7 +18,7 @@ import os, re, shutil, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = os.path.join(ROOT, "site")
 OUT = os.path.join(SITE, "_harness")
-PAGES = ["account.html", "profile.html"]
+PAGES = ["account.html", "profile.html", "admin-dues.html"]
 
 FIXTURES = r"""
 const STATE = new URLSearchParams(location.search).get("state") || "paid";
@@ -41,10 +41,39 @@ const MEMBERSHIPS = {
 
 const COUNTS = { paid:[4,2,1], unpaid:[0,0,0], board:[7,3,5] };
 
+/* Rows for the admin pages, which read tables directly rather than going
+   through the helpers in portal.js. Deliberately includes one of every status,
+   so the Treasurer's view can be judged with a confirmed payment on screen. */
+const PEOPLE = [
+  { id:"m1", full_name:"Lea Haddad",   email:"lea@example.org",   university:"LU",  academic_year:"2nd year", phone:"70 111 222" },
+  { id:"m2", full_name:"Karim Chidiac",email:"karim@example.org", university:"USJ", academic_year:"3rd year", phone:"03 445 118" },
+  { id:"m3", full_name:"Nour Fakih",   email:"nour@example.org",  university:"BAU", academic_year:"5th year", phone:"76 902 331" },
+  { id:"m4", full_name:"Jad Semaan",   email:"jad@example.org",   university:"BAU", academic_year:"1st year", phone:"" },
+];
+
+window.membershipRows = function (year) {
+  return [
+    { id:"x1", profile_id:"m1", academic_year:year, status:"pending", amount_usd:10,
+      method:"whish", proof_path:"payment-proofs/m1/whish.png", paid_on:null, notes:null,
+      created_at:"2026-09-14T09:12:00Z" },
+    { id:"x2", profile_id:"m2", academic_year:year, status:"paid", amount_usd:10,
+      method:"OMT", proof_path:"payment-proofs/m2/omt.png", paid_on:"2026-09-12", notes:null,
+      created_at:"2026-09-12T14:03:00Z" },
+    { id:"x3", profile_id:"m3", academic_year:year, status:"rejected", amount_usd:10,
+      method:"Bank transfer", proof_path:null, paid_on:null,
+      notes:"The screenshot did not show the transfer reference. Please send one that does.",
+      created_at:"2026-09-10T18:40:00Z" },
+    { id:"x4", profile_id:"m4", academic_year:year, status:"unpaid", amount_usd:10,
+      method:null, proof_path:null, paid_on:null, notes:null,
+      created_at:"2026-09-09T11:25:00Z" },
+  ];
+};
+
 window.__FIXTURE = {
   session: { user: { id: PROFILES[STATE].id, email: PROFILES[STATE].email } },
   profile: PROFILES[STATE],
   memberships: MEMBERSHIPS[STATE],
+  adminMemberships: [],   // filled by the stub once duesYear() is known
 };
 
 /* A stand-in for the supabase-js client. It answers the handful of chains the
@@ -70,7 +99,12 @@ window.supabase = {
         updateUser: async () => ({ error: null }),
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe(){} } } }),
       },
-      from() { return thenable({ data: [], error: null, count: counts[served++ % counts.length] }); },
+      from(table) {
+        if (table === "profiles")    return thenable({ data: PEOPLE, error: null, count: PEOPLE.length });
+        if (table === "memberships") return thenable({ data: window.__FIXTURE.adminMemberships, error: null, count: 4 });
+        return thenable({ data: [], error: null, count: counts[served++ % counts.length] });
+      },
+      rpc: async () => ({ data: null, error: null }),
       storage: { from: () => thenable({ data: { path: "x" }, error: null }) },
     };
   },
@@ -90,6 +124,11 @@ export async function requireAuth()   { return window.__FIXTURE.session; }
 export async function getProfile()    { return window.__FIXTURE.profile; }
 /* The fixture's newest row is stamped with whatever duesYear() says today, so
    the "paid" state stays paid as the academic year rolls over. */
+/* admin-dues.html filters on the current academic year, so the fixture rows are
+   stamped with whatever duesYear() says today rather than a hardcoded string. */
+window.__FIXTURE.adminMemberships = window.membershipRows
+  ? window.membershipRows(real.duesYear()) : [];
+
 export async function getMemberships(){
   const rows = window.__FIXTURE.memberships;
   return rows.length ? [{ ...rows[0], academic_year: real.duesYear() }, ...rows.slice(1)] : rows;
