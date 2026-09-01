@@ -356,6 +356,7 @@ function card(m) {
         : '<span class="p-muted" style="font-size:0.88rem;align-self:center;">No screenshot</span>'}
       ${m.status !== "paid" ? '<button type="button" class="btn" data-act="approve">Confirm payment</button>' : ""}
       ${open ? '<button type="button" class="btn btn-outline" data-act="reject">Cannot verify</button>' : ""}
+      ${m.status === "paid" ? '<button type="button" class="btn btn-outline" data-act="reverse">Reverse confirmation</button>' : ""}
     </div>
     <p class="form-msg" data-msg role="status" aria-live="polite"></p>
   </div>`;
@@ -379,6 +380,25 @@ document.addEventListener("click", async (e) => {
       const { error } = await sb.rpc("approve_membership", { membership_id: rec.dataset.id });
       if (error) throw error;
       say(msg, "Confirmed. Their account is updated.", "success");
+    } else if (act === "reverse") {
+      /* Undoing a confirmation is the one action here that takes something
+         away from a member who currently believes they are paid up, so the
+         reason is required rather than optional: it is what they are emailed. */
+      const reason = prompt(
+        "Why is this confirmation being reversed?\nThe member is sent this text, so write it to them.");
+      if (reason === null) { buttons.forEach(b => b.disabled = false); return; }
+      if (!reason.trim()) {
+        say(msg, "A reversal needs a reason. Nothing was changed.", "error");
+        buttons.forEach(b => b.disabled = false);
+        return;
+      }
+      say(msg, "Reversing\u2026");
+      const { error } = await sb.rpc("reverse_membership", {
+        membership_id: rec.dataset.id,
+        reason: reason.trim(),
+      });
+      if (error) throw error;
+      say(msg, "Reversed. They have been told why.", "success");
     } else {
       const reason = prompt(
         "What should the member be told?\nLeave blank to send the standard message asking for a clearer screenshot.");
