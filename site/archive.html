@@ -102,18 +102,19 @@
 .ar-close:hover{border-color:var(--red);color:var(--red)}
 .ar-media{position:relative;background:#000;overflow:hidden}
 .ar-track{display:flex;width:100%;transition:transform .35s ease;touch-action:pan-y;user-select:none}
-.ar-track figure{margin:0;flex:0 0 100%;width:100%;height:min(46vh,400px);
-  display:grid;place-items:center;background:#000}
-.ar-track img,.ar-track video{width:100%;height:100%;object-fit:contain;background:#000;
-  pointer-events:none}
+.ar-track figure{position:relative;margin:0;flex:0 0 100%;width:100%;height:min(62vh,520px);background:#000}
+.ar-track img,.ar-track video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  background:#000;pointer-events:none}
 .ar-track video{pointer-events:auto}
 @media (prefers-reduced-motion:reduce){.ar-track{transition:none}}
-.ar-nav{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;display:grid;
-  place-items:center;border-radius:99px;border:1px solid var(--grey);background:var(--panel, var(--white));
-  color:var(--text, var(--black));cursor:pointer;font-family:inherit;font-size:1rem;line-height:1;opacity:.94}
-.ar-nav:hover{border-color:var(--red);color:var(--red);opacity:1}
-.ar-nav[disabled]{opacity:.3;cursor:default}
-.ar-prev{left:.55rem}.ar-next{right:.55rem}
+.ar-nav{position:absolute;z-index:3;top:50%;transform:translateY(-50%);width:44px;height:44px;display:grid;
+  place-items:center;border-radius:99px;border:1px solid rgba(255,255,255,.5);background:rgba(16,16,16,.72);
+  color:#fff;cursor:pointer;font-family:inherit;font-size:1.35rem;line-height:1;
+  backdrop-filter:blur(4px);transition:background .15s,border-color .15s}
+.ar-nav:hover{background:var(--red);border-color:var(--red);color:#fff}
+.ar-nav[disabled]{opacity:.32;cursor:default}
+.ar-nav[disabled]:hover{background:rgba(16,16,16,.72);border-color:rgba(255,255,255,.5)}
+.ar-prev{left:.7rem}.ar-next{right:.7rem}
 .ar-num{position:absolute;top:.6rem;left:.6rem;font-size:.66rem;font-weight:700;letter-spacing:.1em;
   background:rgba(10,10,10,.72);color:#fff;padding:.26rem .55rem;border-radius:99px;
   font-variant-numeric:tabular-nums}
