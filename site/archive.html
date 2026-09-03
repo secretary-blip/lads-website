@@ -100,13 +100,14 @@
   place-items:center;border-radius:99px;border:1px solid var(--grey);background:var(--panel, var(--white));
   color:var(--text, var(--black));cursor:pointer;font-size:1.1rem;line-height:1;font-family:inherit}
 .ar-close:hover{border-color:var(--red);color:var(--red)}
-.ar-media{position:relative;background:var(--text, var(--black))}
-.ar-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;
-  touch-action:pan-x pinch-zoom;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
-.ar-track::-webkit-scrollbar{display:none}
-.ar-track figure{margin:0;flex:0 0 100%;scroll-snap-align:center;height:min(46vh,400px);
+.ar-media{position:relative;background:#000;overflow:hidden}
+.ar-track{display:flex;width:100%;transition:transform .35s ease;touch-action:pan-y;user-select:none}
+.ar-track figure{margin:0;flex:0 0 100%;width:100%;height:min(46vh,400px);
   display:grid;place-items:center;background:#000}
-.ar-track img,.ar-track video{width:100%;height:100%;object-fit:contain;background:#000}
+.ar-track img,.ar-track video{width:100%;height:100%;object-fit:contain;background:#000;
+  pointer-events:none}
+.ar-track video{pointer-events:auto}
+@media (prefers-reduced-motion:reduce){.ar-track{transition:none}}
 .ar-nav{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;display:grid;
   place-items:center;border-radius:99px;border:1px solid var(--grey);background:var(--panel, var(--white));
   color:var(--text, var(--black));cursor:pointer;font-family:inherit;font-size:1rem;line-height:1;opacity:.94}
@@ -402,6 +403,7 @@ function openEvent(e){
     `<div class="ar-row ${cls || ""}"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
 
   dlg.showModal();
+  dlg.onkeydown = null;
   if (media.length > 1) initCarousel(media.length);
 }
 
@@ -427,7 +429,6 @@ function mediaMarkup(media, title){
 function initCarousel(total){
   const tr = $("ar-track"), num = $("ar-num"), prev = $("ar-prev"),
         next = $("ar-next"), dots = $("ar-dots");
-  const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
   let at = 0;
   const sync = () => {
     num.textContent = `${at+1} / ${total}`;
@@ -435,8 +436,12 @@ function initCarousel(total){
     [...dots.children].forEach((b,i) => b.setAttribute("aria-current", String(i === at)));
   };
   const go = n => {
-    at = Math.max(0, Math.min(total-1, n));
-    tr.scrollTo({ left: at * tr.clientWidth, behavior: smooth ? "smooth" : "auto" });
+    const to = Math.max(0, Math.min(total-1, n));
+    if (to === at) return;
+    at = to;
+    /* translate, not scroll: behaves the same in Chrome, Firefox and Safari */
+    tr.style.transform = `translateX(-${at * 100}%)`;
+    tr.querySelectorAll("video").forEach(v => v.pause());
     sync();
   };
   prev.addEventListener("click", () => go(at-1));
@@ -444,18 +449,20 @@ function initCarousel(total){
   dots.addEventListener("click", ev => {
     const b = ev.target.closest("button"); if (b) go(+b.dataset.n);
   });
-  let t;
-  tr.addEventListener("scroll", () => {
-    clearTimeout(t);
-    t = setTimeout(() => {
-      const n = Math.round(tr.scrollLeft / tr.clientWidth);
-      if (n !== at) { at = n; sync(); }
-    }, 90);
+  /* swipe with a finger or a mouse */
+  let x0 = null;
+  tr.addEventListener("pointerdown", ev => { if (ev.target.tagName !== "VIDEO") x0 = ev.clientX; });
+  tr.addEventListener("pointerup", ev => {
+    if (x0 === null) return;
+    const dx = ev.clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) go(dx < 0 ? at+1 : at-1);
   });
-  dlg.addEventListener("keydown", ev => {
+  tr.addEventListener("pointercancel", () => { x0 = null; });
+  /* one keyboard handler per open, never stacked */
+  dlg.onkeydown = ev => {
     if (ev.key === "ArrowLeft")  { ev.preventDefault(); go(at-1); }
     if (ev.key === "ArrowRight") { ev.preventDefault(); go(at+1); }
-  });
+  };
   sync();
 }
 
