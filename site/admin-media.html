@@ -66,16 +66,24 @@
   .pending { font-size:0.85rem; }
   .pending.on { color:var(--red); font-weight:600; }
 
+  #ask { border:1px solid var(--line); background:var(--white); color:var(--black);
+          padding:1.6rem 1.7rem; max-width:min(30rem,92vw); }
+  #ask::backdrop { background:rgba(0,0,0,.6); }
+
   .prog { margin-top:1rem; height:4px; background:var(--grey-soft); display:none; }
   .prog.on { display:block; }
   .prog span { display:block; height:100%; width:0; background:var(--red); transition:width .2s; }
 
   @media (prefers-color-scheme: dark){
+    html:not([data-theme="light"]) #ask { background:var(--panel); color:var(--text); }
+    html:not([data-theme="light"]) #ask h3 { color:var(--text); }
     html:not([data-theme="light"]) .tile { background:var(--panel); }
     html:not([data-theme="light"]) .tile input.cap { background:var(--panel-2,var(--panel)); color:var(--text); }
     html:not([data-theme="light"]) .drop.over { background:var(--panel); }
     html:not([data-theme="light"]) .actions { background:var(--page,var(--panel)); }
   }
+  html[data-theme="dark"] #ask { background:var(--panel); color:var(--text); }
+  html[data-theme="dark"] #ask h3 { color:var(--text); }
   html[data-theme="dark"] .tile { background:var(--panel); }
   html[data-theme="dark"] .tile input.cap { background:var(--panel-2,var(--panel)); color:var(--text); }
   html[data-theme="dark"] .drop.over { background:var(--panel); }
@@ -148,6 +156,17 @@
 
       <div class="grid" id="grid"></div>
       <p id="empty" class="muted" hidden style="margin-top:1.6rem;">No photographs on this activity yet.</p>
+
+      <dialog id="ask">
+        <form method="dialog">
+          <h3 id="ask-title" style="font-size:1.15rem;">Are you sure?</h3>
+          <p id="ask-body" class="muted" style="margin-top:0.6rem; font-size:0.95rem; max-width:42ch;"></p>
+          <div class="btn-row" style="margin-top:1.4rem; display:flex; gap:0.7rem; flex-wrap:wrap;">
+            <button class="btn" value="yes" id="ask-yes" type="submit">Yes</button>
+            <button class="btn btn-outline" value="no" type="submit">Cancel</button>
+          </div>
+        </form>
+      </dialog>
 
       <div class="actions">
         <button class="btn" id="save" type="button" disabled>Save</button>
@@ -232,6 +251,21 @@ let events = [], current = null, items = [], original = "", busy = false;
 const src = p => p ? (/^https?:/.test(p) ? p : STORAGE + p) : "";
 const snapshot = () => JSON.stringify(items.map(i =>
   [i.id, i.url, i.caption || "", i.cover ? 1 : 0]));
+
+/* The browser's own confirm() is a trap here. Arc and Chrome offer a
+   "don't show this again" checkbox on it, and once ticked every later
+   confirm() returns false without appearing, so Delete silently stops
+   working and nothing on screen explains why. This asks in the page. */
+function ask(title, body) {
+  return new Promise(resolve => {
+    $("ask-title").textContent = title;
+    $("ask-body").textContent = body;
+    const dlg = $("ask");
+    dlg.addEventListener("close", () => resolve(dlg.returnValue === "yes"), { once: true });
+    dlg.showModal();
+    $("ask-yes").focus();
+  });
+}
 
 const session = await requireAuth();
 if (session) {
@@ -333,14 +367,16 @@ function move(i, to) {
   render();
 }
 
-$("grid").addEventListener("click", ev => {
+$("grid").addEventListener("click", async ev => {
   const b = ev.target.closest("button"); if (!b) return;
   const i = +b.dataset.i;
   if (b.dataset.act === "up")   move(i, i - 1);
   if (b.dataset.act === "down") move(i, i + 1);
   if (b.dataset.act === "cover") { items.forEach(m => { m.cover = false; }); items[i].cover = true; render(); }
   if (b.dataset.act === "del") {
-    if (!confirm("Remove this photograph from the archive? The file is deleted too.")) return;
+    const ok = await ask("Remove this photograph?",
+      "It comes off the archive page and the file is deleted from storage when you press Save.");
+    if (!ok) return;
     const [gone] = items.splice(i, 1);
     (window.__removed = window.__removed || []).push(gone);
     if (gone.cover && items.length) {
@@ -382,8 +418,10 @@ $("grid").addEventListener("dragend", () => {
 });
 
 $("event").addEventListener("change", async ev => {
-  if (snapshot() !== original && !confirm("Discard the unsaved changes on this activity?")) {
-    ev.target.value = current.id; return;
+  if (snapshot() !== original) {
+    const ok = await ask("Discard your changes?",
+      "You have unsaved changes on this activity. Moving to another one loses them.");
+    if (!ok) { ev.target.value = current.id; return; }
   }
   window.__removed = [];
   await selectEvent(ev.target.value);
