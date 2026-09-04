@@ -23,6 +23,36 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#C00000">
+<style>
+  /* The board, as people rather than as a two-column table. Round, because a
+     square crop is then the only thing anyone has to get right when they send
+     a photo. Until photos arrive each face is that person's initials, which is
+     honest and still reads as a portrait grid. */
+  .bm-grid { display:grid; gap:clamp(1rem,2.5vw,1.5rem); margin-top:0;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+  .bm-grid--heads { grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); }
+  /* Cards stretch to their own row, and the role sits at the bottom of the
+     card, so roles line up across a row without a short last row being
+     stretched to match a tall one. */
+  .bm-card { min-width:0; display:flex; flex-direction:column; }
+  .bm-body { display:flex; flex-direction:column; flex:1; }
+  .bm-role { margin-top:auto; padding-top:0.3rem; }
+  .bm-photo { position:relative; aspect-ratio:1/1; border-radius:999px; overflow:hidden;
+    background:var(--grey-soft); border:1px solid var(--grey); display:grid; place-items:center;
+    width:100%; max-width:160px; margin-inline:auto; }
+  .bm-card--head .bm-photo { max-width:112px; }
+  .bm-initials { font-size:clamp(1.4rem,3.6vw,1.9rem); font-weight:700; color:var(--gray-text); }
+  .bm-photo img { width:100%; height:100%; object-fit:cover; display:block; }
+  @media (hover:hover) and (pointer:fine){
+    .bm-photo img { filter:grayscale(1); transition:filter .25s ease; }
+    .bm-card:hover .bm-photo img { filter:grayscale(0); }
+  }
+  .bm-body { margin-top:0.9rem; text-align:center; }
+  .bm-name { font-weight:700; font-size:1rem; line-height:1.3; }
+  .bm-card--head .bm-name { font-size:0.92rem; }
+  .bm-role { font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--red); }
+</style>
 </head>
 <body>
 
@@ -78,20 +108,19 @@
   <div class="wrap">
     <div class="split">
       <div class="split-head">
-        <p class="eyebrow">Executive Committee</p>
-        <h2 class="h-sub">The principal executive body responsible for day-to-day administration of the Association.</h2>
+        <p class="eyebrow">What we do</p>
+        <h2 class="h-sub">Three kinds of work, all of it delivered by students.</h2>
       </div>
-      <div>
-        <table class="board">
-          <thead><tr><th>Position</th><th>Name</th></tr></thead>
-          <tbody>
-        <tr><td>President</td><td>Rasha Badih</td></tr>
-        <tr><td>Vice-President</td><td>Raneem Al Sheikh Ali</td></tr>
-        <tr><td>General Secretary</td><td>Riad Jawhar</td></tr>
-        <tr><td>Treasurer</td><td>Omar Al Batal</td></tr>
-        <tr><td>Delegate to IADS</td><td>Mahmoud Mahmoud</td></tr>
-          </tbody>
-        </table>
+      <div class="prose">
+        <p>Our charitable work falls into three areas: free oral health care for underserved
+        communities, oral health education in schools and public settings, and professional
+        development for dental students across Lebanon's three dental faculties. Every programme
+        is delivered by dental students without payment, funded by member dues together with
+        sponsorship secured by the Fundraising Committee.</p>
+        <p>Each activity is recorded as it happens, with the photographs taken on the day and
+        the figures the committee reported. The <a href="archive.html">activity archive</a> holds
+        every one since 2024; our <a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram
+        account</a> is the day-to-day record alongside it.</p>
       </div>
     </div>
   </div>
@@ -101,24 +130,125 @@
   <div class="wrap">
     <div class="split">
       <div class="split-head">
+        <p class="eyebrow">Executive Committee</p>
+        <h2 class="h-sub">The principal executive body responsible for day-to-day administration of the Association.</h2>
+      </div>
+      <div>
+        <div class="bm-grid">
+        <div class="bm-card">
+          <div class="bm-photo"><span class="bm-initials">RB</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Rasha Badih</p>
+            <p class="bm-role">President</p>
+          </div>
+        </div>
+        <div class="bm-card">
+          <div class="bm-photo"><span class="bm-initials">RA</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Raneem Al Sheikh Ali</p>
+            <p class="bm-role">Vice-President</p>
+          </div>
+        </div>
+        <div class="bm-card">
+          <div class="bm-photo"><span class="bm-initials">RJ</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Riad Jawhar</p>
+            <p class="bm-role">General Secretary</p>
+          </div>
+        </div>
+        <div class="bm-card">
+          <div class="bm-photo"><span class="bm-initials">OA</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Omar Al Batal</p>
+            <p class="bm-role">Treasurer</p>
+          </div>
+        </div>
+        <div class="bm-card">
+          <div class="bm-photo"><span class="bm-initials">MM</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Mahmoud Mahmoud</p>
+            <p class="bm-role">Delegate to IADS</p>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="wrap">
+    <div class="split">
+      <div class="split-head">
         <p class="eyebrow">Committee Heads</p>
         <h2 class="h-sub">Nine standing committees, nine student leaders.</h2>
       </div>
       <div>
-        <table class="board">
-          <thead><tr><th>Committee</th><th>Head</th></tr></thead>
-          <tbody>
-        <tr><td>Scientific</td><td>Tia Majed</td></tr>
-        <tr><td>Fundraising</td><td>Alaa Al Kork &amp; Kristina Hajj Geagea</td></tr>
-        <tr><td>Exchange (NEO)</td><td>Ali Khalifeh</td></tr>
-        <tr><td>Training</td><td>Aya Omais</td></tr>
-        <tr><td>Public Health</td><td>Maysa Abou Saad</td></tr>
-        <tr><td>Voluntary</td><td>Fouad Haytham Mawlawy</td></tr>
-        <tr><td>Activities</td><td>Majida Jabr</td></tr>
-        <tr><td>Editorial</td><td>Aya Al Ghandour</td></tr>
-        <tr><td>Social Media</td><td>Sarah Sadikk</td></tr>
-          </tbody>
-        </table>
+        <div class="bm-grid bm-grid--heads">
+        <div class="bm-card bm-card--head">
+          <div class="bm-photo"><span class="bm-initials">TM</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Tia Majed</p>
+            <p class="bm-role">Scientific</p>
+          </div>
+        </div>
+        <div class="bm-card bm-card--head">
+          <div class="bm-photo"><span class="bm-initials">AA</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Alaa Al Kork &amp; Kristina Hajj Geagea</p>
+            <p class="bm-role">Fundraising</p>
+          </div>
+        </div>
+        <div class="bm-card bm-card--head">
+          <div class="bm-photo"><span class="bm-initials">AK</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Ali Khalifeh</p>
+            <p class="bm-role">Exchange, NEO</p>
+          </div>
+        </div>
+        <div class="bm-card bm-card--head">
+          <div class="bm-photo"><span class="bm-initials">AO</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Aya Omais</p>
+            <p class="bm-role">Training</p>
+          </div>
+        </div>
+        <div class="bm-card bm-card--head">
+          <div class="bm-photo"><span class="bm-initials">MA</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Maysa Abou Saad</p>
+            <p class="bm-role">Public Health</p>
+          </div>
+        </div>
+        <div class="bm-card bm-card--head">
+          <div class="bm-photo"><span class="bm-initials">FH</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Fouad Haytham Mawlawy</p>
+            <p class="bm-role">Voluntary</p>
+          </div>
+        </div>
+        <div class="bm-card bm-card--head">
+          <div class="bm-photo"><span class="bm-initials">MJ</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Majida Jabr</p>
+            <p class="bm-role">Activities</p>
+          </div>
+        </div>
+        <div class="bm-card bm-card--head">
+          <div class="bm-photo"><span class="bm-initials">AA</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Aya Al Ghandour</p>
+            <p class="bm-role">Editorial</p>
+          </div>
+        </div>
+        <div class="bm-card bm-card--head">
+          <div class="bm-photo"><span class="bm-initials">SS</span></div>
+          <div class="bm-body">
+            <p class="bm-name">Sarah Sadikk</p>
+            <p class="bm-role">Social Media</p>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   </div>
@@ -284,14 +414,4 @@
 })();
 </script>
 </body>
-</html>        <h3>What LADS delivers</h3>
-        <p>Our charitable work falls into three areas: free oral health care for underserved
-        communities, oral health education in schools and public settings, and professional
-        development for dental students across Lebanon's three dental faculties. Every programme
-        is delivered by dental students without payment, funded by member dues together with
-        sponsorship secured by the Fundraising Committee.</p>
-        <p>Each activity is recorded as it happens, with the photographs taken on the day and the
-        figures the committee reported. The <a href="archive.html">activity archive</a> holds every
-        one since 2024; our <a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram
-        account</a> is the day-to-day record alongside it.</p>
-        
+</html>
