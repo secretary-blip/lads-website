@@ -169,7 +169,7 @@
         committee head about taking part.</p>
         <div class="btns">
           <a class="btn" href="join.html">Join LADS</a>
-          <a class="btn btn-outline" href="mailto:info@ladslb.org">Email us</a>
+          <a class="btn btn-outline" id="cm-mail" href="mailto:info@ladslb.org">Email the head</a>
         </div>
         <dl id="cm-stats"></dl>
       </aside>
@@ -310,34 +310,36 @@ const src = p => p ? (/^https?:/.test(p) ? p : STORAGE + p) : "";
 /* Held here rather than read from public.committees, because committees_read
    grants access to signed-in members only and this page is public. */
 const COMMITTEES = {
-  scientific: { no:"01", name:"Scientific Committee", lead:"Tia Majed", role:"Head",
+  /* One address per committee, the role account rather than anyone's personal
+     inbox, so a change of head does not break the page. */
+  scientific: { no:"01", name:"Scientific Committee", lead:"Tia Majed", mail:"nro@ladslb.org", role:"Head",
     desc:"Encourages dental students to engage in medical and scientific research with local " +
          "professionals and international initiatives. Organizes conferences, lectures and " +
          "workshops, and works with the IADS SCORE programme." },
-  fundraising: { no:"02", name:"Fundraising Committee", lead:"Alaa Al Kork & Kristina Hajj Geagea",
+  fundraising: { no:"02", name:"Fundraising Committee", lead:"Alaa Al Kork & Kristina Hajj Geagea", mail:"info@ladslb.org",
     role:"Heads",
     desc:"Secures sponsorships and financial support, communicates with companies and partners, " +
          "and prepares sponsorship agreements ensuring the Association's financial sustainability." },
-  exchange: { no:"03", name:"Exchange Committee", lead:"Ali Khalifeh", role:"National Exchange Officer",
+  exchange: { no:"03", name:"Exchange Committee", lead:"Ali Khalifeh", mail:"neo@ladslb.org", role:"National Exchange Officer",
     desc:"Organizes the annual exchange period and international exchange opportunities for " +
          "members, in coordination with the IADS Exchange Board." },
-  training: { no:"04", name:"Training Committee", lead:"Aya Omais", role:"Head",
+  training: { no:"04", name:"Training Committee", lead:"Aya Omais", mail:"training@ladslb.org", role:"Head",
     desc:"Runs training sessions during General Assemblies and beyond, offering members " +
          "professional and soft-skill development in accordance with the IADS Training Committee." },
-  public_health: { no:"05", name:"Public Health Committee", lead:"Maysa Abou Saad", role:"Head",
+  public_health: { no:"05", name:"Public Health Committee", lead:"Maysa Abou Saad", mail:"npo@ladslb.org", role:"Head",
     desc:"Raises awareness about common diseases and destructive habits among students and local " +
          "communities. Promotes healthy habits through campaigns, screening and treatment initiatives." },
-  voluntary: { no:"06", name:"Voluntary Committee", lead:"Fouad Haytham Mawlawy", role:"Head",
+  voluntary: { no:"06", name:"Voluntary Committee", lead:"Fouad Haytham Mawlawy", mail:"voluntary@ladslb.org", role:"Head",
     desc:"Provides opportunities to contribute to oral health care in underprivileged regions, " +
          "evaluates volunteering opportunities, and serves as Local Organizing Committee for IADS " +
          "International Voluntary Projects." },
-  activities: { no:"07", name:"Activities Committee", lead:"Majida Jabr", role:"Head",
+  activities: { no:"07", name:"Activities Committee", lead:"Majida Jabr", mail:"activities@ladslb.org", role:"Head",
     desc:"Organizes trips, gatherings, sports days and clubs for theatre, music, photography and " +
          "more, helping students enjoy life beyond their studies." },
-  editorial: { no:"08", name:"Editorial Committee", lead:"Aya Al Ghandour", role:"Head",
+  editorial: { no:"08", name:"Editorial Committee", lead:"Aya Al Ghandour", mail:"editorial@ladslb.org", role:"Head",
     desc:"Produces the visual content representing LADS: the LADS Gazette, posters, promotional " +
          "graphics and the Association's visual identity, in accordance with the IADS Editorial Board." },
-  social_media: { no:"09", name:"Social Media Committee", lead:"Sarah Sadikk", role:"Head",
+  social_media: { no:"09", name:"Social Media Committee", lead:"Sarah Sadikk", mail:"social@ladslb.org", role:"Head",
     desc:"Manages all LADS social platforms, produces engaging content, runs digital campaigns and " +
          "builds our online community while promoting dental health awareness." },
 };
@@ -372,6 +374,9 @@ async function load() {
     `<span class="av">${escapeHtml(initials(c.lead))}</span>` +
     `<span><b>${escapeHtml(c.lead)}</b><span class="r">${escapeHtml(c.role)}</span></span>`;
   $("cm-year").textContent = YEAR;
+  /* Fundraising has no address of its own and is being wound up as a standing
+     committee, so it writes to the general inbox until it goes. */
+  $("cm-mail").href = "mailto:" + (c.mail || "info@ladslb.org");
 
   const { data, error } = await sb
     .from("events")

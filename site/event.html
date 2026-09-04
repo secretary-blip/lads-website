@@ -108,10 +108,9 @@
 
   .ev-films { background:#0F0F0F; color:#F0F0F0; padding:clamp(2.4rem,6vw,3.6rem) 0;
     margin-top:clamp(2rem,5vw,3rem); }
-  .ev-films .ev-chead { border-bottom-color:rgba(255,255,255,.18); margin-top:0; }
+  .ev-films .ev-chead { border-bottom-color:rgba(255,255,255,.18); margin:0 0 1.4rem; }
   .ev-films .ev-chead h2 { color:#F0F0F0; }
   .ev-films .ev-chead .n { color:#A9A9A9; }
-  .ev-films .intro { color:#A9A9A9; font-size:0.93rem; max-width:52ch; margin:0.2rem 0 1.5rem; }
   .ev-reel { display:grid; gap:14px; grid-template-columns:repeat(4,1fr); }
   @media (max-width:820px){ .ev-reel { grid-template-columns:repeat(2,1fr); } }
   @media (max-width:420px){ .ev-reel { grid-template-columns:1fr; } }
@@ -194,7 +193,7 @@
 
 <main id="main">
 
-<div class="wrap"><a class="ev-back" href="archive.html">&#8592; All activities</a></div>
+<div class="wrap"><a class="ev-back" id="ev-back" href="archive.html">&#8592; All activities</a></div>
 
 <p id="ev-loading" class="ev-state"><span class="wrap">Loading&hellip;</span></p>
 <p id="ev-missing" hidden class="ev-state"><span class="wrap">That activity is not in the archive.
@@ -231,8 +230,6 @@
         <h2>Films</h2>
         <span class="n" id="ev-filmn"></span>
       </div>
-      <p class="intro">Filmed upright, so they are shown upright rather than letterboxed
-      into the photograph grid.</p>
       <div class="ev-reel" id="ev-reel"></div>
     </div>
   </section>
@@ -416,6 +413,14 @@ async function load() {
   const films  = media.filter(m => m.kind === "video");
 
   document.title = data.title + " | LADS";
+
+  /* An activity belongs to a committee, and that is where the visitor almost
+     always arrived from. Point back at it by name rather than at the archive,
+     which is no longer in the navigation. */
+  if (data.committee_id && COMMITTEES[data.committee_id]) {
+    $("ev-back").href = "committee.html?c=" + encodeURIComponent(data.committee_id);
+    $("ev-back").innerHTML = "&#8592; " + escapeHtml(COMMITTEES[data.committee_id]) + " Committee";
+  }
 
   /* hero */
   const cover = data.image_url || (photos[0] && photos[0].url);
