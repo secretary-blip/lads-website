@@ -820,6 +820,12 @@ html[data-theme="dark"] .checks label{border-color:var(--line);}
 .theme-toggle:hover{color:var(--red);}
 .theme-toggle:focus-visible{outline:2px solid var(--red);outline-offset:3px;}
 .theme-toggle .sun{display:none;}
+
+/* The sign-out button starts hidden and is revealed only when there is a
+   session. .theme-toggle sets display, and a class beats the [hidden]
+   attribute at equal specificity, so hidden has to be stated here or the
+   button shows to signed-out visitors. */
+.theme-toggle[hidden]{display:none;}
 @media (min-width:900px){ .theme-toggle{margin-left:0.9rem;} }
 
 /* ---------- data table variant (transparency / organisation details) ----------
