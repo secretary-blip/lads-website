@@ -6,5 +6,6 @@
 /projects.html  /about.html  301
 /projects       /about.html  301
 
-# Anything else that does not exist renders the styled 404 page.
-/*  /404.html  404
+# A path matching nothing renders the styled 404 page. Cloudflare handles that
+# through not_found_handling in wrangler.jsonc, because a 404 status is not
+# valid in this file: only 200, 301, 302, 303, 307 and 308 are accepted.
