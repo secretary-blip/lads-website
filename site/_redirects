@@ -1,0 +1,10 @@
+# Cloudflare Pages reads this file the way Netlify reads netlify.toml.
+# Static files win first; these rules only run when nothing on disk matches.
+
+# projects.html was retired: what it claimed, the archive now proves, and the
+# funding and governance paragraphs moved to About.
+/projects.html  /about.html  301
+/projects       /about.html  301
+
+# Anything else that does not exist renders the styled 404 page.
+/*  /404.html  404

@@ -1,0 +1,22 @@
+# Cloudflare Pages reads this file the way Netlify reads netlify.toml.
+
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# HTML changes on every deploy, and a browser holding an old copy shows stale
+# code long after a fix has shipped. Cache it, but revalidate on every visit.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Portal pages hold personal data. Never let a proxy or browser cache them.
+/account.html
+  Cache-Control: no-store
+
+/admin-*
+  Cache-Control: no-store
