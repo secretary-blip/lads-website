@@ -1,0 +1,17 @@
+{
+  // Cloudflare serves the site as a Worker with static assets. Only site/ is
+  // published, the same split netlify.toml enforces, so the SQL migrations and
+  // the documentation in this repository stay off the public website.
+  //
+  // site/_headers and site/_redirects are read from that directory and carry
+  // the security headers, the cache rules and the /projects redirect across.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lads-website",
+  "compatibility_date": "2026-09-04",
+  "assets": {
+    "directory": "./site",
+    // A path that matches no file renders the styled 404 page rather than a
+    // bare Cloudflare error.
+    "not_found_handling": "404-page"
+  }
+}
