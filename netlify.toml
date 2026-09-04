@@ -19,6 +19,19 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
+# HTML pages change whenever the site is redeployed, and a browser holding an
+# old copy shows stale code long after a fix has shipped. Let the browser cache
+# them, but make it revalidate with Netlify on every visit.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
 # Portal pages hold personal data. Never let a proxy or browser cache them.
 [[headers]]
   for = "/account.html"
