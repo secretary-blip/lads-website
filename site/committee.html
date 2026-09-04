@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-116JSZSGZN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-116JSZSGZN');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Committee | LADS</title>
+<meta name="description" content="A LADS committee: what it does, who leads it, and the work it has run.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#C00000">
+
+<style>
+  .cm-back { display:inline-flex; align-items:center; gap:0.5rem; text-decoration:none;
+    font-size:0.74rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--gray-text); padding:1.1rem 0; }
+  .cm-back:hover { color:var(--red); }
+
+  /* style.css gives every <section> a tall padding-block. These pages set
+     their own rhythm, so each section states its own padding rather than
+     inheriting a gap it did not ask for. */
+  .cm-mast { padding:clamp(1.4rem,3.5vw,2.2rem) 0 0; }
+  .cm-list { padding-block:0; }
+  .cm-mast .grid { display:grid; gap:clamp(1.8rem,5vw,3.2rem);
+    grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); align-items:start; }
+  @media (max-width:880px){ .cm-mast .grid { grid-template-columns:1fr; } }
+  .cm-no { font-size:0.72rem; font-weight:700; letter-spacing:0.2em; color:var(--red);
+    font-variant-numeric:tabular-nums; margin:0; }
+  .cm-mast h1 { font-size:clamp(2rem,4.8vw,3rem); margin:0.45rem 0 0; line-height:1.12;
+    text-wrap:balance; }
+  .cm-role { font-size:clamp(1rem,2vw,1.12rem); line-height:1.7; margin:1rem 0 0; max-width:54ch; }
+  .cm-who { margin-top:1.4rem; display:flex; align-items:center; gap:0.8rem; }
+  .cm-who .av { width:42px; height:42px; border-radius:99px; background:var(--red); color:#fff;
+    display:grid; place-items:center; font-weight:700; font-size:0.88rem; flex:0 0 auto; }
+  .cm-who b { display:block; font-size:0.95rem; }
+  .cm-who span.r { display:block; font-size:0.7rem; letter-spacing:0.13em;
+    text-transform:uppercase; color:var(--gray-text); }
+
+  .cm-join { border:1px solid var(--grey); background:var(--grey-soft);
+    padding:1.4rem 1.5rem 1.5rem; }
+  .cm-join h2 { font-size:1rem; margin:0; }
+  .cm-join p { font-size:0.91rem; color:var(--gray-text); margin:0.55rem 0 0; }
+  .cm-join .btns { display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:1.1rem; }
+  .cm-join dl { margin:1.3rem 0 0; display:grid; gap:0.45rem; font-size:0.85rem; }
+  .cm-join dl > div { display:flex; gap:0.7rem; justify-content:space-between;
+    border-top:1px solid var(--grey); padding-top:0.45rem; }
+  .cm-join dt { color:var(--gray-text); }
+  .cm-join dd { margin:0; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  .cm-yhead { display:flex; align-items:baseline; gap:1rem; border-bottom:1px solid var(--grey);
+    padding-bottom:0.7rem; margin:clamp(2rem,4.5vw,3rem) 0 1.2rem; }
+  .cm-yhead h2 { font-size:clamp(1.15rem,2.5vw,1.5rem); margin:0; font-variant-numeric:tabular-nums; }
+  .cm-yhead .lab { margin-left:auto; font-size:0.7rem; font-weight:700; letter-spacing:0.13em;
+    text-transform:uppercase; color:var(--gray-text); white-space:nowrap; }
+
+  .cm-cards { display:grid; gap:1.1rem; grid-template-columns:repeat(3,1fr); }
+  @media (max-width:900px){ .cm-cards { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .cm-cards { grid-template-columns:1fr; } }
+  .cm-card { display:flex; flex-direction:column; text-align:left; text-decoration:none;
+    border:1px solid var(--grey); background:var(--panel, var(--white));
+    color:var(--text, var(--black)); transition:border-color .2s, transform .2s; }
+  .cm-card:hover { border-color:var(--red); transform:translateY(-3px); }
+  .cm-card:focus-visible { outline:3px solid var(--red); outline-offset:2px; }
+  .cm-card .shot { position:relative; aspect-ratio:4/3; background:var(--grey-soft); overflow:hidden; }
+  .cm-card .shot img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    transition:transform .5s cubic-bezier(.2,.7,.3,1); }
+  .cm-card:hover .shot img { transform:scale(1.05); }
+  .cm-card .shot .ph { position:absolute; inset:0; display:grid; place-items:center;
+    font-size:0.7rem; letter-spacing:0.13em; text-transform:uppercase; color:var(--gray-text); }
+  .cm-card .n { position:absolute; bottom:0.5rem; right:0.5rem; font-size:0.62rem; font-weight:700;
+    letter-spacing:0.1em; background:rgba(10,10,10,.72); color:#fff; padding:0.2rem 0.5rem;
+    border-radius:99px; }
+  .cm-card .body { padding:1rem 1.1rem 1.15rem; display:flex; flex-direction:column;
+    gap:0.4rem; flex:1; }
+  .cm-card .date { font-size:0.68rem; font-weight:700; letter-spacing:0.13em;
+    text-transform:uppercase; color:var(--red); }
+  .cm-card h3 { font-size:1.02rem; margin:0; line-height:1.3; }
+  .cm-card p { margin:0; font-size:0.87rem; color:var(--gray-text); line-height:1.55; }
+  .cm-card .fig { margin-top:auto; padding-top:0.65rem; border-top:1px solid var(--grey);
+    font-size:0.81rem; font-weight:600; }
+
+  .cm-rows { border-top:1px solid var(--grey); }
+  .cm-row { display:grid; grid-template-columns:6.6rem 1fr auto; gap:1.1rem; align-items:baseline;
+    width:100%; text-align:left; text-decoration:none; color:var(--text, var(--black));
+    border-bottom:1px solid var(--grey); padding:0.95rem 0.2rem;
+    transition:padding-left .2s, color .2s; }
+  .cm-row:hover { padding-left:0.7rem; color:var(--red); }
+  .cm-row:focus-visible { outline:3px solid var(--red); outline-offset:-3px; }
+  .cm-row .when { font-size:0.73rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--gray-text); font-variant-numeric:tabular-nums; }
+  .cm-row:hover .when { color:var(--red); }
+  .cm-row b { font-size:0.99rem; font-weight:600; }
+  .cm-row .meta { font-size:0.77rem; color:var(--gray-text); white-space:nowrap;
+    font-variant-numeric:tabular-nums; }
+  @media (max-width:620px){
+    .cm-row { grid-template-columns:1fr auto; gap:0.25rem 1rem; }
+    .cm-row .when { grid-column:1 / -1; }
+  }
+
+  .cm-none { color:var(--gray-text); font-size:0.95rem; margin:0; }
+  .cm-state { padding:clamp(3rem,8vw,5rem) 0; color:var(--gray-text); }
+  .cm-tail { border-top:1px solid var(--grey); padding:2.2rem 0 3rem;
+    margin-top:clamp(2rem,5vw,3rem); }
+  .cm-tail .wrap { display:flex; flex-wrap:wrap; gap:1rem; align-items:center;
+    justify-content:space-between; }
+  .cm-tail p { margin:0; font-size:0.86rem; color:var(--gray-text); max-width:52ch; }
+  @media (prefers-reduced-motion:reduce){ .cm-card, .cm-card .shot img, .cm-row { transition:none; } }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+<header>
+  <div class="nav-wrap">
+    <a class="logo" href="index.html"><img src="assets/lads_logo.png" alt="LADS, Lebanese Association of Dental Students"></a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-controls="nav" aria-expanded="false" onclick="var n=document.getElementById('nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o);">&#9776;</button>
+    <nav id="nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="account.html" data-portal-link>Portal</a></li>
+        <li><a href="join.html" class="btn-join">Join LADS</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-label="Switch between light and dark mode" title="Switch theme">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+<div class="wrap"><a class="cm-back" href="committees.html">&#8592; All committees</a></div>
+
+<p id="cm-loading" class="cm-state"><span class="wrap">Loading&hellip;</span></p>
+<p id="cm-missing" hidden class="cm-state"><span class="wrap">That committee does not exist.
+  <a href="committees.html" style="text-decoration:underline;">See all nine</a>.</span></p>
+
+<div id="cm-body" hidden>
+  <section class="cm-mast">
+    <div class="wrap grid">
+      <div>
+        <p class="cm-no" id="cm-no"></p>
+        <h1 id="cm-name"></h1>
+        <p class="cm-role" id="cm-role"></p>
+        <div class="cm-who" id="cm-who"></div>
+      </div>
+      <aside class="cm-join">
+        <h2>Take part</h2>
+        <p id="cm-join-note">Members hear about each activity first. Join, then speak to the
+        committee head about taking part.</p>
+        <div class="btns">
+          <a class="btn" href="join.html">Join LADS</a>
+          <a class="btn btn-outline" href="mailto:info@ladslb.org">Email us</a>
+        </div>
+        <dl id="cm-stats"></dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="wrap cm-list">
+    <div class="cm-yhead"><h2 id="cm-year"></h2><span class="lab">This year</span></div>
+    <div class="cm-cards" id="cm-cards"></div>
+    <p class="cm-none" id="cm-nothing" hidden>Nothing recorded yet this year. The committee is
+      planning its next activity.</p>
+
+    <div id="cm-earlier" hidden>
+      <div class="cm-yhead"><h2>Earlier</h2><span class="lab" id="cm-span"></span></div>
+      <div class="cm-rows" id="cm-rows"></div>
+    </div>
+  </section>
+
+  <section class="cm-tail">
+    <div class="wrap">
+      <p>Every LADS activity since 2024 is kept on record, with the photographs and the
+      figures the committee reported at the time.</p>
+      <a class="btn btn-outline" href="archive.html">The full record &rarr;</a>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<dialog id="ar-dlg" aria-labelledby="ar-title">
+  <button class="ar-close" id="ar-close" type="button" aria-label="Close">&times;</button>
+  <div id="ar-media"></div>
+  <div class="ar-detail">
+    <p class="ar-date" id="ar-when"></p>
+    <h2 id="ar-title"></h2>
+    <p class="lead" id="ar-lead"></p>
+    <dl class="ar-rows" id="ar-rows"></dl>
+  </div>
+</dialog>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <img src="assets/lads_logo.png" alt="LADS">
+      <h4>LADS</h4>
+      <p>Lebanese Association of Dental Students<br>Faculty of Dentistry, Beirut Arab University<br>Tarik El Jadida, Riad El Solh 11072809<br>Beirut, Lebanon</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="join.html">Membership</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/lebaneseassociationofdentalstudents" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.linkedin.com/company/lebanese-association-of-dental-students" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:info@ladslb.org">info@ladslb.org</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015. GOOGLE FOR NONPROFITS CHARITY ID 1658. <a href="about.html#transparency" style="text-decoration:underline;">ORGANISATION DETAILS</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  if(!btn) return;
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function current(){
+    var set = root.getAttribute('data-theme');
+    if(set) return set;
+    return mq.matches ? 'dark' : 'light';
+  }
+  function paint(){
+    var dark = current()==='dark';
+    btn.querySelector('.moon').style.display = dark ? 'none' : 'block';
+    btn.querySelector('.sun').style.display  = dark ? 'block' : 'none';
+  }
+  var saved=null; try{saved=localStorage.getItem('lads-theme');}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  paint();
+  mq.addEventListener && mq.addEventListener('change', paint);
+  btn.addEventListener('click', function(){
+    var next = current()==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{localStorage.setItem('lads-theme', next);}catch(e){}
+    paint();
+  });
+})();
+</script>
+<script>
+/* The big red button is the one call to action in the header, so it should
+   always be the next thing this visitor needs. A signed-in member does not
+   need "Join LADS"; they need the portal. Supabase stores its session in
+   localStorage, so this reads it directly rather than loading the client on
+   every public page for one cosmetic decision. Nothing here grants access:
+   the portal pages check the session properly on arrival. */
+(function(){
+  var join = document.querySelector('nav a.btn-join');
+  if(!join) return;
+  var live = false;
+  try{
+    for(var i=0;i<localStorage.length;i++){
+      var k = localStorage.key(i);
+      if(!/^sb-.+-auth-token$/.test(k)) continue;
+      var v = JSON.parse(localStorage.getItem(k) || 'null');
+      var s = v && (v.currentSession || v);
+      var exp = s && s.expires_at;
+      if(exp && exp * 1000 > Date.now()) live = true;
+    }
+  }catch(e){ return; }
+  if(!live) return;
+  var plain = document.querySelector('nav a[data-portal-link]');
+  var here = plain && plain.classList.contains('active');
+  join.setAttribute('href', (join.getAttribute('href').charAt(0) === '/' ? '/' : '') + 'account.html');
+  join.textContent = 'Portal';
+  if(here){ join.classList.add('active'); join.setAttribute('aria-current','page'); }
+  if(plain && plain.parentElement) plain.parentElement.style.display = 'none';
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+
+import { sb, SUPABASE_URL, fmtDate, escapeHtml } from "./js/portal.js";
+
+const $ = id => document.getElementById(id);
+const STORAGE = SUPABASE_URL + "/storage/v1/object/public/media/";
+const src = p => p ? (/^https?:/.test(p) ? p : STORAGE + p) : "";
+
+/* Held here rather than read from public.committees, because committees_read
+   grants access to signed-in members only and this page is public. */
+const COMMITTEES = {
+  scientific: { no:"01", name:"Scientific Committee", lead:"Tia Majed", role:"Head",
+    desc:"Encourages dental students to engage in medical and scientific research with local " +
+         "professionals and international initiatives. Organizes conferences, lectures and " +
+         "workshops, and works with the IADS SCORE programme." },
+  fundraising: { no:"02", name:"Fundraising Committee", lead:"Alaa Al Kork & Kristina Hajj Geagea",
+    role:"Heads",
+    desc:"Secures sponsorships and financial support, communicates with companies and partners, " +
+         "and prepares sponsorship agreements ensuring the Association's financial sustainability." },
+  exchange: { no:"03", name:"Exchange Committee", lead:"Ali Khalifeh", role:"National Exchange Officer",
+    desc:"Organizes the annual exchange period and international exchange opportunities for " +
+         "members, in coordination with the IADS Exchange Board." },
+  training: { no:"04", name:"Training Committee", lead:"Aya Omais", role:"Head",
+    desc:"Runs training sessions during General Assemblies and beyond, offering members " +
+         "professional and soft-skill development in accordance with the IADS Training Committee." },
+  public_health: { no:"05", name:"Public Health Committee", lead:"Maysa Abou Saad", role:"Head",
+    desc:"Raises awareness about common diseases and destructive habits among students and local " +
+         "communities. Promotes healthy habits through campaigns, screening and treatment initiatives." },
+  voluntary: { no:"06", name:"Voluntary Committee", lead:"Fouad Haytham Mawlawy", role:"Head",
+    desc:"Provides opportunities to contribute to oral health care in underprivileged regions, " +
+         "evaluates volunteering opportunities, and serves as Local Organizing Committee for IADS " +
+         "International Voluntary Projects." },
+  activities: { no:"07", name:"Activities Committee", lead:"Majida Jabr", role:"Head",
+    desc:"Organizes trips, gatherings, sports days and clubs for theatre, music, photography and " +
+         "more, helping students enjoy life beyond their studies." },
+  editorial: { no:"08", name:"Editorial Committee", lead:"Aya Al Ghandour", role:"Head",
+    desc:"Produces the visual content representing LADS: the LADS Gazette, posters, promotional " +
+         "graphics and the Association's visual identity, in accordance with the IADS Editorial Board." },
+  social_media: { no:"09", name:"Social Media Committee", lead:"Sarah Sadikk", role:"Head",
+    desc:"Manages all LADS social platforms, produces engaging content, runs digital campaigns and " +
+         "builds our online community while promoting dental health awareness." },
+};
+
+const id = new URLSearchParams(location.search).get("c");
+const c = COMMITTEES[id];
+const YEAR = new Date().getFullYear();
+const yearOf = iso => new Date(iso).getFullYear();
+const initials = n => n.split(/[\s&]+/).filter(Boolean).slice(0, 2)
+  .map(w => w[0]).join("").toUpperCase();
+
+/* The leading figure from the committee's own sentence, shown on the card so a
+   student can see the size of the thing without opening it. It reads the first
+   "<number> <what>" pair and stops there, so a long outcome sentence never
+   arrives half-cut. Nothing is computed or estimated: if no figure was
+   written down, the card carries none. */
+function lead(impact) {
+  if (!impact) return null;
+  const m = impact.match(
+    /(\d[\d,]*\+?)\s+([a-z][a-z' -]{2,34}?)(?=[,.;—]|\s+(?:and|with|among|across|in|to|from|plus)\b|$)/i);
+  return m ? m[1] + " " + m[2].trim().replace(/\s+/g, " ") : null;
+}
+
+async function load() {
+  if (!c) { $("cm-loading").hidden = true; $("cm-missing").hidden = false; return; }
+
+  document.title = c.name + " | LADS";
+  $("cm-no").textContent = c.no;
+  $("cm-name").textContent = c.name;
+  $("cm-role").textContent = c.desc;
+  $("cm-who").innerHTML =
+    `<span class="av">${escapeHtml(initials(c.lead))}</span>` +
+    `<span><b>${escapeHtml(c.lead)}</b><span class="r">${escapeHtml(c.role)}</span></span>`;
+  $("cm-year").textContent = YEAR;
+
+  const { data, error } = await sb
+    .from("events")
+    .select("title,slug,summary,starts_at,impact,image_url,event_media(url)")
+    .eq("committee_id", id)
+    .eq("published", true)
+    .eq("members_only", false)
+    .order("starts_at", { ascending: false });
+
+  $("cm-loading").hidden = true;
+  const rows = error ? [] : (data || []);
+  const thisYear = rows.filter(e => yearOf(e.starts_at) === YEAR);
+  const earlier  = rows.filter(e => yearOf(e.starts_at) !== YEAR);
+
+  const shots = rows.reduce((n, e) => n + (e.event_media || []).length, 0);
+  const stats = [["Activities this year", thisYear.length]];
+  if (rows.length !== thisYear.length) stats.push(["Recorded since 2024", rows.length]);
+  if (shots) stats.push(["Photographs and films", shots]);
+  $("cm-stats").innerHTML = stats.map(([k, v]) =>
+    `<div><dt>${escapeHtml(k)}</dt><dd>${v}</dd></div>`).join("");
+
+  $("cm-cards").innerHTML = thisYear.map(e => {
+    const cover = e.image_url || ((e.event_media || [])[0] || {}).url;
+    const n = (e.event_media || []).length;
+    const fig = lead(e.impact);
+    return `<a class="cm-card" href="event.html?e=${encodeURIComponent(e.slug)}">
+      <span class="shot">${cover
+        ? `<img src="${escapeHtml(src(cover))}" alt="" loading="lazy" decoding="async">`
+        : `<span class="ph">No photograph yet</span>`}${
+        n ? `<span class="n">${n} ${n === 1 ? "item" : "items"}</span>` : ""}</span>
+      <span class="body">
+        <span class="date">${escapeHtml(fmtDate(e.starts_at))}</span>
+        <h3>${escapeHtml(e.title)}</h3>
+        <p>${escapeHtml(e.summary || "")}</p>
+        ${fig ? `<span class="fig">${escapeHtml(fig)}</span>` : ""}
+      </span></a>`;
+  }).join("");
+  $("cm-nothing").hidden = thisYear.length > 0;
+
+  if (earlier.length) {
+    $("cm-earlier").hidden = false;
+    const years = [...new Set(earlier.map(e => yearOf(e.starts_at)))].sort();
+    $("cm-span").textContent = years.length > 1
+      ? years[0] + " to " + years[years.length - 1] : String(years[0]);
+    $("cm-rows").innerHTML = earlier.map(e => {
+      const n = (e.event_media || []).length;
+      const fig = lead(e.impact);
+      return `<a class="cm-row" href="event.html?e=${encodeURIComponent(e.slug)}">
+        <span class="when">${escapeHtml(fmtDate(e.starts_at))}</span>
+        <b>${escapeHtml(e.title)}</b>
+        <span class="meta">${fig ? escapeHtml(fig) + " &middot; " : ""}${n} ${n === 1 ? "item" : "items"}</span>
+      </a>`;
+    }).join("");
+  }
+
+  $("cm-body").hidden = false;
+}
+
+load();
+
+</script>
+</body>
+</html>

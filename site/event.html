@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-116JSZSGZN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-116JSZSGZN');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity | LADS</title>
+<meta name="description" content="A LADS activity: what happened, who it reached, and the photographs from the day.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#C00000">
+
+<style>
+  /* Light mode gets its values from :root in style.css. Dark mode remaps
+     --grey, --grey-soft and --gray-text there, so anything built from those
+     three follows the theme without a second rule. Surfaces that need a real
+     panel colour ask for --panel and fall back to white, the way archive.html
+     does. */
+  .ev-note { background:var(--grey-soft); border-bottom:1px solid var(--grey);
+             padding:0.85rem 0; font-size:0.78rem; color:var(--gray-text); }
+
+  .ev-back { display:inline-flex; align-items:center; gap:0.5rem; text-decoration:none;
+             font-size:0.74rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+             color:var(--gray-text); padding:1.1rem 0; }
+  .ev-back:hover { color:var(--red); }
+
+  .ev-hero { position:relative; background:#0C0C0C; }
+  .ev-hero figure { margin:0; position:relative; height:clamp(300px,54vh,520px); }
+  .ev-hero img { width:100%; height:100%; object-fit:cover; display:block; }
+  .ev-hero .veil { position:absolute; inset:0;
+    background:linear-gradient(to top, rgba(8,8,8,.9) 0%, rgba(8,8,8,.45) 40%, rgba(8,8,8,.05) 75%); }
+  .ev-hero .lede { position:absolute; inset:auto 0 0 0; padding-bottom:clamp(1.3rem,4vw,2.4rem); }
+  .ev-hero.plain { background:var(--grey-soft); }
+  .ev-hero.plain figure { display:none; }
+  .ev-hero.plain .lede { position:static; padding:clamp(2rem,6vw,3.4rem) 0; }
+  .ev-hero.plain .ev-kick, .ev-hero.plain h1, .ev-hero.plain .ev-where { color:inherit; }
+  .ev-hero.plain .ev-kick { color:var(--gray-text); }
+
+  .ev-kick { display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin:0;
+    font-size:0.68rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase;
+    color:#fff; }
+  .ev-kick .dot { width:3px; height:3px; border-radius:99px; background:currentColor; opacity:.65; }
+  .ev-kick .tag { background:var(--red); color:#fff; padding:0.22rem 0.6rem; border-radius:99px; }
+  .ev-hero h1 { color:#fff; font-size:clamp(1.9rem,5vw,3.2rem); margin:0.6rem 0 0;
+    max-width:18ch; line-height:1.12; text-wrap:balance; }
+  .ev-where { color:#fff; opacity:.85; margin:0.5rem 0 0; font-size:clamp(0.95rem,1.6vw,1.05rem); }
+
+  .ev-rail { border-bottom:1px solid var(--grey); background:var(--grey-soft); }
+  .ev-rail .wrap { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+  .ev-fig { padding:1.4rem 1.3rem 1.5rem; border-right:1px solid var(--grey); }
+  .ev-fig:last-child { border-right:0; }
+  .ev-fig b { display:block; font-size:clamp(1.6rem,3.2vw,2.2rem); line-height:1;
+    font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
+  .ev-fig span { display:block; margin-top:0.4rem; font-size:0.7rem; font-weight:700;
+    letter-spacing:0.13em; text-transform:uppercase; color:var(--gray-text); }
+
+  /* style.css gives every <section> a tall padding-block; this page sets its
+     own rhythm, so each section states its padding rather than inheriting a
+     gap it did not ask for. */
+  .ev-hero, .ev-rail { padding-block:0; }
+  .ev-read { padding:clamp(2.4rem,6vw,3.8rem) 0 clamp(1.2rem,3vw,2rem); }
+  .ev-chapters { padding-block:0 clamp(1rem,3vw,2rem); }
+  .ev-narrow { width:min(66ch,100%); }
+  .ev-sum { font-size:clamp(1.04rem,2vw,1.2rem); line-height:1.72; margin:0; }
+  .ev-meta { margin:2rem 0 0; display:grid; gap:1px; background:var(--grey);
+    border:1px solid var(--grey); }
+  .ev-meta > div { background:var(--panel, var(--white)); padding:0.9rem 1.1rem;
+    display:grid; grid-template-columns:8rem 1fr; gap:1rem; align-items:baseline; }
+  .ev-meta dt { margin:0; font-size:0.68rem; font-weight:700; letter-spacing:0.13em;
+    text-transform:uppercase; color:var(--gray-text); }
+  .ev-meta dd { margin:0; font-size:0.95rem; line-height:1.6; }
+  @media (max-width:620px){ .ev-meta > div { grid-template-columns:1fr; gap:0.15rem; } }
+
+  .ev-chead { display:flex; align-items:baseline; gap:1rem; border-bottom:1px solid var(--grey);
+    padding-bottom:0.7rem; margin:clamp(2rem,5vw,3.2rem) 0 1.1rem; }
+  .ev-chead h2 { font-size:clamp(1.1rem,2.4vw,1.45rem); margin:0; }
+  .ev-chead .n { margin-left:auto; font-size:0.7rem; font-weight:700; letter-spacing:0.13em;
+    text-transform:uppercase; color:var(--gray-text); white-space:nowrap;
+    font-variant-numeric:tabular-nums; }
+
+  .ev-shots { display:grid; gap:10px; grid-template-columns:repeat(4,1fr); }
+  .ev-shots button { padding:0; border:0; cursor:zoom-in; background:var(--grey-soft);
+    position:relative; aspect-ratio:1/1; overflow:hidden; display:block; }
+  .ev-shots button.wide { grid-column:span 2; grid-row:span 2; }
+  .ev-shots img { width:100%; height:100%; object-fit:cover; display:block;
+    transition:transform .45s cubic-bezier(.2,.7,.3,1); }
+  .ev-shots button:hover img { transform:scale(1.045); }
+  .ev-shots button:focus-visible { outline:3px solid var(--red); outline-offset:2px; }
+  @media (max-width:820px){ .ev-shots { grid-template-columns:repeat(3,1fr); } }
+  @media (max-width:520px){
+    .ev-shots { grid-template-columns:repeat(2,1fr); }
+    .ev-shots button.wide { grid-column:span 2; grid-row:auto; }
+  }
+
+  .ev-films { background:#0F0F0F; color:#F0F0F0; padding:clamp(2.4rem,6vw,3.6rem) 0;
+    margin-top:clamp(2rem,5vw,3rem); }
+  .ev-films .ev-chead { border-bottom-color:rgba(255,255,255,.18); margin-top:0; }
+  .ev-films .ev-chead h2 { color:#F0F0F0; }
+  .ev-films .ev-chead .n { color:#A9A9A9; }
+  .ev-films .intro { color:#A9A9A9; font-size:0.93rem; max-width:52ch; margin:0.2rem 0 1.5rem; }
+  .ev-reel { display:grid; gap:14px; grid-template-columns:repeat(4,1fr); }
+  @media (max-width:820px){ .ev-reel { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:420px){ .ev-reel { grid-template-columns:1fr; } }
+  .ev-film { position:relative; border:0; padding:0; cursor:pointer; background:#000;
+    aspect-ratio:9/16; overflow:hidden; display:block; text-align:left; }
+  .ev-film img { width:100%; height:100%; object-fit:cover; display:block; opacity:.92;
+    transition:transform .5s cubic-bezier(.2,.7,.3,1), opacity .3s; }
+  .ev-film:hover img { transform:scale(1.05); opacity:1; }
+  .ev-film:focus-visible { outline:3px solid var(--red); outline-offset:3px; }
+  .ev-film .play { position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
+  .ev-film .play i { width:52px; height:52px; border-radius:99px; display:grid; place-items:center;
+    background:rgba(10,10,10,.55); border:1px solid rgba(255,255,255,.5); transition:background .2s,border-color .2s; }
+  .ev-film:hover .play i { background:var(--red); border-color:var(--red); }
+  .ev-film .play svg { width:16px; height:16px; fill:#fff; margin-left:3px; }
+  .ev-film figcaption { position:absolute; inset:auto 0 0 0; padding:2rem 0.8rem 0.7rem;
+    background:linear-gradient(to top, rgba(6,6,6,.9), rgba(6,6,6,0)); color:#fff;
+    font-size:0.8rem; line-height:1.4; pointer-events:none; }
+
+  #ev-dlg { border:0; padding:0; background:transparent; max-width:none; max-height:none;
+    width:100vw; height:100dvh; overflow:hidden; }
+  #ev-dlg::backdrop { background:rgba(6,6,6,.95); }
+  .ev-lb { position:absolute; inset:0; display:grid; grid-template-rows:1fr auto; }
+  .ev-stage { position:relative; display:grid; place-items:center;
+    padding:clamp(1rem,4vw,3rem); min-height:0; }
+  .ev-stage img, .ev-stage video { max-width:100%; max-height:100%; object-fit:contain; display:block; }
+  .ev-stage video { width:min(430px,86vw); background:#000; }
+  .ev-bar { display:flex; align-items:center; justify-content:center; gap:1.2rem; color:#fff;
+    padding:1rem 1.2rem calc(1rem + env(safe-area-inset-bottom)); }
+  .ev-bar p { margin:0; font-size:0.85rem; color:#D6D6D6; text-align:center; max-width:46ch;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ev-num { font-size:0.7rem; letter-spacing:0.13em; font-weight:700; color:#9A9A9A;
+    font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .ev-nav { position:absolute; top:50%; transform:translateY(-50%); width:46px; height:46px;
+    border-radius:99px; border:1px solid rgba(255,255,255,.45); background:rgba(12,12,12,.62);
+    color:#fff; font:inherit; font-size:1.3rem; line-height:1; cursor:pointer; display:grid;
+    place-items:center; z-index:3; }
+  .ev-nav:hover { background:var(--red); border-color:var(--red); }
+  .ev-nav[disabled] { opacity:.28; cursor:default; }
+  .ev-nav[disabled]:hover { background:rgba(12,12,12,.62); border-color:rgba(255,255,255,.45); }
+  .ev-prev { left:max(0.7rem,2vw); } .ev-next { right:max(0.7rem,2vw); }
+  .ev-shut { position:absolute; top:max(0.7rem,2vw); right:max(0.7rem,2vw); z-index:4;
+    width:42px; height:42px; border-radius:99px; border:1px solid rgba(255,255,255,.4);
+    background:rgba(12,12,12,.62); color:#fff; font:inherit; font-size:1.05rem; cursor:pointer;
+    display:grid; place-items:center; }
+  .ev-shut:hover { background:var(--red); border-color:var(--red); }
+
+  .ev-tail { border-top:1px solid var(--grey); padding:2.2rem 0 3rem;
+    margin-top:clamp(2rem,5vw,3rem); }
+  .ev-tail .wrap { display:flex; flex-wrap:wrap; gap:1rem; align-items:center;
+    justify-content:space-between; }
+  .ev-tail p { margin:0; font-size:0.86rem; color:var(--gray-text); max-width:50ch; }
+  .ev-state { padding:clamp(3rem,8vw,5rem) 0; color:var(--gray-text); }
+  @media (prefers-reduced-motion:reduce){ .ev-shots img, .ev-film img { transition:none; } }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+<header>
+  <div class="nav-wrap">
+    <a class="logo" href="index.html"><img src="assets/lads_logo.png" alt="LADS, Lebanese Association of Dental Students"></a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-controls="nav" aria-expanded="false" onclick="var n=document.getElementById('nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o);">&#9776;</button>
+    <nav id="nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="account.html" data-portal-link>Portal</a></li>
+        <li><a href="join.html" class="btn-join">Join LADS</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-label="Switch between light and dark mode" title="Switch theme">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+<div class="wrap"><a class="ev-back" href="archive.html">&#8592; All activities</a></div>
+
+<p id="ev-loading" class="ev-state"><span class="wrap">Loading&hellip;</span></p>
+<p id="ev-missing" hidden class="ev-state"><span class="wrap">That activity is not in the archive.
+  <a href="archive.html" style="text-decoration:underline;">See all activities</a>.</span></p>
+
+<article id="ev-body" hidden>
+  <section class="ev-hero" id="ev-hero">
+    <figure><img id="ev-cover" alt=""><span class="veil"></span></figure>
+    <div class="lede">
+      <div class="wrap">
+        <p class="ev-kick" id="ev-kick"></p>
+        <h1 id="ev-title"></h1>
+        <p class="ev-where" id="ev-where"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ev-rail" id="ev-rail" hidden><div class="wrap" id="ev-figs"></div></section>
+
+  <section class="ev-read">
+    <div class="wrap">
+      <div class="ev-narrow">
+        <p class="ev-sum" id="ev-sum"></p>
+        <dl class="ev-meta" id="ev-meta"></dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap ev-chapters" id="ev-chapters"></section>
+
+  <section class="ev-films" id="ev-filmwrap" hidden>
+    <div class="wrap">
+      <div class="ev-chead">
+        <h2>Films</h2>
+        <span class="n" id="ev-filmn"></span>
+      </div>
+      <p class="intro">Filmed upright, so they are shown upright rather than letterboxed
+      into the photograph grid.</p>
+      <div class="ev-reel" id="ev-reel"></div>
+    </div>
+  </section>
+
+  <section class="ev-tail">
+    <div class="wrap">
+      <p>Every LADS activity since 2024 is kept on record, with the photographs and the
+      figures the committee reported at the time.</p>
+      <a class="btn btn-outline" href="archive.html">The full record &rarr;</a>
+    </div>
+  </section>
+</article>
+
+<dialog id="ev-dlg">
+  <div class="ev-lb">
+    <button class="ev-shut" id="ev-shut" type="button" aria-label="Close">&#10005;</button>
+    <div class="ev-stage" id="ev-stage"></div>
+    <button class="ev-nav ev-prev" id="ev-prev" type="button" aria-label="Previous">&#8249;</button>
+    <button class="ev-nav ev-next" id="ev-next" type="button" aria-label="Next">&#8250;</button>
+    <div class="ev-bar"><span class="ev-num" id="ev-num"></span><p id="ev-cap"></p></div>
+  </div>
+</dialog>
+
+</main>
+
+<dialog id="ar-dlg" aria-labelledby="ar-title">
+  <button class="ar-close" id="ar-close" type="button" aria-label="Close">&times;</button>
+  <div id="ar-media"></div>
+  <div class="ar-detail">
+    <p class="ar-date" id="ar-when"></p>
+    <h2 id="ar-title"></h2>
+    <p class="lead" id="ar-lead"></p>
+    <dl class="ar-rows" id="ar-rows"></dl>
+  </div>
+</dialog>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <img src="assets/lads_logo.png" alt="LADS">
+      <h4>LADS</h4>
+      <p>Lebanese Association of Dental Students<br>Faculty of Dentistry, Beirut Arab University<br>Tarik El Jadida, Riad El Solh 11072809<br>Beirut, Lebanon</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="join.html">Membership</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/lebaneseassociationofdentalstudents" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.linkedin.com/company/lebanese-association-of-dental-students" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:info@ladslb.org">info@ladslb.org</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015. GOOGLE FOR NONPROFITS CHARITY ID 1658. <a href="about.html#transparency" style="text-decoration:underline;">ORGANISATION DETAILS</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  if(!btn) return;
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function current(){
+    var set = root.getAttribute('data-theme');
+    if(set) return set;
+    return mq.matches ? 'dark' : 'light';
+  }
+  function paint(){
+    var dark = current()==='dark';
+    btn.querySelector('.moon').style.display = dark ? 'none' : 'block';
+    btn.querySelector('.sun').style.display  = dark ? 'block' : 'none';
+  }
+  var saved=null; try{saved=localStorage.getItem('lads-theme');}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  paint();
+  mq.addEventListener && mq.addEventListener('change', paint);
+  btn.addEventListener('click', function(){
+    var next = current()==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{localStorage.setItem('lads-theme', next);}catch(e){}
+    paint();
+  });
+})();
+</script>
+<script>
+/* The big red button is the one call to action in the header, so it should
+   always be the next thing this visitor needs. A signed-in member does not
+   need "Join LADS"; they need the portal. Supabase stores its session in
+   localStorage, so this reads it directly rather than loading the client on
+   every public page for one cosmetic decision. Nothing here grants access:
+   the portal pages check the session properly on arrival. */
+(function(){
+  var join = document.querySelector('nav a.btn-join');
+  if(!join) return;
+  var live = false;
+  try{
+    for(var i=0;i<localStorage.length;i++){
+      var k = localStorage.key(i);
+      if(!/^sb-.+-auth-token$/.test(k)) continue;
+      var v = JSON.parse(localStorage.getItem(k) || 'null');
+      var s = v && (v.currentSession || v);
+      var exp = s && s.expires_at;
+      if(exp && exp * 1000 > Date.now()) live = true;
+    }
+  }catch(e){ return; }
+  if(!live) return;
+  var plain = document.querySelector('nav a[data-portal-link]');
+  var here = plain && plain.classList.contains('active');
+  join.setAttribute('href', (join.getAttribute('href').charAt(0) === '/' ? '/' : '') + 'account.html');
+  join.textContent = 'Portal';
+  if(here){ join.classList.add('active'); join.setAttribute('aria-current','page'); }
+  if(plain && plain.parentElement) plain.parentElement.style.display = 'none';
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+
+import { sb, SUPABASE_URL, fmtDate, escapeHtml } from "./js/portal.js";
+
+const $ = id => document.getElementById(id);
+const STORAGE = SUPABASE_URL + "/storage/v1/object/public/media/";
+const src = p => p ? (/^https?:/.test(p) ? p : STORAGE + p) : "";
+
+const COMMITTEES = {
+  scientific:"Scientific", public_health:"Public Health", voluntary:"Voluntary",
+  exchange:"Exchange", training:"Training", editorial:"Editorial",
+  social_media:"Social Media", fundraising:"Fundraising", activities:"Activities",
+};
+
+const params = new URLSearchParams(location.search);
+const slug = params.get("e");
+
+/* Impact is written as one sentence by the committee, because a sentence is
+   what a person can verify later. The rail pulls the leading figures out of it
+   for scanning, and the sentence itself stays intact underneath. Nothing here
+   invents a number: a figure only appears if it is written in the record. */
+function figures(impact) {
+  if (!impact) return [];
+  const out = [];
+  const seen = new Set();
+  const re = /(\d[\d,]*\+?)\s+([a-z][a-z' -]{2,40}?)(?=[,.;—]|\s+(?:and|with|among|across|in|to|from|plus)\b|$)/gi;
+  let m;
+  while ((m = re.exec(impact)) !== null && out.length < 4) {
+    const n = m[1];
+    const label = m[2].trim().replace(/\s+/g, " ");
+    if (seen.has(label.toLowerCase())) continue;
+    seen.add(label.toLowerCase());
+    out.push([n, label]);
+  }
+  return out;
+}
+
+async function load() {
+  if (!slug) { $("ev-loading").hidden = true; $("ev-missing").hidden = false; return; }
+
+  const { data, error } = await sb
+    .from("events")
+    .select("id,title,slug,summary,description,committee_id,starts_at,location," +
+            "partners,impact,category,image_url," +
+            "event_media(url,kind,sort_order,caption,poster_url)")
+    .eq("slug", slug)
+    .eq("published", true)
+    .eq("members_only", false)
+    .maybeSingle();
+
+  $("ev-loading").hidden = true;
+  if (error || !data) { $("ev-missing").hidden = false; return; }
+
+  const media = (data.event_media || []).slice().sort((a, b) => a.sort_order - b.sort_order);
+  const photos = media.filter(m => m.kind !== "video");
+  const films  = media.filter(m => m.kind === "video");
+
+  document.title = data.title + " | LADS";
+
+  /* hero */
+  const cover = data.image_url || (photos[0] && photos[0].url);
+  if (cover) { $("ev-cover").src = src(cover); $("ev-cover").alt = data.title; }
+  else $("ev-hero").classList.add("plain");
+
+  $("ev-kick").innerHTML =
+    (data.category ? `<span class="tag">${escapeHtml(data.category)}</span>` : "") +
+    `<span>${escapeHtml(fmtDate(data.starts_at))}</span>` +
+    `<span class="dot"></span><span>${escapeHtml(COMMITTEES[data.committee_id] || "Executive")}</span>` +
+    (data.partners ? `<span class="dot"></span><span>with ${escapeHtml(data.partners)}</span>` : "");
+  $("ev-title").textContent = data.title;
+  if (data.location) $("ev-where").textContent = data.location; else $("ev-where").hidden = true;
+
+  /* figures */
+  const figs = figures(data.impact);
+  if (figs.length >= 2) {
+    $("ev-figs").innerHTML = figs.map(([n, k]) =>
+      `<div class="ev-fig"><b>${escapeHtml(n)}</b><span>${escapeHtml(k)}</span></div>`).join("");
+    $("ev-rail").hidden = false;
+  }
+
+  /* the record */
+  $("ev-sum").textContent = data.description || data.summary || "";
+  const rows = [];
+  rows.push(["Committee", COMMITTEES[data.committee_id] || "Executive"]);
+  if (data.location) rows.push(["Where", data.location]);
+  if (data.partners) rows.push(["Partners", data.partners]);
+  if (data.impact)   rows.push(["Outcome", data.impact]);
+  if (data.category) rows.push(["Programme", data.category]);
+  $("ev-meta").innerHTML = rows.map(([k, v]) =>
+    `<div><dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd></div>`).join("");
+
+  /* photographs, grouped by their caption when the captions actually group.
+     Healing Hands was four regional visits in one activity and its captions say
+     so, which is worth showing. Where captions are absent or all different, one
+     grid is the honest presentation. */
+  const groups = groupPhotos(photos);
+  $("ev-chapters").innerHTML = groups.map(g => {
+    const from = photos.indexOf(g.items[0]);
+    return `
+      <div class="ev-chead">
+        <h2>${escapeHtml(g.name)}</h2>
+        <span class="n">${g.items.length} ${g.items.length === 1 ? "photograph" : "photographs"}</span>
+      </div>
+      <div class="ev-shots">${g.items.map((m, i) => `
+        <button type="button" data-i="${from + i}"${i === 0 && g.items.length > 3 ? ' class="wide"' : ""}
+                aria-label="Open photograph ${i + 1} of ${g.items.length}">
+          <img src="${escapeHtml(src(m.url))}" alt="${escapeHtml(m.caption || data.title)}"
+               loading="lazy" decoding="async">
+        </button>`).join("")}</div>`;
+  }).join("");
+
+  /* films */
+  if (films.length) {
+    $("ev-filmwrap").hidden = false;
+    $("ev-filmn").textContent = films.length + (films.length === 1 ? " film" : " films");
+    $("ev-reel").innerHTML = films.map((m, i) => `
+      <button class="ev-film" type="button" data-v="${i}"
+              aria-label="Play film ${i + 1} of ${films.length}">
+        ${m.poster_url
+          ? `<img src="${escapeHtml(src(m.poster_url))}" alt="" loading="lazy" decoding="async">`
+          : `<video src="${escapeHtml(src(m.url))}" preload="metadata" muted></video>`}
+        <span class="play"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg></i></span>
+        ${m.caption ? `<figcaption>${escapeHtml(m.caption)}</figcaption>` : ""}
+      </button>`).join("");
+  }
+
+  $("ev-body").hidden = false;
+  wire(photos, films, data);
+}
+
+function groupPhotos(photos) {
+  const named = photos.filter(p => p.caption);
+  const names = [...new Set(named.map(p => p.caption))];
+  const grouped = named.length === photos.length && names.length > 1 && names.length <= 6;
+  if (!grouped) return [{ name: "Photographs", items: photos }];
+  return names.map(n => ({ name: n, items: photos.filter(p => p.caption === n) }));
+}
+
+function wire(photos, films, data) {
+  const dlg = $("ev-dlg");
+  let list = [], at = 0;
+
+  function show() {
+    const m = list[at];
+    $("ev-stage").innerHTML = m.kind === "video"
+      ? `<video src="${escapeHtml(src(m.url))}"${m.poster_url ? ` poster="${escapeHtml(src(m.poster_url))}"` : ""} controls autoplay playsinline></video>`
+      : `<img src="${escapeHtml(src(m.url))}" alt="${escapeHtml(m.caption || data.title)}">`;
+    $("ev-num").textContent = (at + 1) + " / " + list.length;
+    $("ev-cap").textContent = m.caption || fmtDate(data.starts_at);
+    $("ev-prev").disabled = at === 0;
+    $("ev-next").disabled = at === list.length - 1;
+  }
+  function go(n) { if (n >= 0 && n < list.length) { at = n; show(); } }
+  function open(set, i) { list = set; at = i; show(); if (!dlg.open) dlg.showModal(); }
+
+  $("ev-chapters").addEventListener("click", ev => {
+    const b = ev.target.closest("button[data-i]"); if (b) open(photos, +b.dataset.i);
+  });
+  $("ev-reel").addEventListener("click", ev => {
+    const b = ev.target.closest("button[data-v]"); if (b) open(films, +b.dataset.v);
+  });
+  $("ev-prev").addEventListener("click", () => go(at - 1));
+  $("ev-next").addEventListener("click", () => go(at + 1));
+  $("ev-shut").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("close", () => { $("ev-stage").innerHTML = ""; });
+  dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });
+  dlg.addEventListener("keydown", ev => {
+    if (ev.key === "ArrowLeft")  { ev.preventDefault(); go(at - 1); }
+    if (ev.key === "ArrowRight") { ev.preventDefault(); go(at + 1); }
+  });
+}
+
+load();
+
+</script>
+</body>
+</html>

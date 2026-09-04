@@ -23,6 +23,15 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#C00000">
+<style>
+  /* Each committee now has a page of its own, so the name is the way in. */
+  .row h3 a { text-decoration:none; color:inherit; }
+  .row h3 a::after { content:" \2192"; color:var(--red); opacity:0; margin-left:.15em;
+    transition:opacity .18s, margin-left .18s; }
+  .row:hover h3 a, .row h3 a:focus-visible { color:var(--red); }
+  .row:hover h3 a::after, .row h3 a:focus-visible::after { opacity:1; margin-left:.35em; }
+  @media (prefers-reduced-motion:reduce){ .row h3 a::after { transition:none; } }
+</style>
 </head>
 <body>
 
@@ -36,8 +45,6 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="committees.html" class="active" aria-current="page">Committees</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="archive.html">Archive</a></li>
         <li><a href="resources.html">Resources</a></li>
         <li><a href="news.html">News</a></li>
         <li><a href="account.html" data-portal-link>Portal</a></li>
@@ -66,7 +73,7 @@
     <div class="rows">
       <div class="row">
         <span class="num">01</span>
-        <h3>Scientific Committee</h3>
+        <h3><a href="committee.html?c=scientific">Scientific Committee</a></h3>
         <div class="row-body">
           <p>Encourages dental students to engage in medical and scientific research with local professionals and international initiatives. Organizes conferences, lectures, and workshops. Works with the IADS SCORE program.</p>
           <span class="tag">Head: Tia Majed</span>
@@ -74,7 +81,7 @@
       </div>
       <div class="row">
         <span class="num">02</span>
-        <h3>Fundraising Committee</h3>
+        <h3><a href="committee.html?c=fundraising">Fundraising Committee</a></h3>
         <div class="row-body">
           <p>Secures sponsorships and financial support, communicates with companies and partners, and prepares sponsorship agreements ensuring the Association's financial sustainability.</p>
           <span class="tag">Heads: Alaa Al Kork &amp; Kristina Hajj Geagea</span>
@@ -82,7 +89,7 @@
       </div>
       <div class="row">
         <span class="num">03</span>
-        <h3>Exchange Committee</h3>
+        <h3><a href="committee.html?c=exchange">Exchange Committee</a></h3>
         <div class="row-body">
           <p>Organizes the annual exchange period and international exchange opportunities for members, led by the National Exchange Officer in coordination with the IADS Exchange Board.</p>
           <span class="tag">NEO: Ali Khalifeh</span>
@@ -90,7 +97,7 @@
       </div>
       <div class="row">
         <span class="num">04</span>
-        <h3>Training Committee</h3>
+        <h3><a href="committee.html?c=training">Training Committee</a></h3>
         <div class="row-body">
           <p>Runs training sessions during General Assemblies and beyond, offering members professional and soft-skill development in accordance with the IADS Training Committee.</p>
           <span class="tag">Head: Aya Omais</span>
@@ -98,7 +105,7 @@
       </div>
       <div class="row">
         <span class="num">05</span>
-        <h3>Public Health Committee</h3>
+        <h3><a href="committee.html?c=public_health">Public Health Committee</a></h3>
         <div class="row-body">
           <p>Raises awareness about common diseases and destructive habits among students and local communities. Promotes healthy habits through campaigns, screening, and treatment initiatives.</p>
           <span class="tag">Head: Maysa Abou Saad</span>
@@ -106,7 +113,7 @@
       </div>
       <div class="row">
         <span class="num">06</span>
-        <h3>Voluntary Committee</h3>
+        <h3><a href="committee.html?c=voluntary">Voluntary Committee</a></h3>
         <div class="row-body">
           <p>Provides opportunities to contribute to oral health care in underprivileged regions, evaluates volunteering opportunities, and serves as Local Organizing Committee for IADS International Voluntary Projects.</p>
           <span class="tag">Head: Fouad Haytham Mawlawy</span>
@@ -114,7 +121,7 @@
       </div>
       <div class="row">
         <span class="num">07</span>
-        <h3>Activities Committee</h3>
+        <h3><a href="committee.html?c=activities">Activities Committee</a></h3>
         <div class="row-body">
           <p>Organizes trips, gatherings, sports days, and clubs for theater, music, photography, and more, helping students enjoy life beyond their studies.</p>
           <span class="tag">Head: Majida Jabr</span>
@@ -122,7 +129,7 @@
       </div>
       <div class="row">
         <span class="num">08</span>
-        <h3>Editorial Committee</h3>
+        <h3><a href="committee.html?c=editorial">Editorial Committee</a></h3>
         <div class="row-body">
           <p>Produces the visual content representing LADS: the LADS Gazette, posters, promotional graphics, and the Association's visual identity, in accordance with the IADS Editorial Board.</p>
           <span class="tag">Head: Aya Al Ghandour</span>
@@ -130,7 +137,7 @@
       </div>
       <div class="row">
         <span class="num">09</span>
-        <h3>Social Media Committee</h3>
+        <h3><a href="committee.html?c=social_media">Social Media Committee</a></h3>
         <div class="row-body">
           <p>Manages all LADS social platforms, produces engaging content, runs digital campaigns, and builds our online community while promoting dental health awareness.</p>
           <span class="tag">Head: Sarah Sadikk</span>
@@ -163,7 +170,6 @@
       <ul>
         <li><a href="about.html">About Us</a></li>
         <li><a href="committees.html">Committees</a></li>
-        <li><a href="projects.html">Projects</a></li>
         <li><a href="join.html">Membership</a></li>
       </ul>
     </div>
@@ -207,6 +213,36 @@
     try{localStorage.setItem('lads-theme', next);}catch(e){}
     paint();
   });
+})();
+</script>
+<script>
+/* The big red button is the one call to action in the header, so it should
+   always be the next thing this visitor needs. A signed-in member does not
+   need "Join LADS"; they need the portal. Supabase stores its session in
+   localStorage, so this reads it directly rather than loading the client on
+   every public page for one cosmetic decision. Nothing here grants access:
+   the portal pages check the session properly on arrival. */
+(function(){
+  var join = document.querySelector('nav a.btn-join');
+  if(!join) return;
+  var live = false;
+  try{
+    for(var i=0;i<localStorage.length;i++){
+      var k = localStorage.key(i);
+      if(!/^sb-.+-auth-token$/.test(k)) continue;
+      var v = JSON.parse(localStorage.getItem(k) || 'null');
+      var s = v && (v.currentSession || v);
+      var exp = s && s.expires_at;
+      if(exp && exp * 1000 > Date.now()) live = true;
+    }
+  }catch(e){ return; }
+  if(!live) return;
+  var plain = document.querySelector('nav a[data-portal-link]');
+  var here = plain && plain.classList.contains('active');
+  join.setAttribute('href', (join.getAttribute('href').charAt(0) === '/' ? '/' : '') + 'account.html');
+  join.textContent = 'Portal';
+  if(here){ join.classList.add('active'); join.setAttribute('aria-current','page'); }
+  if(plain && plain.parentElement) plain.parentElement.style.display = 'none';
 })();
 </script>
 </body>

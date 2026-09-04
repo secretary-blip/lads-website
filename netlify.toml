@@ -6,6 +6,19 @@
   publish = "site"
   command = ""
 
+# projects.html was retired: what it claimed, the archive now proves, and the
+# funding and governance paragraphs moved to About. Anything already linked to
+# it lands on About rather than on a 404.
+[[redirects]]
+  from = "/projects.html"
+  status = 301
+  to = "/about.html"
+
+[[redirects]]
+  from = "/projects"
+  status = 301
+  to = "/about.html"
+
 [[redirects]]
   from = "/*"
   status = 404
