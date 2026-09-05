@@ -40,6 +40,8 @@ type Membership = {
   method: string | null;
   amount_usd: number;
   notes: string | null;
+  reminder_sent_at: string | null;
+  reminder_count: number;
 };
 
 type Person = {
@@ -147,8 +149,13 @@ Deno.serve(async (req) => {
   const becamePaid  = rec.status === "paid"     && old?.status !== "paid";
   const becameNo    = rec.status === "rejected" && old?.status !== "rejected";
   const newlyPending = nowPending && (payload.type === "INSERT" || !wasPending);
+  /* The Treasurer pressed "Send reminder". The stamp only moves through
+     remind_membership(), so this cannot fire on an ordinary edit. */
+  const reminded = payload.type === "UPDATE" &&
+    !!rec.reminder_sent_at &&
+    rec.reminder_sent_at !== (old?.reminder_sent_at ?? null);
 
-  if (!newlyPending && !becamePaid && !becameNo) {
+  if (!newlyPending && !becamePaid && !becameNo && !reminded) {
     return new Response("nothing to do");
   }
 
@@ -200,6 +207,31 @@ Deno.serve(async (req) => {
            apply for exchanges and voluntary projects, and put your name forward
            for a committee.</p>`,
         { text: "Open the member portal", href: `${PORTAL}/account.html` },
+      ),
+    );
+    return new Response("ok");
+  }
+
+  // ------------------------------------------------- dues reminder
+  if (reminded) {
+    const first = esc((who.full_name || "").split(" ")[0]);
+    const again = (rec.reminder_count ?? 1) > 1;
+    await sendEmail(
+      [who.email],
+      `Your LADS membership for ${rec.academic_year} is still unpaid`,
+      shell(
+        `${first}, your dues are outstanding`,
+        `<p style="font-size:15px;">Our records show your LADS membership for
+           ${esc(rec.academic_year)} has not been paid.${again
+             ? " This is a second reminder." : ""}</p>
+         <p style="font-size:15px;">Membership is
+           $${Number(rec.amount_usd ?? 20).toFixed(0)} for the whole academic
+           year. Pay by whish to <strong>+961 78 78 20 96</strong>, or in cash
+           to a board member at any event, then submit it on the payment page so
+           we can verify it.</p>
+         <p style="font-size:15px;">If you have already paid, reply to this
+           email and we will sort it out.</p>`,
+        { text: "Submit your payment", href: `${PORTAL}/pay.html` },
       ),
     );
     return new Response("ok");

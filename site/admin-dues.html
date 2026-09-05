@@ -134,6 +134,7 @@
             Remind everyone unpaid<span class="count" id="c-owe" hidden>0</span>
           </button>
         </div>
+        <p id="remind-msg" class="form-msg" role="status" aria-live="polite"></p>
         <div id="list-all" style="margin-top:1.5rem;"></div>
       </div>
 
@@ -141,6 +142,21 @@
     </div>
   </div>
 </section>
+
+<!-- Not window.confirm(). A browser that has been told "don't show this
+     again" for a page silently returns false from every later confirm, and the
+     action looks like it simply does nothing. That has already bitten the
+     media page. -->
+<dialog class="proof" id="ask-dlg">
+  <form method="dialog" style="padding:1.5rem;max-width:30rem;">
+    <h3 class="h-sub" style="font-size:1.15rem;" id="ask-title"></h3>
+    <p id="ask-body" style="margin-top:0.75rem;"></p>
+    <div class="btn-row" style="margin-top:1.25rem;">
+      <button type="submit" value="ok" class="btn" id="ask-ok">Send</button>
+      <button type="submit" value="no" class="btn btn-outline">Cancel</button>
+    </div>
+  </form>
+</dialog>
 
 <dialog class="proof" id="dlg">
   <div style="padding:1.5rem;">
@@ -357,32 +373,52 @@ function owing() {
     (m.profiles || {}).email);
 }
 
-/* A mailto, not a server call. The Edge Function only knows how to announce a
-   status change, and teaching it a new message means redeploying it and
-   holding another secret. This sends from the Treasurer's own mailbox, which
-   is also where the replies belong. Addresses go in bcc so a hundred students
-   do not get each other's email. */
-function remind(list) {
+/* Sending is the server's job, exactly like confirming a payment: one RPC,
+   the Edge Function writes the email, and the row records that it happened.
+   A mailto would have been quicker to build and would have left no trace of
+   who was chased or when. */
+function ask(title, body) {
+  return new Promise(resolve => {
+    const d = $("ask-dlg");
+    $("ask-title").textContent = title;
+    $("ask-body").textContent = body;
+    d.onclose = () => resolve(d.returnValue === "ok");
+    d.showModal();
+  });
+}
+
+async function remind(list, btn) {
+  const out = $("remind-msg");
   if (!list.length) {
-    alert("Nobody to remind. Everyone this year has paid or is awaiting verification.");
+    say(out, "Nobody to remind. Everyone has paid or is awaiting verification.");
     return;
   }
-  const bcc = list.map(m => m.profiles.email).join(",");
-  const subject = `LADS membership ${YEAR}: your dues are still outstanding`;
-  const body =
-    "Hello,\n\n" +
-    `Our records show your LADS membership for ${YEAR} has not been paid yet.\n\n` +
-    "Membership is 20 USD for the whole academic year. You can pay by whish to\n" +
-    "+961 78 78 20 96, or in cash to a board member at any event.\n\n" +
-    "Once you have paid, submit it here so we can verify it:\n" +
-    "https://ladslb.org/pay.html\n\n" +
-    "If you have already paid and this is a mistake, reply to this email and we\n" +
-    "will sort it out.\n\n" +
-    "Thank you,\nLebanese Association of Dental Students";
-  window.location.href =
-    "mailto:?bcc=" + encodeURIComponent(bcc) +
-    "&subject=" + encodeURIComponent(subject) +
-    "&body=" + encodeURIComponent(body);
+  const many = list.length > 1;
+  const ok = await ask(
+    many ? `Remind ${list.length} members?` : "Send this reminder?",
+    many
+      ? `They will each get an email asking for their ${YEAR} dues.`
+      : `${list[0].profiles.full_name || "This member"} will get an email asking for their ${YEAR} dues.`);
+  if (!ok) return;
+
+  const label = btn ? btn.textContent : null;
+  if (btn) { btn.disabled = true; btn.textContent = "Sending\u2026"; }
+
+  let sent = 0;
+  const failed = [];
+  for (const m of list) {
+    const { error } = await sb.rpc("remind_membership", { membership_id: m.id });
+    if (error) failed.push((m.profiles || {}).full_name || (m.profiles || {}).email);
+    else sent++;
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = label; }
+  if (failed.length) {
+    say(out, `Sent ${sent}. Could not send to: ${failed.join(", ")}`, "error");
+  } else {
+    say(out, `Sent ${sent} reminder${sent === 1 ? "" : "s"}.`, "success");
+  }
+  await load();
 }
 
 function render() {
@@ -458,6 +494,9 @@ function card(m) {
       ${p.phone ? `<dt>Phone</dt><dd>${escapeHtml(p.phone)}</dd>` : ""}
       ${m.paid_on ? `<dt>Confirmed</dt><dd>${escapeHtml(fmtDate(m.paid_on))}</dd>` : ""}
       ${m.notes ? `<dt>Note</dt><dd>${escapeHtml(m.notes)}</dd>` : ""}
+      ${m.reminder_sent_at
+        ? `<dt>Reminded</dt><dd>${escapeHtml(fmtDate(m.reminder_sent_at))}${
+             m.reminder_count > 1 ? ` (${m.reminder_count} times)` : ""}</dd>` : ""}
     </dl>
     <div class="btn-row">
       ${m.proof_path
@@ -482,7 +521,7 @@ document.addEventListener("click", async (e) => {
 
   if (act === "remind") {
     const id = btn.closest("[data-id]").dataset.id;
-    return remind(rows.filter(m => m.id === id && (m.profiles || {}).email));
+    return remind(rows.filter(m => m.id === id && (m.profiles || {}).email), btn);
   }
 
   const rec = btn.closest(".rec");
@@ -556,7 +595,7 @@ $("q").addEventListener("input", renderAll);
 $("f").addEventListener("change", renderAll);
 
 function wireTabs() {
-  $("remind-all").addEventListener("click", () => remind(owing()));
+  $("remind-all").addEventListener("click", (e) => remind(owing(), e.currentTarget));
 
   const map = { "tab-wait": "pane-wait", "tab-all": "pane-all" };
   Object.keys(map).forEach(t => {
