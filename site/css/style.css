@@ -18,6 +18,15 @@
   --gut:clamp(1.25rem,5vw,3rem);
   --sec:clamp(3.5rem,9vw,7rem);
 
+  /* One radius for every card, panel and tile, matching portal.css, which has
+     been rounded at 6px since the member area was built. Chrome that is not a
+     card, buttons and inputs, keeps the tighter 4px. Bands, the header,
+     tables and divider-line lists stay square: rounding a full-bleed band
+     leaves slivers at the page edge, and rounding a list separated by
+     border-bottom needs a layout change, not a radius. */
+  --r:6px;
+  --r-sm:4px;
+
   --f:"Kufam",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 
@@ -87,7 +96,7 @@ section{padding-block:var(--sec);}
   min-height:52px;padding:0.9rem 1.7rem;
   font-family:var(--f);font-size:1rem;font-weight:700;letter-spacing:0.01em;
   background:var(--red);color:var(--white);border:2px solid var(--red);
-  border-radius:2px;cursor:pointer;text-decoration:none;
+  border-radius:var(--r-sm);cursor:pointer;text-decoration:none;
   transition:background .15s ease,color .15s ease,border-color .15s ease,transform .12s ease-out;
 }
 .btn:active{transform:scale(.98);}
@@ -113,7 +122,7 @@ header{
 .logo img{height:74px;width:auto;}
 .nav-toggle{
   order:2;width:46px;height:46px;display:grid;place-items:center;
-  background:none;border:1px solid var(--grey);border-radius:2px;
+  background:none;border:1px solid var(--grey);border-radius:var(--r-sm);
   font-size:1.35rem;line-height:1;color:var(--black);cursor:pointer;
 }
 nav{
@@ -135,7 +144,7 @@ nav a.active:not(.btn-join){color:var(--red);}
 nav .btn-join.active{color:var(--white);}
 nav .btn-join{
   margin-top:1rem;border:none;background:var(--red);color:var(--white);
-  text-align:center;border-radius:2px;padding:0.95rem 1.25rem;
+  text-align:center;border-radius:var(--r-sm);padding:0.95rem 1.25rem;
 }
 nav .btn-join:hover{background:var(--red-dark);color:var(--white);}
 
@@ -256,17 +265,30 @@ nav .btn-join:hover{background:var(--red-dark);color:var(--white);}
    including the dark-mode rules below. */
 .blocks.cards{gap:1rem;background:none;border:0;}
 .blocks.cards .block{
-  border:1px solid var(--grey);border-radius:12px;
+  border:1px solid var(--grey);border-radius:var(--r);
   transition:border-color 0.15s ease;
 }
 .blocks.cards .block:hover{border-color:var(--red);}
 .blocks.cards .tag{border-radius:999px;}
 
+/* The whole card is the target, not just the four words of the heading.
+   The link stays a real link in the markup, and its ::after is stretched over
+   the card, so keyboard focus, middle-click and "open in new tab" all still
+   land on the same anchor. Nothing else in the card is interactive, so there
+   is nothing for the overlay to swallow. */
+.blocks.cards .block{position:relative;}
+.blocks.cards .block h3 a::after{content:"";position:absolute;inset:0;}
+.blocks.cards .block:hover{cursor:pointer;}
+.blocks.cards .block:hover h3 a{color:var(--red);}
+.blocks.cards .block h3 a:hover{text-decoration:none;}
+.blocks.cards .block:has(a:focus-visible){outline:3px solid var(--red);outline-offset:3px;}
+.blocks.cards .block h3 a:focus-visible{outline:none;}
+
 /* The icon sits in its own tile so the nine read as one set. */
 .cmt-ico{
   display:grid;place-items:center;
   width:2.9rem;height:2.9rem;
-  background:var(--grey-soft);border-radius:10px;
+  background:var(--grey-soft);border-radius:var(--r);
 }
 .cmt-ico svg{
   width:1.55rem;height:1.55rem;
@@ -374,7 +396,8 @@ nav .btn-join:hover{background:var(--red-dark);color:var(--white);}
 .step p{margin-top:0.5rem;color:var(--gray-text);}
 @media (min-width:820px){.step{grid-template-columns:4rem 1fr;padding-block:2rem;}.step::before{font-size:2rem;}}
 
-.panel{border:1px solid var(--grey);background:var(--white);padding:clamp(1.4rem,4vw,2.25rem);}
+.panel{border:1px solid var(--grey);border-radius:var(--r);background:var(--white);
+       padding:clamp(1.4rem,4vw,2.25rem);}
 .panel-red{border-top:4px solid var(--red);}
 .panel h3{font-size:1.15rem;}
 .pay-list{margin-top:1.25rem;display:grid;gap:0.85rem;}
@@ -425,7 +448,7 @@ textarea,
 input[type="file"]{
   width:100%;min-height:56px;padding:0.95rem 1rem;
   font-family:var(--f);font-size:1.02rem;line-height:1.4;color:var(--black);
-  background:var(--white);border:1px solid #B9B9B9;border-radius:4px;
+  background:var(--white);border:1px solid #B9B9B9;border-radius:var(--r-sm);
   transition:border-color .12s ease, box-shadow .12s ease;
 }
 textarea{min-height:120px;resize:vertical;}
@@ -436,7 +459,7 @@ input[type="file"]{padding:0.7rem;background:var(--grey-soft);}
 .checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.5rem;}
 .checks label{
   display:flex;align-items:center;gap:0.6rem;min-height:48px;padding:0.5rem 0.8rem;
-  border:1px solid var(--grey);border-radius:2px;font-size:0.92rem;cursor:pointer;
+  border:1px solid var(--grey);border-radius:var(--r-sm);font-size:0.92rem;cursor:pointer;
 }
 .checks label:hover{border-color:var(--black);}
 input[type="checkbox"]{width:20px;height:20px;accent-color:var(--red);flex:none;margin:0;}
@@ -641,7 +664,7 @@ footer li{margin-bottom:0.55rem;}
 .notice-wrap{padding-block:clamp(1.5rem,4vw,2.5rem) 0;}
   .notice{
     border:1px solid var(--red);border-left:6px solid var(--red);
-    background:var(--grey-soft);padding:clamp(1.15rem,3vw,1.6rem);border-radius:2px;
+    background:var(--grey-soft);padding:clamp(1.15rem,3vw,1.6rem);border-radius:var(--r);
   }
   .notice h3{font-size:1.15rem;color:var(--red);}
   .notice p{margin-top:0.6rem;font-size:0.97rem;line-height:1.65;}
@@ -817,7 +840,7 @@ html[data-theme="dark"] .nav-toggle:hover{border-color:var(--red);color:var(--re
 .notice-wrap{padding-block:clamp(1.5rem,4vw,2.5rem) 0;}
 .notice{
   border:1px solid var(--red);border-left:6px solid var(--red);
-  background:var(--grey-soft);padding:clamp(1.15rem,3vw,1.6rem);border-radius:2px;
+  background:var(--grey-soft);padding:clamp(1.15rem,3vw,1.6rem);border-radius:var(--r);
 }
 .notice h3{font-size:1.15rem;color:var(--red);}
 .notice p{margin-top:0.6rem;font-size:0.97rem;line-height:1.65;}
