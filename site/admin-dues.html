@@ -130,6 +130,9 @@
             <option value="rejected">Not verified</option>
             <option value="unpaid">Not paid</option>
           </select>
+          <button type="button" class="btn btn-outline" id="remind-all">
+            Remind everyone unpaid<span class="count" id="c-owe" hidden>0</span>
+          </button>
         </div>
         <div id="list-all" style="margin-top:1.5rem;"></div>
       </div>
@@ -345,6 +348,43 @@ function waiting() {
   return rows.filter(m => m.status === "pending" || m.status === "pending_verification");
 }
 
+/* Who still owes for this year: never paid, or a payment we could not verify.
+   Someone waiting on the Treasurer is not chased. */
+function owing() {
+  return rows.filter(m =>
+    m.academic_year === YEAR &&
+    (m.status === "unpaid" || m.status === "rejected") &&
+    (m.profiles || {}).email);
+}
+
+/* A mailto, not a server call. The Edge Function only knows how to announce a
+   status change, and teaching it a new message means redeploying it and
+   holding another secret. This sends from the Treasurer's own mailbox, which
+   is also where the replies belong. Addresses go in bcc so a hundred students
+   do not get each other's email. */
+function remind(list) {
+  if (!list.length) {
+    alert("Nobody to remind. Everyone this year has paid or is awaiting verification.");
+    return;
+  }
+  const bcc = list.map(m => m.profiles.email).join(",");
+  const subject = `LADS membership ${YEAR}: your dues are still outstanding`;
+  const body =
+    "Hello,\n\n" +
+    `Our records show your LADS membership for ${YEAR} has not been paid yet.\n\n` +
+    "Membership is 20 USD for the whole academic year. You can pay by whish to\n" +
+    "+961 78 78 20 96, or in cash to a board member at any event.\n\n" +
+    "Once you have paid, submit it here so we can verify it:\n" +
+    "https://ladslb.org/pay.html\n\n" +
+    "If you have already paid and this is a mistake, reply to this email and we\n" +
+    "will sort it out.\n\n" +
+    "Thank you,\nLebanese Association of Dental Students";
+  window.location.href =
+    "mailto:?bcc=" + encodeURIComponent(bcc) +
+    "&subject=" + encodeURIComponent(subject) +
+    "&body=" + encodeURIComponent(body);
+}
+
 function render() {
   const thisYear = rows.filter(m => m.academic_year === YEAR);
   const n = s => thisYear.filter(m => m.status === s).length;
@@ -367,6 +407,10 @@ function render() {
   $("list-wait").innerHTML = w.length
     ? w.map(card).join("")
     : '<p class="p-muted">Nothing waiting. Every payment has been dealt with.</p>';
+
+  const owe = owing();
+  $("c-owe").hidden = !owe.length;
+  $("c-owe").textContent = owe.length;
 
   renderAll();
 }
@@ -422,6 +466,8 @@ function card(m) {
       ${m.status !== "paid" ? '<button type="button" class="btn" data-act="approve">Confirm payment</button>' : ""}
       ${open ? '<button type="button" class="btn btn-outline" data-act="reject">Cannot verify</button>' : ""}
       ${m.status === "paid" ? '<button type="button" class="btn btn-outline" data-act="reverse">Reverse confirmation</button>' : ""}
+      ${(m.status === "unpaid" || m.status === "rejected") && p.email
+        ? '<button type="button" class="btn btn-outline" data-act="remind">Send reminder</button>' : ""}
     </div>
     <p class="form-msg" data-msg role="status" aria-live="polite"></p>
   </div>`;
@@ -433,6 +479,11 @@ document.addEventListener("click", async (e) => {
   const act = btn.dataset.act;
 
   if (act === "proof") return showProof(btn.dataset.path, btn.dataset.name);
+
+  if (act === "remind") {
+    const id = btn.closest("[data-id]").dataset.id;
+    return remind(rows.filter(m => m.id === id && (m.profiles || {}).email));
+  }
 
   const rec = btn.closest(".rec");
   const msg = rec.querySelector("[data-msg]");
@@ -505,6 +556,8 @@ $("q").addEventListener("input", renderAll);
 $("f").addEventListener("change", renderAll);
 
 function wireTabs() {
+  $("remind-all").addEventListener("click", () => remind(owing()));
+
   const map = { "tab-wait": "pane-wait", "tab-all": "pane-all" };
   Object.keys(map).forEach(t => {
     $(t).addEventListener("click", () => {
