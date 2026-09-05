@@ -80,15 +80,17 @@
         <div class="p-steps">
           <div class="p-step">
             <span class="num">1</span>
-            <h3>Send $10 USD</h3>
-            <p>Through the whish app, to the number below. Membership is 10 USD
-               for the whole academic year.</p>
+            <h3>Send $20 USD</h3>
+            <p>Through the whish app, to the number below, or in cash to a
+               board member at an event. Membership is 20 USD for the whole
+               academic year.</p>
           </div>
           <div class="p-step">
             <span class="num">2</span>
             <h3>Screenshot the confirmation</h3>
             <p>It needs to show the date and the reference clearly, or the
-               Treasurer cannot match it to the transfer.</p>
+               Treasurer cannot match it to the transfer. Paying cash? Go
+               straight to step three.</p>
           </div>
           <div class="p-step">
             <span class="num">3</span>
@@ -100,15 +102,15 @@
 
         <div class="panel panel-red" style="margin-top:1.5rem;">
           <p class="eyebrow">whish payment details</p>
-          <h3 style="margin-top:0.4rem;">Send $10 USD</h3>
+          <h3 style="margin-top:0.4rem;">Send $20 USD</h3>
           <div class="pay-list" style="margin-top:0.9rem;">
-            <p><strong>Number:</strong> Not available at this moment</p>
+            <p><strong>Number:</strong> <a href="tel:+96178782096">+961 78 78 20 96</a></p>
             <p><strong>Name:</strong> Lebanese Association of Dental Students</p>
-            <p><strong>Amount:</strong> $10 USD</p>
+            <p><strong>Amount:</strong> $20 USD</p>
           </div>
           <p class="hint" style="margin-top:0.9rem;">
-            whish transfers become active in September, at the start of the
-            academic year.
+            Check the name shown in the app before you confirm. A whish
+            transfer cannot be reversed once it is sent.
           </p>
         </div>
       </div>
@@ -127,8 +129,6 @@
               <select id="method" required>
                 <option value="">Select&hellip;</option>
                 <option>whish</option>
-                <option>Bank transfer</option>
-                <option>OMT</option>
                 <option>Cash</option>
               </select>
             </div>
@@ -342,7 +342,7 @@ function render(current, year) {
       "showing the date and reference, and we will sort it out.";
     showForm(true);
   } else {
-    detail.textContent = `Membership is 10 USD for the ${year} academic year.`;
+    detail.textContent = `Membership is 20 USD for the ${year} academic year.`;
     showForm(true);
   }
 }
