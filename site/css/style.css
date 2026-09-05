@@ -248,6 +248,33 @@ nav .btn-join:hover{background:var(--red-dark);color:var(--white);}
   .block.wide{grid-column:span 2;}
 }
 
+/* ---------- blocks, separated into rounded cards ----------
+   The committee grid needs nine equal cards a reader can scan, not the
+   hairline mosaic .blocks draws by default: with nine of them the shared
+   1px seams read as a table. This modifier pulls the cards apart, gives each
+   its own border, and rounds them. Everything else about .block still holds,
+   including the dark-mode rules below. */
+.blocks.cards{gap:1rem;background:none;border:0;}
+.blocks.cards .block{
+  border:1px solid var(--grey);border-radius:12px;
+  transition:border-color 0.15s ease;
+}
+.blocks.cards .block:hover{border-color:var(--red);}
+.blocks.cards .tag{border-radius:999px;}
+
+/* The icon sits in its own tile so the nine read as one set. */
+.cmt-ico{
+  display:grid;place-items:center;
+  width:2.9rem;height:2.9rem;
+  background:var(--grey-soft);border-radius:10px;
+}
+.cmt-ico svg{
+  width:1.55rem;height:1.55rem;
+  fill:none;stroke:var(--red);stroke-width:1.4;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.blocks.cards .block h3{margin-top:1rem;}
+
 /* ---------- link list (resources) ---------- */
 .links{border-top:1px solid var(--grey);}
 .link-item{
@@ -516,6 +543,8 @@ footer li{margin-bottom:0.55rem;}
   html:not([data-theme="light"]) .block,
   html:not([data-theme="light"]) .panel{background:var(--panel);border-color:var(--line);}
   html:not([data-theme="light"]) .blocks{background:var(--line);border-color:var(--line);}
+  html:not([data-theme="light"]) .blocks.cards{background:none;border:0;}
+  html:not([data-theme="light"]) .cmt-ico{background:var(--panel-2, var(--panel));}
   html:not([data-theme="light"]) .card p,
   html:not([data-theme="light"]) .block p,
   html:not([data-theme="light"]) .row .row-body p,
@@ -690,6 +719,8 @@ html[data-theme="dark"] .card,
 html[data-theme="dark"] .block,
 html[data-theme="dark"] .panel{background:var(--panel);border-color:var(--line);}
 html[data-theme="dark"] .blocks{background:var(--line);border-color:var(--line);}
+html[data-theme="dark"] .blocks.cards{background:none;border:0;}
+html[data-theme="dark"] .cmt-ico{background:var(--panel-2, var(--panel));}
 html[data-theme="dark"] .card p,
 html[data-theme="dark"] .block p,
 html[data-theme="dark"] .row .row-body p,
