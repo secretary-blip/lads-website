@@ -226,9 +226,9 @@ Deno.serve(async (req) => {
              ? " This is a second reminder." : ""}</p>
          <p style="font-size:15px;">Membership is
            $${Number(rec.amount_usd ?? 20).toFixed(0)} for the whole academic
-           year. Pay by whish to <strong>+961 78 78 20 96</strong>, or in cash
-           to a board member at any event, then submit it on the payment page so
-           we can verify it.</p>
+           year. Pay in cash to a board member at any LADS event, then submit it
+           on the payment page so we can verify it. Paying by whish at the
+           university booths starts next week.</p>
          <p style="font-size:15px;">If you have already paid, reply to this
            email and we will sort it out.</p>`,
         { text: "Submit your payment", href: `${PORTAL}/pay.html` },

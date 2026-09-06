@@ -80,17 +80,15 @@
         <div class="p-steps">
           <div class="p-step">
             <span class="num">1</span>
-            <h3>Send $20 USD</h3>
-            <p>Through the whish app, to the number below, or in cash to a
-               board member at an event. Membership is 20 USD for the whole
-               academic year.</p>
+            <h3>Pay $20 USD in cash</h3>
+            <p>To a board member at any LADS event. Membership is 20 USD for
+               the whole academic year.</p>
           </div>
           <div class="p-step">
             <span class="num">2</span>
-            <h3>Screenshot the confirmation</h3>
-            <p>It needs to show the date and the reference clearly, or the
-               Treasurer cannot match it to the transfer. Paying cash? Go
-               straight to step three.</p>
+            <h3>Note who took it</h3>
+            <p>Whoever collects your dues records the payment. You do not need
+               a screenshot for cash.</p>
           </div>
           <div class="p-step">
             <span class="num">3</span>
@@ -100,17 +98,14 @@
           </div>
         </div>
 
-        <div class="panel panel-red" style="margin-top:1.5rem;">
-          <p class="eyebrow">whish payment details</p>
-          <h3 style="margin-top:0.4rem;">Send $20 USD</h3>
-          <div class="pay-list" style="margin-top:0.9rem;">
-            <p><strong>Number:</strong> <a href="tel:+96178782096">+961 78 78 20 96</a></p>
-            <p><strong>Name:</strong> Lebanese Association of Dental Students</p>
-            <p><strong>Amount:</strong> $20 USD</p>
-          </div>
+        <div class="panel" style="margin-top:1.5rem;">
+          <p class="eyebrow">Paying by whish</p>
+          <h3 style="margin-top:0.4rem;">Coming next week</h3>
+          <p style="margin-top:0.6rem;">whish payment is being set up. From next
+             week you will be able to pay at the LADS booth at your university,
+             and the number will appear here once it is live.</p>
           <p class="hint" style="margin-top:0.9rem;">
-            Check the name shown in the app before you confirm. A whish
-            transfer cannot be reversed once it is sent.
+            Until then, cash to a board member is the way to pay.
           </p>
         </div>
       </div>
@@ -128,14 +123,13 @@
               <label for="method">How did you pay?</label>
               <select id="method" required>
                 <option value="">Select&hellip;</option>
-                <option>whish</option>
                 <option>Cash</option>
               </select>
             </div>
             <div class="form-field" id="proof-field">
               <label for="proof">Payment screenshot</label>
               <input type="file" id="proof" accept="image/*,application/pdf">
-              <span class="hint">PNG, JPG or PDF, under 5MB. Not needed if you paid in cash.</span>
+              <span class="hint">Not needed for cash. Leave it empty.</span>
             </div>
             <button type="submit" class="btn" id="submit">Submit for verification</button>
             <p id="msg" class="form-msg" role="status" aria-live="polite"></p>
