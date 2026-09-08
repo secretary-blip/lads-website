@@ -24,10 +24,10 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#C00000">
 <style>
-  /* The board, as people rather than as a two-column table. Round, because a
-     square crop is then the only thing anyone has to get right when they send
-     a photo. Until photos arrive each face is that person's initials, which is
-     honest and still reads as a portrait grid. */
+  /* The board, as people rather than as a two-column table. Every portrait is
+     cut out on the same flat background and aligned on the eye line, so the
+     fourteen photographs read as one set rather than fourteen different
+     studios. Anyone still without a photograph keeps their initials. */
   .bm-grid { display:grid; gap:clamp(1rem,2.5vw,1.5rem); margin-top:0;
     grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
   .bm-grid--heads { grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); }
@@ -43,10 +43,6 @@
   .bm-card--head .bm-photo { max-width:112px; }
   .bm-initials { font-size:clamp(1.4rem,3.6vw,1.9rem); font-weight:700; color:var(--gray-text); }
   .bm-photo img { width:100%; height:100%; object-fit:cover; display:block; }
-  @media (hover:hover) and (pointer:fine){
-    .bm-photo img { filter:grayscale(1); transition:filter .25s ease; }
-    .bm-card:hover .bm-photo img { filter:grayscale(0); }
-  }
   .bm-body { margin-top:0.9rem; text-align:center; }
   .bm-name { font-weight:700; font-size:1rem; line-height:1.3; }
   .bm-card--head .bm-name { font-size:0.92rem; }
@@ -118,35 +114,35 @@
       <div>
         <div class="bm-grid">
         <div class="bm-card">
-          <div class="bm-photo"><span class="bm-initials">RB</span></div>
+          <div class="bm-photo"><img src="assets/board/rasha-badih.jpg" alt="Rasha Badih" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Rasha Badih</p>
             <p class="bm-role">President</p>
           </div>
         </div>
         <div class="bm-card">
-          <div class="bm-photo"><span class="bm-initials">RA</span></div>
+          <div class="bm-photo"><img src="assets/board/raneem-elsheikh-ali.jpg" alt="Raneem Al Sheikh Ali" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Raneem Al Sheikh Ali</p>
             <p class="bm-role">Vice-President</p>
           </div>
         </div>
         <div class="bm-card">
-          <div class="bm-photo"><span class="bm-initials">RJ</span></div>
+          <div class="bm-photo"><img src="assets/board/riad-jawhar.jpg" alt="Riad Jawhar" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Riad Jawhar</p>
             <p class="bm-role">General Secretary</p>
           </div>
         </div>
         <div class="bm-card">
-          <div class="bm-photo"><span class="bm-initials">OA</span></div>
+          <div class="bm-photo"><img src="assets/board/omar-albatal.jpg" alt="Omar Al Batal" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Omar Al Batal</p>
             <p class="bm-role">Treasurer</p>
           </div>
         </div>
         <div class="bm-card">
-          <div class="bm-photo"><span class="bm-initials">MM</span></div>
+          <div class="bm-photo"><img src="assets/board/mahmoud.jpg" alt="Mahmoud Mahmoud" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Mahmoud Mahmoud</p>
             <p class="bm-role">Delegate to IADS</p>
@@ -168,63 +164,63 @@
       <div>
         <div class="bm-grid bm-grid--heads">
         <div class="bm-card bm-card--head">
-          <div class="bm-photo"><span class="bm-initials">TM</span></div>
+          <div class="bm-photo"><img src="assets/board/tia-majed.jpg" alt="Tia Majed" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Tia Majed</p>
             <p class="bm-role">Scientific</p>
           </div>
         </div>
         <div class="bm-card bm-card--head">
-          <div class="bm-photo"><span class="bm-initials">AA</span></div>
+          <div class="bm-photo"><img src="assets/board/alaa-alkork.jpg" alt="Alaa Al Kork" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Alaa Al Kork &amp; Kristina Hajj Geagea</p>
             <p class="bm-role">Fundraising</p>
           </div>
         </div>
         <div class="bm-card bm-card--head">
-          <div class="bm-photo"><span class="bm-initials">AK</span></div>
+          <div class="bm-photo"><img src="assets/board/ali-khalife.jpg" alt="Ali Khalifeh" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Ali Khalifeh</p>
             <p class="bm-role">Exchange, NEO</p>
           </div>
         </div>
         <div class="bm-card bm-card--head">
-          <div class="bm-photo"><span class="bm-initials">AO</span></div>
+          <div class="bm-photo"><img src="assets/board/aya-omais.jpg" alt="Aya Omais" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Aya Omais</p>
             <p class="bm-role">Training</p>
           </div>
         </div>
         <div class="bm-card bm-card--head">
-          <div class="bm-photo"><span class="bm-initials">MA</span></div>
+          <div class="bm-photo"><img src="assets/board/maysa.jpg" alt="Maysa Abou Saad" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Maysa Abou Saad</p>
             <p class="bm-role">Public Health</p>
           </div>
         </div>
         <div class="bm-card bm-card--head">
-          <div class="bm-photo"><span class="bm-initials">FH</span></div>
+          <div class="bm-photo"><img src="assets/board/fouad-haytham-mawlawy.jpg" alt="Fouad Haytham Mawlawy" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Fouad Haytham Mawlawy</p>
             <p class="bm-role">Voluntary</p>
           </div>
         </div>
         <div class="bm-card bm-card--head">
-          <div class="bm-photo"><span class="bm-initials">MJ</span></div>
+          <div class="bm-photo"><img src="assets/board/majida-jabr.jpg" alt="Majida Jabr" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Majida Jabr</p>
             <p class="bm-role">Activities</p>
           </div>
         </div>
         <div class="bm-card bm-card--head">
-          <div class="bm-photo"><span class="bm-initials">AA</span></div>
+          <div class="bm-photo"><img src="assets/board/aya-ghandour.jpg" alt="Aya Al Ghandour" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Aya Al Ghandour</p>
             <p class="bm-role">Editorial</p>
           </div>
         </div>
         <div class="bm-card bm-card--head">
-          <div class="bm-photo"><span class="bm-initials">SS</span></div>
+          <div class="bm-photo"><img src="assets/board/sarah-sadikk.jpg" alt="Sarah Sadikk" width="360" height="360" loading="lazy" decoding="async"></div>
           <div class="bm-body">
             <p class="bm-name">Sarah Sadikk</p>
             <p class="bm-role">Social Media</p>
