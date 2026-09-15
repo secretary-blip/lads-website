@@ -12,26 +12,26 @@
    them in dark mode. Same two-block pattern as style.css: once for the system
    preference, once for the manual toggle. */
 :root{
-  --p-card:#FFFFFF;
-  --p-tint:#F7F7F7;
-  --p-line:#E4E4E4;
-  --p-ink:#111111;
-  --p-dim:#5A5A5A;
+  --p-card:#FFFEFB;
+  --p-tint:#F3EDE1;
+  --p-line:#E6DECE;
+  --p-ink:#141210;
+  --p-dim:#5A5348;
   --p-ok:#1A7F37;
   --p-wait:#9A6700;
   --p-shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 24px -16px rgba(0,0,0,.25);
 }
 @media (prefers-color-scheme: dark){
   html:not([data-theme="light"]){
-    --p-card:#1C1C1C; --p-tint:#191919; --p-line:#333333;
-    --p-ink:#EDEDED;  --p-dim:#A9A9A9;
+    --p-card:#242019; --p-tint:#141110; --p-line:#352F27;
+    --p-ink:#EDEDED;  --p-dim:#ADA79C;
     --p-ok:#4ADE80;   --p-wait:#E3B341;
     --p-shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.9);
   }
 }
 html[data-theme="dark"]{
-  --p-card:#1C1C1C; --p-tint:#191919; --p-line:#333333;
-  --p-ink:#EDEDED;  --p-dim:#A9A9A9;
+  --p-card:#242019; --p-tint:#141110; --p-line:#352F27;
+  --p-ink:#EDEDED;  --p-dim:#ADA79C;
   --p-ok:#4ADE80;   --p-wait:#E3B341;
   --p-shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.9);
 }

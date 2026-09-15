@@ -7,12 +7,12 @@
 :root{
   --red:#C00000;
   --red-dark:#8E0000;
-  --black:#111111;
+  --black:#141210;
   --ink:#000000;
-  --grey:#E8E8E8;
-  --grey-soft:#F4F4F4;
-  --white:#FFFFFF;
-  --gray-text:#565656;
+  --grey:#E6DECE;
+  --grey-soft:#F3EDE1;
+  --white:#FBF8F2;
+  --gray-text:#5A5348;
 
   --wrap:1180px;
   --gut:clamp(1.25rem,5vw,3rem);
@@ -448,7 +448,7 @@ textarea,
 input[type="file"]{
   width:100%;min-height:56px;padding:0.95rem 1rem;
   font-family:var(--f);font-size:1.02rem;line-height:1.4;color:var(--black);
-  background:var(--white);border:1px solid #B9B9B9;border-radius:var(--r-sm);
+  background:var(--white);border:1px solid #C4BBA9;border-radius:var(--r-sm);
   transition:border-color .12s ease, box-shadow .12s ease;
 }
 textarea{min-height:120px;resize:vertical;}
@@ -518,20 +518,20 @@ footer li{margin-bottom:0.55rem;}
      ========================================================================== */
   html:not([data-theme="light"]){
     color-scheme: dark;
-    --page:#121212;        /* page background      */
-    --panel:#1C1C1C;       /* cards, inputs        */
-    --panel-2:#191919;     /* subtle tint / hover  */
-    --deep:#080808;        /* the "black" bands    */
-    --line:#333333;        /* borders              */
+    --page:#1A1714;        /* page background      */
+    --panel:#242019;       /* cards, inputs        */
+    --panel-2:#141110;     /* subtle tint / hover  */
+    --deep:#0D0B09;        /* the "black" bands    */
+    --line:#352F27;        /* borders              */
     --text:#EDEDED;        /* body text            */
     --muted:#A9A9A9;       /* secondary text       */
     --red:#FF5C5C;         /* accessible red on dark */
     --red-dark:#E24444;
 
     /* remap the light-mode vars so component rules using them behave */
-    --grey:#333333;        /* borders, dividers    */
-    --grey-soft:#191919;   /* subtle fills, hovers */
-    --gray-text:#A9A9A9;   /* muted body text      */
+    --grey:#352F27;        /* borders, dividers    */
+    --grey-soft:#141110;   /* subtle fills, hovers */
+    --gray-text:#ADA79C;   /* muted body text      */
     --ink:#EDEDED;         /* strong body text     */
   }
 
@@ -694,20 +694,20 @@ footer li{margin-bottom:0.55rem;}
    ========================================================================== */
 html[data-theme="dark"]{
   color-scheme: dark;
-  --page:#121212;        /* page background      */
-  --panel:#1C1C1C;       /* cards, inputs        */
-  --panel-2:#191919;     /* subtle tint / hover  */
-  --deep:#080808;        /* the "black" bands    */
-  --line:#333333;        /* borders              */
+  --page:#1A1714;        /* page background      */
+  --panel:#242019;       /* cards, inputs        */
+  --panel-2:#141110;     /* subtle tint / hover  */
+  --deep:#0D0B09;        /* the "black" bands    */
+  --line:#352F27;        /* borders              */
   --text:#EDEDED;        /* body text            */
   --muted:#A9A9A9;       /* secondary text       */
   --red:#FF5C5C;         /* accessible red on dark */
   --red-dark:#E24444;
 
   /* remap the light-mode vars so component rules using them behave */
-  --grey:#333333;        /* borders, dividers    */
-  --grey-soft:#191919;   /* subtle fills, hovers */
-  --gray-text:#A9A9A9;   /* muted body text      */
+  --grey:#352F27;        /* borders, dividers    */
+  --grey-soft:#141110;   /* subtle fills, hovers */
+  --gray-text:#ADA79C;   /* muted body text      */
   --ink:#EDEDED;         /* strong body text     */
 }
 
