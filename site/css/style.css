@@ -485,6 +485,10 @@ footer li{margin-bottom:0.55rem;}
   margin-top:clamp(2.5rem,6vw,4rem);padding-block:1.5rem;border-top:1px solid rgba(255,255,255,.16);
   font-size:0.68rem;letter-spacing:0.12em;line-height:1.8;color:rgba(255,255,255,.5);
 }
+/* The credit sits on the registration line rather than in a line of its own:
+   it belongs to the small print, and a line to itself would read as a claim. */
+.foot-credit{display:block;margin-top:0.5rem;text-transform:none;letter-spacing:0.06em;
+  color:rgba(255,255,255,.38);}
 @media (min-width:760px){
   .foot-grid{grid-template-columns:1.4fr 1fr 1fr;gap:3rem;}
 }
