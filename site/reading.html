@@ -2,23 +2,61 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-116JSZSGZN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-116JSZSGZN');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign in | LADS</title>
-<meta name="description" content="Sign in to the LADS member portal.">
+<title>Journal Club reading list | LADS</title>
+<meta name="description" content="Every paper the LADS Journal Club is reading this semester, with a summary you can take part on even without library access.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/portal.css">
+<style>
+  /* The list reuses .links and .link-item from style.css. Only the session
+     rail and the state pill are new, and both are page-local. */
+  .jc-note{max-width:64ch;color:var(--gray-text);margin-bottom:2rem;}
+  .jc-state{padding:2rem 0;color:var(--gray-text);}
+  .jc-row{display:grid;gap:0.35rem 1.5rem;padding:1.6rem 0;
+          border-bottom:1px solid var(--grey);}
+  @media (min-width:780px){
+    .jc-row{grid-template-columns:8.5rem minmax(0,1fr);}
+    .jc-when{grid-row:1 / span 5;}
+  }
+  .jc-when{font-size:0.78rem;font-weight:700;letter-spacing:0.12em;
+           text-transform:uppercase;color:var(--gray-text);padding-top:0.3rem;}
+  .jc-when b{display:block;font-size:1.35rem;letter-spacing:-0.02em;
+             text-transform:none;color:var(--black);line-height:1.1;}
+  .jc-pill{display:inline-block;margin-top:0.55rem;font-size:0.66rem;
+           font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+           padding:0.2rem 0.5rem;border-radius:99px;
+           border:1px solid var(--grey);color:var(--gray-text);}
+  .jc-pill.next{background:var(--red);border-color:var(--red);color:#fff;}
+  .jc-topic{font-size:0.7rem;font-weight:700;letter-spacing:0.14em;
+            text-transform:uppercase;color:var(--red);}
+  .jc-row h2{font-size:clamp(1.2rem,3vw,1.6rem);line-height:1.2;margin-top:0.3rem;}
+  .jc-cite{color:var(--gray-text);font-size:0.95rem;margin-top:0.3rem;}
+  .jc-sum{margin-top:0.8rem;max-width:64ch;}
+  .jc-go{margin-top:0.9rem;font-weight:700;font-size:0.92rem;}
+  /* Nothing here is hover-only: on a phone there is no hover, and the state a
+     row is in has to be readable without one. */
+</style>
+
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#C00000">
-<meta name="robots" content="noindex, nofollow">
 </head>
 <body>
+
+<a class="skip" href="#main">Skip to content</a>
 <header>
   <div class="nav-wrap">
     <a class="logo" href="index.html"><img src="assets/lads_logo.png" alt="LADS, Lebanese Association of Dental Students"></a>
@@ -30,7 +68,7 @@
         <li><a href="committees.html">Committees</a></li>
         <li><a href="resources.html">Resources</a></li>
         <li><a href="news.html">News</a></li>
-        <li><a href="account.html" data-portal-link class="active">Portal</a></li>
+        <li><a href="account.html" data-portal-link>Portal</a></li>
         <li><a href="join.html" class="btn-join">Join LADS</a></li>
       </ul>
     </nav>
@@ -44,43 +82,30 @@
     </button>
   </div>
 </header>
+
 <main id="main">
 
-<section>
-  <div class="wrap"><div class="auth-card">
-    <div class="sec-head">
-      <p class="eyebrow">Member Portal</p>
-      <h1 class="h-sec">Sign in.</h1>
-    </div>
-
-    <p style="margin-top:1.5rem; color:var(--gray-text);">
-      Use the email address and password you registered with.
-    </p>
-
-    <form id="form" novalidate>
-      <div class="form-field">
-        <label for="email">Email address</label>
-        <input type="email" id="email" autocomplete="email" required>
-      </div>
-      <div class="form-field">
-        <label for="password">Password</label>
-        <div class="pw-wrap">
-          <input type="password" id="password" autocomplete="current-password" required>
-          <button type="button" class="pw-toggle" data-toggle="password">Show</button>
-        </div>
-      </div>
-      <button type="submit" class="btn" id="submit">Sign in</button>
-      <p id="msg" class="form-msg" role="status" aria-live="polite"></p>
-      <p id="resend-wrap" hidden style="margin-top:0.75rem;">
-        <button type="button" class="btn btn-outline" id="resend">Send the confirmation email again</button>
-      </p>
-    </form>
-
-    <p class="alt"><a href="forgot-password.html">Forgotten your password?</a></p>
-    <p class="alt">No account yet? <a href="signup.html">Create one</a>.</p>
-  </div></div>
+<section class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Journal Club</p>
+    <h1>What we are reading.</h1>
+  </div>
 </section>
+
+<section>
+  <div class="wrap">
+    <p class="jc-note">One paper a session. LADS does not host the papers, so each
+    one links out to its journal. Every entry carries a summary written by the
+    student presenting it, which is there so you can take part in the discussion
+    whether or not you can get past the publisher.</p>
+    <div class="links" id="jc-list">
+      <p class="jc-state">Loading the reading list&hellip;</p>
+    </div>
+  </div>
+</section>
+
 </main>
+
 <footer>
   <div class="wrap foot-grid">
     <div>
@@ -110,6 +135,7 @@
     <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015.</p>
   </div>
 </footer>
+
 <script>
 (function(){
   var root=document.documentElement, btn=document.getElementById('themeBtn');
@@ -220,56 +246,78 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
+import { sb } from "./js/portal.js";
 
-import { signIn, resendConfirmation, authMessage, getSession, say } from "./js/portal.js";
-const $ = id => document.getElementById(id);
+const list = document.getElementById("jc-list");
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 
-/* Already signed in? Go straight through. */
-if (await getSession()) location.replace(nextUrl());
-
-function nextUrl() {
-  const n = new URLSearchParams(location.search).get("next");
-  /* Only ever redirect within this site. An open redirect here would let a
-     phishing link bounce someone off our domain after a real sign-in. */
-  if (n && /^[a-zA-Z0-9._\/-]+$/.test(n) && !n.startsWith("//")) return n.replace(/^\//, "");
-  return "account.html";
+/* Beirut, not the visitor's clock: a paper discussed this evening should not
+   read as "discussed" to somebody browsing from a timezone that is already
+   tomorrow. Comparing dates only, so the session counts as upcoming all day. */
+function today(){
+  const p = new Intl.DateTimeFormat("en-CA", { timeZone:"Asia/Beirut" }).format(new Date());
+  return p;                                  // YYYY-MM-DD
 }
 
-document.querySelectorAll("[data-toggle]").forEach(b => {
-  b.addEventListener("click", () => {
-    const f = $(b.dataset.toggle);
-    const showing = f.type === "text";
-    f.type = showing ? "password" : "text";
-    b.textContent = showing ? "Show" : "Hide";
-  });
-});
+const fmt = new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"long" });
 
-$("form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const btn = $("submit"), msg = $("msg");
-  $("resend-wrap").hidden = true;
-  btn.disabled = true;
-  say(msg, "Signing in\u2026");
-
-  const { error } = await signIn($("email").value, $("password").value);
-
-  if (error) {
-    btn.disabled = false;
-    say(msg, authMessage(error), "error");
-    if ((error.message || "").toLowerCase().includes("email not confirmed"))
-      $("resend-wrap").hidden = false;
+function render(rows){
+  if(!rows.length){
+    list.innerHTML = '<p class="jc-state">The reading list goes up as soon as the ' +
+      'Scientific Committee confirms the semester\'s papers.</p>';
     return;
   }
-  location.replace(nextUrl());
-});
+  const now = today();
+  /* The next session is the earliest one still to come, so it is marked once
+     and only once even when several are scheduled. */
+  const ahead = rows.filter(r => r.session_on >= now).sort((a,b) => a.session_on < b.session_on ? -1 : 1);
+  const done  = rows.filter(r => r.session_on <  now).sort((a,b) => a.session_on > b.session_on ? -1 : 1);
+  const nextOn = ahead.length ? ahead[0].session_on : null;
 
-$("resend").addEventListener("click", async () => {
-  const msg = $("msg");
-  say(msg, "Sending\u2026");
-  const { error } = await resendConfirmation($("email").value);
-  say(msg, error ? authMessage(error) : "Sent. Check your inbox.", error ? "error" : "success");
-});
+  /* Soonest first among the sessions still to come, then the record of what
+     has been discussed, newest first. A reading list that opens on last
+     month's paper is answering the wrong question. */
+  list.innerHTML = ahead.concat(done).map(r => {
+    const past = r.session_on < now;
+    const isNext = r.session_on === nextOn;
+    const d = new Date(r.session_on + "T12:00:00");
+    const pill = isNext ? '<span class="jc-pill next">Next up</span>'
+               : past   ? '<span class="jc-pill">Discussed</span>'
+                        : '<span class="jc-pill">Scheduled</span>';
+    const cite = [r.journal, r.pub_year].filter(Boolean).join(", ");
+    const href = r.url || (r.doi ? "https://doi.org/" + r.doi : "");
+    return '<article class="jc-row">' +
+      '<div class="jc-when"><b>' + esc(fmt.format(d)) + '</b>' +
+        esc(String(d.getFullYear())) + pill + '</div>' +
+      '<div>' +
+        (r.topic ? '<p class="jc-topic">' + esc(r.topic) + '</p>' : '') +
+        '<h2>' + esc(r.title) + '</h2>' +
+        (cite ? '<p class="jc-cite">' + esc(cite) +
+                (r.presenter ? ' &middot; presented by ' + esc(r.presenter) : '') +
+                '</p>' : '') +
+        (r.summary ? '<p class="jc-sum">' + esc(r.summary) + '</p>' : '') +
+        (href ? '<p class="jc-go"><a href="' + esc(href) + '" target="_blank" ' +
+                'rel="noopener">Read it at the journal &rarr;</a></p>' : '') +
+      '</div></article>';
+  }).join("");
+}
 
+/* Newest first, so the paper being discussed next is near the top rather than
+   at the bottom of a growing list. */
+const { data, error } = await sb
+  .from("journal_papers")
+  .select("session_on,topic,title,journal,pub_year,doi,url,summary,presenter")
+  .eq("published", true)
+  .order("session_on", { ascending: true });
+
+if(error){
+  list.innerHTML = '<p class="jc-state">The reading list could not be loaded just ' +
+    'now. Please try again shortly.</p>';
+  console.error(error);
+}else{
+  render(data || []);
+}
 </script>
 </body>
 </html>

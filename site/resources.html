@@ -167,15 +167,31 @@
 (function(){
   var join = document.querySelector('nav a.btn-join');
   if(!join) return;
+  /* supabase-js splits a session it cannot fit in one localStorage value
+     across sb-<ref>-auth-token.0, .1 and so on. Matching only the bare key
+     missed every chunked session, so a signed-in member kept seeing "Join
+     LADS" and no sign-out button until a reload rewrote the token whole.
+     Collect the chunks, reassemble them in index order, then parse. */
   var live = false;
   try{
+    var parts = {};
     for(var i=0;i<localStorage.length;i++){
       var k = localStorage.key(i);
-      if(!/^sb-.+-auth-token$/.test(k)) continue;
-      var v = JSON.parse(localStorage.getItem(k) || 'null');
-      var s = v && (v.currentSession || v);
-      var exp = s && s.expires_at;
-      if(exp && exp * 1000 > Date.now()) live = true;
+      var m = /^(sb-.+-auth-token)(?:\.(\d+))?$/.exec(k);
+      if(!m) continue;
+      if(!parts[m[1]]) parts[m[1]] = [];
+      parts[m[1]][m[2] ? Number(m[2]) : 0] = localStorage.getItem(k) || '';
+    }
+    for(var base in parts){
+      if(!Object.prototype.hasOwnProperty.call(parts, base)) continue;
+      /* One unreadable token must not decide the whole header, so each is
+         parsed on its own rather than inside a single try that returns. */
+      try{
+        var v = JSON.parse(parts[base].join('') || 'null');
+        var s = v && (v.currentSession || v);
+        var exp = s && s.expires_at;
+        if(exp && exp * 1000 > Date.now()) live = true;
+      }catch(e){}
     }
   }catch(e){ return; }
   if(!live) return;
@@ -212,8 +228,10 @@
     t.onerror = function(){
       /* No network for the CDN: clear the stored session so this browser is
          signed out either way, then leave. */
+      /* Chunked keys end in .0, .1 and so on, so clear those too or the
+         browser stays signed in with the CDN unreachable. */
       try{ for(var i=localStorage.length-1;i>=0;i--){ var k=localStorage.key(i);
-        if(/^sb-.+-auth-token$/.test(k)) localStorage.removeItem(k); } }catch(e){}
+        if(/^sb-.+-auth-token(\.\d+)?$/.test(k)) localStorage.removeItem(k); } }catch(e){}
       done();
     };
     document.head.appendChild(t);
