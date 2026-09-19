@@ -10,6 +10,9 @@ Once this is done, three things happen on their own:
 | The Treasurer confirms a payment | The member, welcoming them and pointing at the portal |
 | The Treasurer cannot verify a payment | The member, asking for a clearer screenshot |
 
+The same function also sends the Journal Club emails. Setting those up is a
+separate, shorter page: `docs/JOURNAL_CLUB_SETUP.md`.
+
 Nobody has to remember to check anything, which is the point. In September, "the
 Treasurer will look at the page each evening" is not a process that survives exam
 week.
