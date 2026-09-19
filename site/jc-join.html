@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-116JSZSGZN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-116JSZSGZN');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journal Club | LADS</title>
+<meta name="description" content="Join the LADS Journal Club and say which sessions you are coming to.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/portal.css">
+<style>
+  /* Only two things here are new. Everything else is style.css and portal.css. */
+  .jc-checks{display:grid;gap:.6rem;}
+  @media (min-width:640px){.jc-checks{grid-template-columns:1fr 1fr;}}
+  .jc-checks label,.jc-consent{display:flex;gap:.65rem;align-items:flex-start;
+    font-size:.95rem;line-height:1.45;cursor:pointer;}
+  .jc-checks input,.jc-consent input{margin-top:.25rem;flex:none;width:1rem;height:1rem;
+    accent-color:var(--red);}
+  .jc-consents{display:grid;gap:.8rem;padding-top:1.1rem;border-top:1px solid var(--p-line);}
+  /* One session, one row. The keyline on the right is the same device the
+     public page uses, so a member arriving from it recognises the furniture. */
+  .jc-session{display:grid;gap:.5rem 1.25rem;padding:1.1rem 1.1rem 1.1rem 0;
+    border-top:1px solid var(--p-line);position:relative;}
+  .jc-session:first-child{border-top:0;}
+  @media (min-width:700px){
+    .jc-session{grid-template-columns:5.5rem minmax(0,1fr) auto;align-items:center;}
+  }
+  .jc-when{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--p-dim);}
+  .jc-when b{display:block;font-size:1.25rem;letter-spacing:-.02em;text-transform:none;
+    color:var(--red);line-height:1.1;}
+  .jc-title{font-weight:700;line-height:1.3;}
+  .jc-cite{font-size:.88rem;color:var(--p-dim);margin-top:.15rem;}
+  .jc-rsvp{display:flex;gap:.5rem;flex-wrap:wrap;}
+  .jc-rsvp button{font:inherit;font-size:.82rem;font-weight:700;padding:.45rem .8rem;
+    border-radius:var(--r-sm);border:1px solid var(--p-line);background:transparent;
+    color:inherit;cursor:pointer;}
+  .jc-rsvp button[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff;}
+  .jc-rsvp button:disabled{opacity:.5;cursor:default;}
+</style>
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#C00000">
+
+<meta name="robots" content="noindex">
+</head>
+<body>
+<header>
+  <div class="nav-wrap">
+    <a class="logo" href="index.html"><img src="assets/lads_logo.png" alt="LADS, Lebanese Association of Dental Students"></a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-controls="nav" aria-expanded="false" onclick="var n=document.getElementById('nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o);">&#9776;</button>
+    <nav id="nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="account.html" data-portal-link class="active">Portal</a></li>
+        <li><a href="join.html" class="btn-join">Join LADS</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-label="Switch between light and dark mode" title="Switch theme">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    </button>
+    <button class="theme-toggle" id="signOutBtn" type="button" hidden
+            aria-label="Sign out" title="Sign out">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4.5h3.6a1.4 1.4 0 0 1 1.4 1.4v12.2a1.4 1.4 0 0 1-1.4 1.4H15"/><path d="M10 8.2 6.2 12 10 15.8M6.2 12H15"/></svg>
+    </button>
+  </div>
+</header>
+<main id="main">
+
+<section class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Journal Club</p>
+    <h1>Join the club.</h1>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+
+    <p id="loading" class="p-muted">Loading&hellip;</p>
+
+    <!-- ALREADY A MEMBER ---------------------------------------------------
+         Somebody who has joined does not need the form again. They need the
+         next session and a way to say whether they are coming. -->
+    <div id="member" hidden>
+      <div class="p-status">
+        <div>
+          <p class="p-muted" style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;">You are in</p>
+          <p style="font-size:1.15rem;font-weight:700;margin-top:.3rem;">Journal Club member</p>
+          <p class="p-muted" id="joined-on" style="margin-top:.3rem;font-size:.92rem;"></p>
+        </div>
+        <span class="p-pill ok">Joined</span>
+      </div>
+
+      <div class="p-sec">
+        <h2 class="h-sec">Sessions</h2>
+        <p class="p-muted" style="margin-top:.5rem;">Tell Nour whether you are coming. You can change your mind.</p>
+        <div id="sessions" style="margin-top:1.25rem;"></div>
+      </div>
+    </div>
+
+    <!-- NOT A MEMBER YET ----------------------------------------------------
+         Four questions, a note and a tick. Name, email, phone, university and
+         year are on the profile already and are deliberately not asked again. -->
+    <form id="join" hidden novalidate>
+      <p class="p-muted" style="max-width:60ch;">
+        One paper, one hour, every two weeks. We already have your name,
+        university and year from your account, so this is short.
+      </p>
+
+      <div class="p-panel" style="margin-top:1.5rem;">
+        <div class="form-field">
+          <label for="cert_name">Name as it should appear on a certificate</label>
+          <input type="text" id="cert_name" autocomplete="name">
+          <p class="p-muted" style="font-size:.85rem;margin-top:.35rem;">
+            Leave it blank to use the name on your account.</p>
+        </div>
+
+        <fieldset style="border:0;padding:0;margin:0 0 1.35rem;">
+          <legend style="font-weight:700;font-size:.92rem;margin-bottom:.6rem;">
+            Why are you joining? Tick as many as apply.</legend>
+          <div id="interests" class="jc-checks"></div>
+        </fieldset>
+
+        <div class="form-field">
+          <label for="presenting">Would you present a paper at some point?</label>
+          <select id="presenting">
+            <option value="">Select&hellip;</option>
+            <option>Yes, I will volunteer</option>
+            <option>Maybe, with some guidance</option>
+            <option>Not this semester, possibly later</option>
+            <option>I would rather just join the discussion</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="research_level">How much research have you done?</label>
+          <select id="research_level">
+            <option value="">Select&hellip;</option>
+            <option>None yet</option>
+            <option>Read papers for classes</option>
+            <option>Taken part in a research project</option>
+            <option>Published or presented research</option>
+            <option>Rather not say</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="mode_pref">How would you like to attend?</label>
+          <select id="mode_pref">
+            <option value="">Select&hellip;</option>
+            <option>In person</option>
+            <option>On Zoom</option>
+            <option>Either, depending on the session</option>
+            <option>No preference</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="access_needs">Anything we should know to make a session work for you?</label>
+          <textarea id="access_needs" rows="3"
+            placeholder="Access needs, or anything else. Optional."></textarea>
+        </div>
+
+        <!-- Two choices, not terms. Off by default, and joining does not
+             depend on either. -->
+        <div class="jc-consents">
+          <label class="jc-consent">
+            <input type="checkbox" id="consent_whatsapp">
+            <span>Add me to the Journal Club WhatsApp group.</span>
+          </label>
+          <label class="jc-consent">
+            <input type="checkbox" id="consent_photos">
+            <span>LADS may use photographs of me from sessions.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:1.5rem;">
+        <button type="submit" class="btn" id="submit">Join the Journal Club</button>
+        <a class="btn btn-outline" href="account.html">Back to the portal</a>
+      </div>
+      <p class="form-msg" id="msg" role="status" aria-live="polite"></p>
+    </form>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <img src="assets/lads_logo.png" alt="LADS">
+      <h4>LADS</h4>
+      <p>Lebanese Association of Dental Students<br>Beirut, Lebanon</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="committees.html">Committees</a></li>
+        <li><a href="join.html">Membership</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lads.ngo" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.facebook.com/lebaneseassociationofdentalstudents" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.linkedin.com/company/lebanese-association-of-dental-students" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:info@ladslb.org">info@ladslb.org</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="foot-bottom">THE LEBANESE ASSOCIATION OF DENTAL STUDENTS IS A NON-PROFIT NGO REGISTERED IN LEBANON, REPRESENTING THE INTERESTS OF DENTAL STUDENTS SINCE ITS FOUNDATION IN 2015.
+      <span class="foot-credit">Designed and built by Riad Jawhar.</span></p>
+  </div>
+</footer>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  if(!btn) return;
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function current(){
+    var set = root.getAttribute('data-theme');
+    if(set) return set;
+    return mq.matches ? 'dark' : 'light';
+  }
+  function paint(){
+    var dark = current()==='dark';
+    btn.querySelector('.moon').style.display = dark ? 'none' : 'block';
+    btn.querySelector('.sun').style.display  = dark ? 'block' : 'none';
+  }
+  var saved=null; try{saved=localStorage.getItem('lads-theme');}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  paint();
+  mq.addEventListener && mq.addEventListener('change', paint);
+  btn.addEventListener('click', function(){
+    var next = current()==='dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{localStorage.setItem('lads-theme', next);}catch(e){}
+    paint();
+  });
+})();
+</script>
+<script>
+/* The big red button is the one call to action in the header, so it should
+   always be the next thing this visitor needs. A signed-in member does not
+   need "Join LADS"; they need the portal. Supabase stores its session in
+   localStorage, so this reads it directly rather than loading the client on
+   every public page for one cosmetic decision. Nothing here grants access:
+   the portal pages check the session properly on arrival. */
+(function(){
+  var join = document.querySelector('nav a.btn-join');
+  if(!join) return;
+  var live = false;
+  try{
+    for(var i=0;i<localStorage.length;i++){
+      var k = localStorage.key(i);
+      if(!/^sb-.+-auth-token$/.test(k)) continue;
+      var v = JSON.parse(localStorage.getItem(k) || 'null');
+      var s = v && (v.currentSession || v);
+      var exp = s && s.expires_at;
+      if(exp && exp * 1000 > Date.now()) live = true;
+    }
+  }catch(e){ return; }
+  if(!live) return;
+  var plain = document.querySelector('nav a[data-portal-link]');
+  var here = plain && plain.classList.contains('active');
+  join.setAttribute('href', (join.getAttribute('href').charAt(0) === '/' ? '/' : '') + 'account.html');
+  join.textContent = 'Portal';
+  if(here){ join.classList.add('active'); join.setAttribute('aria-current','page'); }
+  if(plain && plain.parentElement) plain.parentElement.style.display = 'none';
+
+  /* Signing out was two levels down, on the profile page, which is not where
+     anyone looks for it. It sits in the header now, and only once there is a
+     session to end. The click loads supabase-js on demand, so a public page
+     still ships no client to a visitor who never signs in. */
+  var out = document.getElementById('signOutBtn');
+  if(!out) return;
+  out.hidden = false;
+  out.addEventListener('click', function(){
+    out.disabled = true;
+    var base = join.getAttribute('href').charAt(0) === '/' ? '/' : '';
+    function done(){ location.href = base + 'index.html'; }
+    function bye(){
+      try{
+        window.supabase
+          .createClient('https://fazswkdinsbqymgwlebr.supabase.co',
+                        'sb_publishable_O36-PFnAMT9-E_tlXtdYBQ_tISXojd6')
+          .auth.signOut().then(done, done);
+      }catch(e){ done(); }
+    }
+    if(window.supabase){ bye(); return; }
+    var t = document.createElement('script');
+    t.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    t.onload = bye;
+    t.onerror = function(){
+      /* No network for the CDN: clear the stored session so this browser is
+         signed out either way, then leave. */
+      try{ for(var i=localStorage.length-1;i>=0;i--){ var k=localStorage.key(i);
+        if(/^sb-.+-auth-token$/.test(k)) localStorage.removeItem(k); } }catch(e){}
+      done();
+    };
+    document.head.appendChild(t);
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* The free-text box only exists when it is the answer.
+
+   This is deliberately its own script and not part of the module or the
+   header script: the module needs supabase-js from a CDN and the header
+   script returns early when nobody is signed in, so anything appended to
+   either can silently never run. A form control must not depend on that. */
+(function(){
+  var sel  = document.getElementById("university");
+  var wrap = document.getElementById("uni-other-wrap");
+  var box  = document.getElementById("university_other");
+  if (!sel || !wrap) return;
+  function sync(){
+    var other = sel.value === "Other";
+    wrap.hidden = !other;
+    if (box) { box.required = other; if (!other) box.value = ""; }
+  }
+  sel.addEventListener("change", sync);
+  /* Exposed so the profile loader can call it after filling the form. */
+  window.ladsSyncUniOther = sync;
+  sync();
+})();
+</script>
+<script type="module">
+import { sb, requireAuth } from "./js/portal.js";
+
+const $ = id => document.getElementById(id);
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c =>
+  ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+
+const session = await requireAuth();
+if (session) {
+  const me = session.user.id;
+
+  /* The old Google Form's list, trimmed of the two Nour cut. Kept in one
+     array so the markup and the saved value cannot drift apart. */
+  const INTERESTS = [
+    "Developing critical appraisal skills",
+    "Keeping up with dental research",
+    "Improving presentation skills",
+    "Meeting dental students from other faculties",
+    "Preparing for specialisation exams",
+    "Research experience for my CV",
+    "Understanding evidence-based dentistry",
+  ];
+  $("interests").innerHTML = INTERESTS.map((t, i) =>
+    `<label><input type="checkbox" value="${esc(t)}" id="int${i}"><span>${esc(t)}</span></label>`
+  ).join("");
+
+  const fmt = new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"short" });
+  /* Beirut, not the reader's clock, so a session tonight is not already past
+     for somebody browsing from a timezone on tomorrow. */
+  const today = () =>
+    new Intl.DateTimeFormat("en-CA", { timeZone:"Asia/Beirut" }).format(new Date());
+
+  const [{ data: mem }, { data: papers }] = await Promise.all([
+    sb.from("journal_members").select("joined_at").eq("profile_id", me).maybeSingle(),
+    sb.from("journal_papers")
+      .select("id,session_on,topic,title,journal,pub_year")
+      .eq("published", true).order("session_on", { ascending: true }),
+  ]);
+
+  $("loading").hidden = true;
+
+  if (mem) { showMember(mem); } else { $("join").hidden = false; }
+
+  async function showMember(row) {
+    $("member").hidden = false;
+    if (row?.joined_at) {
+      $("joined-on").textContent =
+        "Joined " + new Date(row.joined_at).toLocaleDateString("en-GB",
+          { day:"numeric", month:"long", year:"numeric" });
+    }
+    const now = (today());
+    const ahead = (papers || []).filter(p => p.session_on >= now);
+    if (!ahead.length) {
+      $("sessions").innerHTML =
+        '<p class="p-muted">No sessions on the calendar yet. You will get an email when the next one is set.</p>';
+      return;
+    }
+    const { data: rsvps } = await sb.from("journal_rsvps")
+      .select("paper_id,attending").eq("profile_id", me);
+    const mine = new Map((rsvps || []).map(r => [r.paper_id, r.attending]));
+
+    $("sessions").innerHTML = ahead.map(p => {
+      const d = new Date(p.session_on + "T12:00:00");
+      const said = mine.has(p.id) ? mine.get(p.id) : null;
+      const cite = [p.journal, p.pub_year].filter(Boolean).join(", ");
+      return `<div class="jc-session" data-paper="${esc(p.id)}">
+        <div class="jc-when"><b>${esc(fmt.format(d))}</b>${esc(String(d.getFullYear()))}</div>
+        <div>
+          <p class="jc-title">${esc(p.title)}</p>
+          ${cite ? `<p class="jc-cite">${esc(cite)}</p>` : ""}
+        </div>
+        <div class="jc-rsvp">
+          <button type="button" data-yes aria-pressed="${said === true}">Coming</button>
+          <button type="button" data-no  aria-pressed="${said === false}">Cannot make it</button>
+        </div>
+      </div>`;
+    }).join("");
+
+    $("sessions").addEventListener("click", async (ev) => {
+      const btn = ev.target.closest("button[data-yes],button[data-no]");
+      if (!btn) return;
+      const row = btn.closest(".jc-session");
+      const paperId = row.dataset.paper;
+      const attending = btn.hasAttribute("data-yes");
+      const pair = row.querySelectorAll("button");
+      pair.forEach(b => b.disabled = true);
+      /* Upsert on the pair, so changing your mind edits one row instead of
+         adding a second answer. */
+      const { error } = await sb.from("journal_rsvps")
+        .upsert({ paper_id: paperId, profile_id: me, attending },
+                { onConflict: "paper_id,profile_id" });
+      pair.forEach(b => b.disabled = false);
+      if (error) { alert("Could not save that just now. Please try again."); return; }
+      row.querySelector("[data-yes]").setAttribute("aria-pressed", String(attending));
+      row.querySelector("[data-no]").setAttribute("aria-pressed", String(!attending));
+    });
+  }
+
+  $("join").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = $("submit"), msg = $("msg");
+    const picked = [...document.querySelectorAll("#interests input:checked")].map(i => i.value);
+    btn.disabled = true;
+    msg.className = "form-msg";
+    msg.textContent = "Joining\u2026";
+
+    const { error } = await sb.from("journal_members").insert({
+      profile_id:       me,
+      certificate_name: $("cert_name").value.trim() || null,
+      interests:        picked,
+      presenting:       $("presenting").value || null,
+      research_level:   $("research_level").value || null,
+      mode_pref:        $("mode_pref").value || null,
+      access_needs:     $("access_needs").value.trim() || null,
+      consent_photos:   $("consent_photos").checked,
+      consent_whatsapp: $("consent_whatsapp").checked,
+    });
+
+    if (error) {
+      btn.disabled = false;
+      msg.className = "form-msg error";
+      msg.textContent = "Could not join: " + error.message;
+      return;
+    }
+    $("join").hidden = true;
+    await showMember({ joined_at: new Date().toISOString() });
+  });
+}
+</script>
+</body>
+</html>
