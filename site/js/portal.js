@@ -42,7 +42,7 @@ export async function signOut() {
  * register under someone else's email and the Treasurer would have no way of
  * knowing which registration was genuine.
  */
-export async function signUp({ email, password, fullName, university, academicYear, phone }) {
+export async function signUp({ email, password, fullName, university, universityOther, academicYear, phone }) {
   return sb.auth.signUp({
     email: email.trim(),
     password,
@@ -52,6 +52,9 @@ export async function signUp({ email, password, fullName, university, academicYe
       data: {
         full_name: (fullName || "").trim(),
         university: university || null,
+        // Only sent with 'Other'. handle_new_user drops it otherwise, so the
+        // column cannot end up contradicting the dropdown.
+        university_other: university === "Other" ? (universityOther || "").trim() || null : null,
         academic_year: academicYear || null,
         phone: (phone || "").trim() || null,
       },

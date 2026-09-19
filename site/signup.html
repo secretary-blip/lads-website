@@ -80,7 +80,16 @@
           <option value="BAU">Beirut Arab University (BAU)</option>
           <option value="LU">Lebanese University (LU)</option>
           <option value="USJ">Universit&eacute; Saint-Joseph (USJ)</option>
+          <option value="Other">Another faculty or academy</option>
         </select>
+      </div>
+      <!-- Dentistry is taught at more than three places in Lebanon. Naming the
+           school keeps the fixed list correctable from what people actually
+           type, rather than from guesswork. -->
+      <div class="form-field" id="uni-other-wrap" hidden>
+        <label for="university_other">Which one?</label>
+        <input type="text" id="university_other" autocomplete="organization"
+               placeholder="Name of your faculty or academy">
       </div>
       <div class="form-field">
         <label for="academic_year">Year of study</label>
@@ -287,6 +296,8 @@ $("form").addEventListener("submit", async (e) => {
   if (pw !== $("password2").value) return say(msg, "The two passwords do not match.", "error");
   if (!$("full_name").value.trim()) return say(msg, "Please enter your full name.", "error");
   if (!$("university").value) return say(msg, "Please choose your university.", "error");
+  if ($("university").value === "Other" && !$("university_other").value.trim())
+    return say(msg, "Please name your faculty or academy.", "error");
   if (!$("academic_year").value) return say(msg, "Please choose your year of study.", "error");
 
   btn.disabled = true;
@@ -297,6 +308,7 @@ $("form").addEventListener("submit", async (e) => {
     password: pw,
     fullName: $("full_name").value,
     university: $("university").value,
+    universityOther: $("university_other").value,
     academicYear: $("academic_year").value,
     phone: $("phone").value,
   });
@@ -315,6 +327,29 @@ $("form").addEventListener("submit", async (e) => {
   $("done").hidden = false;
 });
 
+</script>
+<script>
+/* The free-text box only exists when it is the answer.
+
+   This is deliberately its own script and not part of the module or the
+   header script: the module needs supabase-js from a CDN and the header
+   script returns early when nobody is signed in, so anything appended to
+   either can silently never run. A form control must not depend on that. */
+(function(){
+  var sel  = document.getElementById("university");
+  var wrap = document.getElementById("uni-other-wrap");
+  var box  = document.getElementById("university_other");
+  if (!sel || !wrap) return;
+  function sync(){
+    var other = sel.value === "Other";
+    wrap.hidden = !other;
+    if (box) { box.required = other; if (!other) box.value = ""; }
+  }
+  sel.addEventListener("change", sync);
+  /* Exposed so the profile loader can call it after filling the form. */
+  window.ladsSyncUniOther = sync;
+  sync();
+})();
 </script>
 </body>
 </html>

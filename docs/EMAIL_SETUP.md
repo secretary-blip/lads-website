@@ -53,12 +53,23 @@ It will take a minute or so to build.
 
 ## 3. Add the secrets
 
-Supabase → Edge Functions → **Secrets** → Add new secret. Two of them:
+Supabase → Edge Functions → **Secrets** → Add new secret. Two are required,
+one is optional:
 
 | Name | Value |
 |---|---|
 | `RESEND_API_KEY` | your Resend sending key, the one starting `re_` |
 | `WEBHOOK_SECRET` | the random string from step 1 |
+| `WHATSAPP_INVITE` | optional. The Journal Club WhatsApp **group** invite link. |
+
+The invite link belongs here and **not in the repository**, which is public:
+anybody holding that URL can join. The link points straight at the Journal
+Club group, so the welcome email sends the student there in one step. Leave it unset and the welcome
+email tells the student that Nour will add them by hand, which is the safe
+default. If the link ever leaks, reset it in WhatsApp and paste the new one
+here; nothing in the code needs to change. The same applies if the group link
+is ever replaced by a community link: only the secret changes, though the
+wording of the welcome email would then be one step short.
 
 `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are already there automatically.
 Do not add them, and do not put either of them anywhere else.

@@ -109,7 +109,13 @@
                   <option value="BAU">Beirut Arab University (BAU)</option>
                   <option value="LU">Lebanese University (LU)</option>
                   <option value="USJ">Universit&eacute; Saint-Joseph (USJ)</option>
+                  <option value="Other">Another faculty or academy</option>
                 </select>
+              </div>
+              <div class="form-field" id="uni-other-wrap" hidden>
+                <label for="university_other">Which one?</label>
+                <input type="text" id="university_other" autocomplete="organization"
+                       placeholder="Name of your faculty or academy">
               </div>
               <div class="form-field">
                 <label for="academic_year">Year of study</label>
@@ -316,6 +322,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
 
+
 import { sb, requireAuth, getProfile, getMemberships, signOut,
          DUES_LABEL, ROLE_LABEL, updatePassword, passwordProblem,
          authMessage, fmtDate, escapeHtml, say } from "./js/portal.js";
@@ -354,19 +361,29 @@ function render(profile, memberships) {
   $("full_name").value     = profile.full_name || "";
   $("email").value         = profile.email || "";
   $("phone").value         = profile.phone || "";
-  $("university").value    = profile.university || "";
+  $("university").value       = profile.university || "";
+  $("university_other").value = profile.university_other || "";
+  if (window.ladsSyncUniOther) window.ladsSyncUniOther();
   $("academic_year").value = profile.academic_year || "";
   $("student_id").value    = profile.student_id || "";
 
   $("profile-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const btn = $("save-btn"), msg = $("profile-msg");
+    if ($("university").value === "Other" && !$("university_other").value.trim()) {
+      say(msg, "Please name your faculty or academy.", "error");
+      return;
+    }
     btn.disabled = true;
     say(msg, "Saving\u2026");
     const { error } = await sb.from("profiles").update({
       full_name:     $("full_name").value.trim(),
       phone:         $("phone").value.trim() || null,
       university:    $("university").value || null,
+      /* Cleared unless 'Other' is the answer, so the column cannot keep a
+         stale school name after somebody switches back to BAU. */
+      university_other: $("university").value === "Other"
+        ? ($("university_other").value.trim() || null) : null,
       academic_year: $("academic_year").value || null,
       student_id:    $("student_id").value.trim() || null,
     }).eq("id", profile.id);
@@ -414,6 +431,10 @@ function render(profile, memberships) {
     const problem = passwordProblem(pw);
     if (problem) return say(msg, problem, "error");
     if (pw !== $("new_password2").value) return say(msg, "The two passwords do not match.", "error");
+    if ($("university").value === "Other" && !$("university_other").value.trim()) {
+      say(msg, "Please name your faculty or academy.", "error");
+      return;
+    }
     btn.disabled = true;
     say(msg, "Saving\u2026");
     const { error } = await updatePassword(pw);
@@ -426,6 +447,29 @@ function render(profile, memberships) {
   $("signout-btn").addEventListener("click", signOut);
 }
 
+</script>
+<script>
+/* The free-text box only exists when it is the answer.
+
+   This is deliberately its own script and not part of the module or the
+   header script: the module needs supabase-js from a CDN and the header
+   script returns early when nobody is signed in, so anything appended to
+   either can silently never run. A form control must not depend on that. */
+(function(){
+  var sel  = document.getElementById("university");
+  var wrap = document.getElementById("uni-other-wrap");
+  var box  = document.getElementById("university_other");
+  if (!sel || !wrap) return;
+  function sync(){
+    var other = sel.value === "Other";
+    wrap.hidden = !other;
+    if (box) { box.required = other; if (!other) box.value = ""; }
+  }
+  sel.addEventListener("change", sync);
+  /* Exposed so the profile loader can call it after filling the form. */
+  window.ladsSyncUniOther = sync;
+  sync();
+})();
 </script>
 </body>
 </html>

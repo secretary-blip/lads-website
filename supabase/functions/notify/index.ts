@@ -18,6 +18,11 @@
 // Secrets required (Edge Functions -> Secrets):
 //   RESEND_API_KEY   the sending key from resend.com
 //   WEBHOOK_SECRET   any long random string; also set as a webhook header
+//   WHATSAPP_INVITE  optional. The Journal Club WhatsApp group invite link.
+//                    It lives here and not in the repository, because the
+//                    repository is public and anybody holding that URL can
+//                    join. Unset means the welcome email tells them Nour will
+//                    add them, which is the safe default.
 // =============================================================================
 
 const RESEND_KEY     = Deno.env.get("RESEND_API_KEY")!;
@@ -25,9 +30,14 @@ const WEBHOOK_SECRET = Deno.env.get("WEBHOOK_SECRET")!;
 const SUPABASE_URL   = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY    = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
+const WHATSAPP  = Deno.env.get("WHATSAPP_INVITE") ?? "";
+
 const FROM      = "LADS <noreply@ladslb.org>";
 const REPLY_TO  = "info@ladslb.org";
 const PORTAL    = "https://ladslb.org";
+/* A role address, not a person. When the NRO changes next year the mail
+   follows the role and nobody has to remember this file exists. */
+const NRO       = "nro@ladslb.org";
 
 /* A membership row. The member's name and email are not on it, so the function
    looks them up. Denormalising them onto the membership would mean two copies
@@ -52,11 +62,32 @@ type Person = {
   academic_year: string | null;
 };
 
+type JournalMember = {
+  profile_id: string;
+  certificate_name: string | null;
+  interests: string[] | null;
+  presenting: string | null;
+  research_level: string | null;
+  mode_pref: string | null;
+  access_needs: string | null;
+  consent_photos: boolean;
+  consent_whatsapp: boolean;
+};
+
+type JournalRsvp = {
+  paper_id: string;
+  profile_id: string;
+  attending: boolean;
+  mode: string | null;
+};
+
 type Payload = {
   type: "INSERT" | "UPDATE" | "DELETE";
   table: string;
-  record: Membership;
-  old_record: Membership | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  record: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  old_record: any | null;
 };
 
 /* Who should hear about payments. Read live from the database rather
@@ -142,6 +173,102 @@ Deno.serve(async (req) => {
 
   const rec = payload.record;
   const old = payload.old_record;
+
+  /* ======================================================================
+     JOURNAL CLUB
+     Same webhook, same secret. The club's two questions are answered by two
+     tables, so the branch is on the table name and returns before any of the
+     membership logic below reads a status that is not there.
+     ====================================================================== */
+  if (payload.table === "journal_members" || payload.table === "journal_rsvps") {
+    const who = await person(rec.profile_id);
+    if (!who) return new Response("no profile", { status: 200 });
+
+    // ------------------------------------------------ somebody joined
+    if (payload.table === "journal_members" && payload.type === "INSERT") {
+      const m = rec as JournalMember;
+      const uni = who.university === "Other" ? "Other" : (who.university ?? "not given");
+      const rows: [string, string][] = [
+        ["Name", who.full_name],
+        ["Email", who.email],
+        ["Phone", who.phone ?? "not given"],
+        ["University", uni],
+        ["Year", who.academic_year ?? "not given"],
+        ["Attendance", m.mode_pref ?? "no preference"],
+        ["Would present", m.presenting ?? "not answered"],
+        ["Research", m.research_level ?? "not answered"],
+        ["Interests", (m.interests ?? []).join(", ") || "none given"],
+        ["WhatsApp group", m.consent_whatsapp ? "yes, wants to join" : "no"],
+        ["Photos", m.consent_photos ? "consented" : "declined"],
+      ];
+      /* Accessibility needs are shown because somebody has to act on them.
+         They are shown last so the line is not lost in the middle. */
+      if (m.access_needs) rows.push(["Access needs", m.access_needs]);
+
+      await sendEmail(
+        [NRO],
+        `Journal Club: ${who.full_name} joined`,
+        shell(
+          "A new Journal Club member",
+          `<table style="width:100%;border-collapse:collapse;font-size:14px;">
+            ${rows.map(([k, v]) =>
+              `<tr><td style="padding:6px 12px 6px 0;color:#565656;white-space:nowrap;">${k}</td>
+                   <td style="padding:6px 0;font-weight:600;">${v}</td></tr>`).join("")}
+          </table>`,
+        ),
+      );
+
+      /* And a word back to the student, so joining does not feel like it
+         went nowhere. The group link is only sent to somebody who asked for
+         it, and only if it has been configured. */
+      const joinLine = !m.consent_whatsapp
+        ? `<p style="font-size:15px;">You are on the list. Session papers go out a
+             week before each meeting.</p>`
+        : WHATSAPP
+        ? `<p style="font-size:15px;">You are on the list. Session papers go out a
+             week before each meeting, and the link below puts you straight in
+             the group.</p>`
+        : `<p style="font-size:15px;">You are on the list. Session papers go out a
+             week before each meeting. Nour will add you to the Journal Club
+             group on WhatsApp.</p>`;
+
+      await sendEmail(
+        [who.email],
+        "You are in the LADS Journal Club",
+        shell(
+          "Welcome to the Journal Club",
+          joinLine,
+          m.consent_whatsapp && WHATSAPP
+            ? { text: "Join the Journal Club group", href: WHATSAPP }
+            : { text: "Open the portal", href: `${PORTAL}/account.html` },
+        ),
+      );
+      return new Response("journal member notified");
+    }
+
+    // ------------------------------------------------ RSVP for a session
+    if (payload.table === "journal_rsvps") {
+      const r = rec as JournalRsvp;
+      const changed = payload.type === "UPDATE";
+      const verb = r.attending
+        ? (changed ? "is coming after all" : "is coming")
+        : "can no longer make it";
+      await sendEmail(
+        [NRO],
+        `Journal Club: ${who.full_name} ${verb}`,
+        shell(
+          `${who.full_name} ${verb}`,
+          `<p style="font-size:15px;">${who.full_name}
+             (${who.university ?? "university not given"}, ${who.academic_year ?? "year not given"})
+             ${verb}${r.mode ? `, ${r.mode}` : ""}.</p>`,
+          { text: "See the session list", href: `${PORTAL}/account.html` },
+        ),
+      );
+      return new Response("rsvp notified");
+    }
+
+    return new Response("nothing to do");
+  }
 
   // A membership only becomes interesting when it enters or leaves review.
   const nowPending  = rec.status === "pending";
