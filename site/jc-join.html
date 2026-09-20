@@ -47,6 +47,19 @@
     color:inherit;cursor:pointer;}
   .jc-rsvp button[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff;}
   .jc-rsvp button:disabled{opacity:.5;cursor:default;}
+  /* The Journal Club wordmark. Two files, not one with a filter, because a
+     filter that lightens CLUB would drag the red with it. Only the black
+     half changes between themes. */
+  .jc-mark-h{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+    clip-path:inset(50%);white-space:nowrap;}
+  .jc-mark{display:block;width:min(100%,26rem);height:auto;margin:.2rem 0 .1rem -.25rem;}
+  .jc-mark.on-dark{display:none;}
+  @media (prefers-color-scheme: dark){
+    html:not([data-theme="light"]) .jc-mark.on-light{display:none;}
+    html:not([data-theme="light"]) .jc-mark.on-dark{display:block;}
+  }
+  html[data-theme="dark"] .jc-mark.on-light{display:none;}
+  html[data-theme="dark"] .jc-mark.on-dark{display:block;}
 </style>
 
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -88,8 +101,10 @@
 
 <section class="masthead">
   <div class="wrap">
-    <p class="eyebrow">Journal Club</p>
-    <h1>Join the club.</h1>
+    <h1 class="jc-mark-h">Journal Club</h1>
+    <img class="jc-mark on-light" src="assets/jc/jc-wordmark.png" alt="" width="1100" height="370">
+    <img class="jc-mark on-dark" src="assets/jc/jc-wordmark-dark.png" alt="" width="1100" height="370">
+    <p class="eyebrow" style="margin-top:1rem;">Join the club</p>
   </div>
 </section>
 
