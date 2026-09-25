@@ -12,7 +12,7 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Journal Club | LADS</title>
-<meta name="description" content="Join the LADS Journal Club and say which sessions you are coming to.">
+<meta name="description" content="Join the LADS Journal Club.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -27,26 +27,6 @@
   .jc-checks input,.jc-consent input{margin-top:.25rem;flex:none;width:1rem;height:1rem;
     accent-color:var(--red);}
   .jc-consents{display:grid;gap:.8rem;padding-top:1.1rem;border-top:1px solid var(--p-line);}
-  /* One session, one row. The keyline on the right is the same device the
-     public page uses, so a member arriving from it recognises the furniture. */
-  .jc-session{display:grid;gap:.5rem 1.25rem;padding:1.1rem 1.1rem 1.1rem 0;
-    border-top:1px solid var(--p-line);position:relative;}
-  .jc-session:first-child{border-top:0;}
-  @media (min-width:700px){
-    .jc-session{grid-template-columns:5.5rem minmax(0,1fr) auto;align-items:center;}
-  }
-  .jc-when{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--p-dim);}
-  .jc-when b{display:block;font-size:1.25rem;letter-spacing:-.02em;text-transform:none;
-    color:var(--red);line-height:1.1;}
-  .jc-title{font-weight:700;line-height:1.3;}
-  .jc-cite{font-size:.88rem;color:var(--p-dim);margin-top:.15rem;}
-  .jc-rsvp{display:flex;gap:.5rem;flex-wrap:wrap;}
-  .jc-rsvp button{font:inherit;font-size:.82rem;font-weight:700;padding:.45rem .8rem;
-    border-radius:var(--r-sm);border:1px solid var(--p-line);background:transparent;
-    color:inherit;cursor:pointer;}
-  .jc-rsvp button[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff;}
-  .jc-rsvp button:disabled{opacity:.5;cursor:default;}
   /* The Journal Club wordmark. Two files, not one with a filter, because a
      filter that lightens CLUB would drag the red with it. Only the black
      half changes between themes. */
@@ -114,8 +94,9 @@
     <p id="loading" class="p-muted">Loading&hellip;</p>
 
     <!-- ALREADY A MEMBER ---------------------------------------------------
-         Somebody who has joined does not need the form again. They need the
-         next session and a way to say whether they are coming. -->
+         Somebody who has joined needs to know they are in and what happens
+         next. Attendance is the organisers' to track, not theirs to declare,
+         so this page does not ask. -->
     <div id="member" hidden>
       <div class="p-status">
         <div>
@@ -127,9 +108,8 @@
       </div>
 
       <div class="p-sec">
-        <h2 class="h-sec">Sessions</h2>
-        <p class="p-muted" style="margin-top:.5rem;">Tell Nour whether you are coming. You can change your mind.</p>
-        <div id="sessions" style="margin-top:1.25rem;"></div>
+        <p style="max-width:60ch;">You will be added to the WhatsApp group soon
+           to receive announcements regarding the Journal Club.</p>
       </div>
     </div>
 
@@ -392,76 +372,20 @@ if (session) {
     `<label><input type="checkbox" value="${esc(t)}" id="int${i}"><span>${esc(t)}</span></label>`
   ).join("");
 
-  const fmt = new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"short" });
-  /* Beirut, not the reader's clock, so a session tonight is not already past
-     for somebody browsing from a timezone on tomorrow. */
-  const today = () =>
-    new Intl.DateTimeFormat("en-CA", { timeZone:"Asia/Beirut" }).format(new Date());
-
-  const [{ data: mem }, { data: papers }] = await Promise.all([
-    sb.from("journal_members").select("joined_at").eq("profile_id", me).maybeSingle(),
-    sb.from("journal_papers")
-      .select("id,session_on,topic,title,journal,pub_year")
-      .eq("published", true).order("session_on", { ascending: true }),
-  ]);
+  const { data: mem } = await sb.from("journal_members")
+    .select("joined_at").eq("profile_id", me).maybeSingle();
 
   $("loading").hidden = true;
 
   if (mem) { showMember(mem); } else { $("join").hidden = false; }
 
-  async function showMember(row) {
+  function showMember(row) {
     $("member").hidden = false;
     if (row?.joined_at) {
       $("joined-on").textContent =
         "Joined " + new Date(row.joined_at).toLocaleDateString("en-GB",
           { day:"numeric", month:"long", year:"numeric" });
     }
-    const now = (today());
-    const ahead = (papers || []).filter(p => p.session_on >= now);
-    if (!ahead.length) {
-      $("sessions").innerHTML =
-        '<p class="p-muted">No sessions on the calendar yet. You will get an email when the next one is set.</p>';
-      return;
-    }
-    const { data: rsvps } = await sb.from("journal_rsvps")
-      .select("paper_id,attending").eq("profile_id", me);
-    const mine = new Map((rsvps || []).map(r => [r.paper_id, r.attending]));
-
-    $("sessions").innerHTML = ahead.map(p => {
-      const d = new Date(p.session_on + "T12:00:00");
-      const said = mine.has(p.id) ? mine.get(p.id) : null;
-      const cite = [p.journal, p.pub_year].filter(Boolean).join(", ");
-      return `<div class="jc-session" data-paper="${esc(p.id)}">
-        <div class="jc-when"><b>${esc(fmt.format(d))}</b>${esc(String(d.getFullYear()))}</div>
-        <div>
-          <p class="jc-title">${esc(p.title)}</p>
-          ${cite ? `<p class="jc-cite">${esc(cite)}</p>` : ""}
-        </div>
-        <div class="jc-rsvp">
-          <button type="button" data-yes aria-pressed="${said === true}">Coming</button>
-          <button type="button" data-no  aria-pressed="${said === false}">Cannot make it</button>
-        </div>
-      </div>`;
-    }).join("");
-
-    $("sessions").addEventListener("click", async (ev) => {
-      const btn = ev.target.closest("button[data-yes],button[data-no]");
-      if (!btn) return;
-      const row = btn.closest(".jc-session");
-      const paperId = row.dataset.paper;
-      const attending = btn.hasAttribute("data-yes");
-      const pair = row.querySelectorAll("button");
-      pair.forEach(b => b.disabled = true);
-      /* Upsert on the pair, so changing your mind edits one row instead of
-         adding a second answer. */
-      const { error } = await sb.from("journal_rsvps")
-        .upsert({ paper_id: paperId, profile_id: me, attending },
-                { onConflict: "paper_id,profile_id" });
-      pair.forEach(b => b.disabled = false);
-      if (error) { alert("Could not save that just now. Please try again."); return; }
-      row.querySelector("[data-yes]").setAttribute("aria-pressed", String(attending));
-      row.querySelector("[data-no]").setAttribute("aria-pressed", String(!attending));
-    });
   }
 
   $("join").addEventListener("submit", async (e) => {
@@ -491,7 +415,7 @@ if (session) {
       return;
     }
     $("join").hidden = true;
-    await showMember({ joined_at: new Date().toISOString() });
+    showMember({ joined_at: new Date().toISOString() });
   });
 }
 </script>
