@@ -211,14 +211,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
 
-import { sb } from "./js/portal.js";
+import { sb, safeNext } from "./js/portal.js";
 const $ = id => document.getElementById(id);
-
-function safeNext() {
-  const n = new URLSearchParams(location.search).get("next");
-  if (n && /^[a-zA-Z0-9._\/-]+$/.test(n) && !n.startsWith("//")) return n.replace(/^\//, "");
-  return "account.html";
-}
 
 function fail(title, detail) {
   $("head").textContent = "Something went wrong.";

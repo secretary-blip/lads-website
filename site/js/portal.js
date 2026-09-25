@@ -42,12 +42,35 @@ export async function signOut() {
  * register under someone else's email and the Treasurer would have no way of
  * knowing which registration was genuine.
  */
-export async function signUp({ email, password, fullName, university, universityOther, academicYear, phone }) {
+/**
+ * Where to send somebody once they are signed in, taken from a ?next= in the
+ * address bar. Only a path on this site is ever returned: an open redirect
+ * here would let a phishing link bounce a member off our domain immediately
+ * after a real sign-in, at the moment they are least suspicious.
+ *
+ * login.html and auth-callback.html each had their own copy of this. They now
+ * share one, so a rule tightened in a year's time is tightened everywhere.
+ */
+export function safeNext(fallback = "account.html") {
+  const n = new URLSearchParams(location.search).get("next");
+  if (n && /^[a-zA-Z0-9._\/-]+$/.test(n) && !n.startsWith("//")) return n.replace(/^\//, "");
+  return fallback;
+}
+
+/* The confirmation link in the email has to carry the destination too. By the
+   time it is clicked the query string that started all this is long gone. */
+function confirmUrl(next) {
+  const dest = (next && /^[a-zA-Z0-9._\/-]+$/.test(next) && !next.startsWith("//"))
+    ? next.replace(/^\//, "") : "account.html";
+  return `${location.origin}/auth-callback.html?next=${encodeURIComponent("/" + dest)}`;
+}
+
+export async function signUp({ email, password, fullName, university, universityOther, academicYear, phone, next }) {
   return sb.auth.signUp({
     email: email.trim(),
     password,
     options: {
-      emailRedirectTo: `${location.origin}/auth-callback.html?next=%2Faccount.html`,
+      emailRedirectTo: confirmUrl(next),
       // Read by the handle_new_user trigger to populate the profile row.
       data: {
         full_name: (fullName || "").trim(),
@@ -76,11 +99,11 @@ export async function updatePassword(password) {
   return sb.auth.updateUser({ password });
 }
 
-export async function resendConfirmation(email) {
+export async function resendConfirmation(email, next) {
   return sb.auth.resend({
     type: "signup",
     email: email.trim(),
-    options: { emailRedirectTo: `${location.origin}/auth-callback.html?next=%2Faccount.html` },
+    options: { emailRedirectTo: confirmUrl(next) },
   });
 }
 

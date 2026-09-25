@@ -272,10 +272,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
 
-import { signUp, passwordProblem, authMessage, getSession, say } from "./js/portal.js";
+import { signUp, passwordProblem, authMessage, getSession, say, safeNext } from "./js/portal.js";
 const $ = id => document.getElementById(id);
 
-if (await getSession()) location.replace("account.html");
+/* Someone arriving from a Journal Club poster is sent here with ?next=. It has
+   to survive the account they are about to make, or they finish signing up and
+   land on the portal home wondering where the club went. */
+const next = safeNext();
+if (await getSession()) location.replace(next);
 
 document.querySelectorAll("[data-toggle]").forEach(b => {
   b.addEventListener("click", () => {
@@ -311,6 +315,7 @@ $("form").addEventListener("submit", async (e) => {
     universityOther: $("university_other").value,
     academicYear: $("academic_year").value,
     phone: $("phone").value,
+    next,
   });
 
   if (error) {

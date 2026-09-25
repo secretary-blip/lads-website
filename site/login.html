@@ -77,7 +77,7 @@
     </form>
 
     <p class="alt"><a href="forgot-password.html">Forgotten your password?</a></p>
-    <p class="alt">No account yet? <a href="signup.html">Create one</a>.</p>
+    <p class="alt">No account yet? <a href="signup.html" id="signup-link">Create one</a>.</p>
   </div></div>
 </section>
 </main>
@@ -222,18 +222,20 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
 
-import { signIn, resendConfirmation, authMessage, getSession, say } from "./js/portal.js";
+import { signIn, resendConfirmation, authMessage, getSession, say, safeNext } from "./js/portal.js";
 const $ = id => document.getElementById(id);
+
+const nextUrl = safeNext;
 
 /* Already signed in? Go straight through. */
 if (await getSession()) location.replace(nextUrl());
 
-function nextUrl() {
-  const n = new URLSearchParams(location.search).get("next");
-  /* Only ever redirect within this site. An open redirect here would let a
-     phishing link bounce someone off our domain after a real sign-in. */
-  if (n && /^[a-zA-Z0-9._\/-]+$/.test(n) && !n.startsWith("//")) return n.replace(/^\//, "");
-  return "account.html";
+/* Carry the destination on to the signup page. Without this, anybody who
+   arrives without an account loses whatever brought them here. */
+{
+  const dest = new URLSearchParams(location.search).get("next");
+  const link = $("signup-link");
+  if (dest && link) link.href = `signup.html?next=${encodeURIComponent(dest)}`;
 }
 
 document.querySelectorAll("[data-toggle]").forEach(b => {
@@ -267,7 +269,7 @@ $("form").addEventListener("submit", async (e) => {
 $("resend").addEventListener("click", async () => {
   const msg = $("msg");
   say(msg, "Sending\u2026");
-  const { error } = await resendConfirmation($("email").value);
+  const { error } = await resendConfirmation($("email").value, nextUrl());
   say(msg, error ? authMessage(error) : "Sent. Check your inbox.", error ? "error" : "success");
 });
 
