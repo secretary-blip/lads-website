@@ -133,9 +133,25 @@ async function sendEmail(to: string[], subject: string, html: string) {
 
 /* Deliberately plain HTML. Heavy templates get clipped by Gmail and look
    broken in half the clients students actually use. */
-function shell(heading: string, body: string, cta?: { text: string; href: string }) {
+/* The Journal Club wordmark, served from the site so the mail carries a link
+   rather than an attachment. Most clients block remote images until the reader
+   allows them, so every mail that uses this still has to read correctly with
+   nothing but the alt text in its place. Nothing below the mark depends on it.
+
+   One fixed pixel width, not a percentage: Outlook ignores CSS width on images
+   and falls back to the file's own 1100px. */
+const JC_MARK = "https://ladslb.org/assets/jc/jc-wordmark.png";
+
+function shell(
+  heading: string,
+  body: string,
+  cta?: { text: string; href: string },
+  mark?: string,
+) {
   return `<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
     max-width:560px;margin:0 auto;padding:24px;color:#111;line-height:1.6;">
+    ${mark ? `<p style="margin:0 0 14px;"><img src="${mark}" alt="Journal Club"
+      width="190" style="width:190px;max-width:60%;height:auto;display:block;border:0;"></p>` : ""}
     <p style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#C00000;
       font-weight:700;margin:0 0 8px;">Lebanese Association of Dental Students</p>
     <h1 style="font-size:22px;margin:0 0 16px;">${heading}</h1>
@@ -215,6 +231,8 @@ Deno.serve(async (req) => {
               `<tr><td style="padding:6px 12px 6px 0;color:#565656;white-space:nowrap;">${k}</td>
                    <td style="padding:6px 0;font-weight:600;">${v}</td></tr>`).join("")}
           </table>`,
+          undefined,
+          JC_MARK,
         ),
       );
 
@@ -241,6 +259,7 @@ Deno.serve(async (req) => {
           m.consent_whatsapp && WHATSAPP
             ? { text: "Join the Journal Club group", href: WHATSAPP }
             : { text: "Open the portal", href: `${PORTAL}/account.html` },
+          JC_MARK,
         ),
       );
       return new Response("journal member notified");
@@ -262,6 +281,7 @@ Deno.serve(async (req) => {
              (${who.university ?? "university not given"}, ${who.academic_year ?? "year not given"})
              ${verb}${r.mode ? `, ${r.mode}` : ""}.</p>`,
           { text: "See the session list", href: `${PORTAL}/account.html` },
+          JC_MARK,
         ),
       );
       return new Response("rsvp notified");
