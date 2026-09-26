@@ -176,16 +176,12 @@
             placeholder="Access needs, or anything else. Optional."></textarea>
         </div>
 
-        <!-- Two choices, not terms. Off by default, and joining does not
-             depend on either. -->
+        <!-- A choice, not a term. Off by default, and joining does not
+             depend on it. -->
         <div class="jc-consents">
           <label class="jc-consent">
             <input type="checkbox" id="consent_whatsapp">
             <span>Add me to the Journal Club WhatsApp group.</span>
-          </label>
-          <label class="jc-consent">
-            <input type="checkbox" id="consent_photos">
-            <span>LADS may use photographs of me from sessions.</span>
           </label>
         </div>
       </div>
@@ -404,7 +400,6 @@ if (session) {
       research_level:   $("research_level").value || null,
       mode_pref:        $("mode_pref").value || null,
       access_needs:     $("access_needs").value.trim() || null,
-      consent_photos:   $("consent_photos").checked,
       consent_whatsapp: $("consent_whatsapp").checked,
     });
 

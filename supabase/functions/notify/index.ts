@@ -70,7 +70,6 @@ type JournalMember = {
   research_level: string | null;
   mode_pref: string | null;
   access_needs: string | null;
-  consent_photos: boolean;
   consent_whatsapp: boolean;
 };
 
@@ -215,7 +214,6 @@ Deno.serve(async (req) => {
         ["Research experience", m.research_level ?? "not answered"],
         ["Interests", (m.interests ?? []).join(", ") || "none given"],
         ["WhatsApp group", m.consent_whatsapp ? "yes, wants to join" : "no"],
-        ["Photos", m.consent_photos ? "consented" : "declined"],
       ];
       /* Accessibility needs are shown because somebody has to act on them.
          They are shown last so the line is not lost in the middle. */
