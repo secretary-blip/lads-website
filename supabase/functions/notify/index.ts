@@ -139,7 +139,8 @@ async function sendEmail(to: string[], subject: string, html: string) {
 
    One fixed pixel width, not a percentage: Outlook ignores CSS width on images
    and falls back to the file's own 1100px. */
-const JC_MARK = "https://ladslb.org/assets/jc/jc-wordmark.png";
+const JC_MARK   = "https://ladslb.org/assets/jc/jc-wordmark.png";
+const LADS_MARK = "https://ladslb.org/assets/lads_logo.png";
 
 function shell(
   heading: string,
@@ -147,10 +148,18 @@ function shell(
   cta?: { text: string; href: string },
   mark?: string,
 ) {
+  /* The LADS mark heads every email. A second mark, the Journal Club's, sits
+     under it on the club's mail only. Both are links, not attachments, and
+     most clients hold remote images until the reader allows them, so nothing
+     below either one depends on it loading: the name is still spelled out in
+     the line underneath. */
   return `<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
     max-width:560px;margin:0 auto;padding:24px;color:#111;line-height:1.6;">
+    <p style="margin:0 0 12px;"><img src="${LADS_MARK}"
+      alt="Lebanese Association of Dental Students" width="150"
+      style="width:150px;max-width:55%;height:auto;display:block;border:0;"></p>
     ${mark ? `<p style="margin:0 0 14px;"><img src="${mark}" alt="Journal Club"
-      width="190" style="width:190px;max-width:60%;height:auto;display:block;border:0;"></p>` : ""}
+      width="170" style="width:170px;max-width:55%;height:auto;display:block;border:0;"></p>` : ""}
     <p style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#C00000;
       font-weight:700;margin:0 0 8px;">Lebanese Association of Dental Students</p>
     <h1 style="font-size:22px;margin:0 0 16px;">${heading}</h1>
@@ -370,7 +379,7 @@ Deno.serve(async (req) => {
            ${esc(rec.academic_year)} has not been paid.${again
              ? " This is a second reminder." : ""}</p>
          <p style="font-size:15px;">Membership is
-           $${Number(rec.amount_usd ?? 20).toFixed(0)} for the whole academic
+           $${Number(rec.amount_usd ?? 15).toFixed(0)} for the whole academic
            year. Pay by whish to <strong>+961 78 78 20 96</strong>, or in cash
            to a board member at any event, then submit it on the payment page so
            we can verify it.</p>
