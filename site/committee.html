@@ -44,11 +44,29 @@
     text-wrap:balance; }
   .cm-role { font-size:clamp(1rem,2vw,1.12rem); line-height:1.7; margin:1rem 0 0; max-width:54ch; }
   .cm-who { margin-top:1.4rem; display:flex; align-items:center; gap:0.8rem; }
-  .cm-who .av { width:42px; height:42px; border-radius:99px; background:var(--red); color:#fff;
+  .cm-who .av { width:52px; height:52px; border-radius:99px; background:var(--red); color:#fff;
     display:grid; place-items:center; font-weight:700; font-size:0.88rem; flex:0 0 auto; }
+  /* A head's photograph sits in the same circle the initials used, so a head
+     with no photograph yet still gets a mark and the line keeps its shape. */
+  .cm-who .avs { display:flex; flex:0 0 auto; }
+  .cm-who .avs .av + .av { margin-left:-12px; box-shadow:0 0 0 3px var(--white); }
+  .cm-who .av { overflow:hidden; }
+  .cm-who .av img { width:100%; height:100%; object-fit:cover; display:block; }
   .cm-who b { display:block; font-size:0.95rem; }
   .cm-who span.r { display:block; font-size:0.7rem; letter-spacing:0.13em;
     text-transform:uppercase; color:var(--gray-text); }
+
+  /* The Journal Club, on the Scientific Committee's page only. The red rule on
+     the right is the club's own device, the same one its home page uses. */
+  .cm-jc { padding:clamp(2rem,5vw,3rem) 0 0; }
+  .cm-jc .box { border:1px solid var(--grey); border-right:3px solid var(--red);
+    background:var(--grey-soft); padding:clamp(1.4rem,3.5vw,2.2rem); display:grid;
+    gap:1.4rem; align-items:center; }
+  @media (min-width:880px){ .cm-jc .box { grid-template-columns:minmax(0,1fr) auto; } }
+  .cm-jc .eyebrow { margin-bottom:0.7rem; }
+  .cm-jc h2 { font-size:clamp(1.4rem,3vw,1.9rem); margin:0; letter-spacing:-0.02em; }
+  .cm-jc p.note { margin:0.8rem 0 0; color:var(--gray-text); max-width:60ch; }
+  .cm-jc .btn-row { margin-top:0; }
 
   .cm-join { border:1px solid var(--grey); background:var(--grey-soft);
     padding:1.4rem 1.5rem 1.5rem; }
@@ -177,6 +195,24 @@
         </div>
         <dl id="cm-stats"></dl>
       </aside>
+    </div>
+  </section>
+
+  <section class="cm-jc" id="cm-jc" hidden>
+    <div class="wrap">
+      <div class="box">
+        <div>
+          <p class="eyebrow">The Journal Club</p>
+          <h2>One paper. One hour. Every two weeks.</h2>
+          <p class="note">Run by the Scientific Committee. Five sessions this semester from
+            13 October: one student presents a paper and the room questions it. Open to LADS
+            members.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn" href="jc-join.html">Register in the portal</a>
+          <a class="btn btn-outline" href="index.html#papers">See the papers</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -400,6 +436,21 @@ const COMMITTEES = {
          "builds our online community while promoting dental health awareness." },
 };
 
+/* Heads' photographs, keyed by the name as written in COMMITTEES. These are
+   the same files the About page shows. A name with no file here gets its
+   initials instead, which is what every head had before. */
+const PHOTOS = {
+  "Tia Majed": "assets/board/tia-majed.jpg",
+  "Alaa Al Kork": "assets/board/alaa-alkork.jpg",
+  "Ali Khalifeh": "assets/board/ali-khalife.jpg",
+  "Aya Omais": "assets/board/aya-omais.jpg",
+  "Maysa Abou Saad": "assets/board/maysa.jpg",
+  "Fouad Haytham Mawlawy": "assets/board/fouad-haytham-mawlawy.jpg",
+  "Majida Jabr": "assets/board/majida-jabr.jpg",
+  "Aya Al Ghandour": "assets/board/aya-ghandour.jpg",
+  "Sarah Sadikk": "assets/board/sarah-sadikk.jpg",
+};
+
 const id = new URLSearchParams(location.search).get("c");
 const c = COMMITTEES[id];
 const YEAR = new Date().getFullYear();
@@ -426,9 +477,15 @@ async function load() {
   $("cm-no").textContent = c.no;
   $("cm-name").textContent = c.name;
   $("cm-role").textContent = c.desc;
+  /* Fundraising has two heads, so each name gets its own circle. */
+  const heads = c.lead.split(/\s*&\s*/).filter(Boolean);
+  const av = n => PHOTOS[n]
+    ? `<span class="av"><img src="${PHOTOS[n]}" alt="" width="52" height="52" decoding="async"></span>`
+    : `<span class="av">${escapeHtml(initials(n))}</span>`;
   $("cm-who").innerHTML =
-    `<span class="av">${escapeHtml(initials(c.lead))}</span>` +
+    `<span class="avs">${heads.map(av).join("")}</span>` +
     `<span><b>${escapeHtml(c.lead)}</b><span class="r">${escapeHtml(c.role)}</span></span>`;
+  $("cm-jc").hidden = id !== "scientific";
   $("cm-year").textContent = YEAR;
   /* Fundraising has no address of its own and is being wound up as a standing
      committee, so it writes to the general inbox until it goes. */
