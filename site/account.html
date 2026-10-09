@@ -304,6 +304,7 @@ if (session) {
   } else {
     render(profile, await getMemberships());
     loadCounts();
+    journalTool(profile);
   }
 }
 
@@ -377,6 +378,23 @@ function render(profile, memberships) {
       `<a class="p-action" href="${h}">${ICON[icon]}<h3>${t}</h3><p>${d}</p><span class="arrow">${a} &rarr;</span></a>`).join("");
   }
 
+}
+
+/* The Journal Club table is for the Scientific Committee head, the Executive
+   Committee and the club's organisers, who may hold no board role. The
+   database answers who that is, so this card appears for exactly the people
+   the table itself would answer. An organiser sees Board tools with this one
+   card in it and nothing else. */
+async function journalTool(profile) {
+  const { data: ok } = await sb.rpc("can_see_journal_members");
+  if (!ok) return;
+  if (!isStaff(profile)) {
+    $("staff-tools").hidden = false;
+    $("role-note").textContent = "Signed in as Journal Club organiser";
+  }
+  $("tool-links").insertAdjacentHTML("beforeend",
+    `<a class="p-action" href="admin-journal.html">${ICON.members}<h3>Journal Club members</h3>` +
+    `<p>Every sign up and their answers in one table.</p><span class="arrow">Open &rarr;</span></a>`);
 }
 
 /* Counts for the tiles. Separate from render so a slow or failing count never
