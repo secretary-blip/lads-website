@@ -18,40 +18,125 @@
 <meta name="theme-color" content="#C00000">
 <meta name="robots" content="noindex, nofollow">
 <style>
-  .stats { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); margin-top:1.5rem; }
-  .stat { background:var(--grey-soft); border:1px solid var(--line); padding:1.1rem 1.2rem; }
-  .stat .n { font-size:2rem; font-weight:700; line-height:1.1; }
-  .stat .k { font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-text); margin-top:0.3rem; }
+  /* Journal Club members. Built for one person reading it on a phone between
+     classes as much as at a desk, so every member is a card that reads top to
+     bottom, and the dues state is the first thing on it.
 
-  .toolbar { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-top:1.5rem; }
-  .toolbar input { padding:0.6rem 0.7rem; font-family:inherit; font-size:0.92rem; flex:1 1 260px; width:auto; margin:0; }
-  table.jc td.nw { white-space:nowrap; }
-  .muted { color:var(--gray-text); }
+     Colours come from portal.css (--p-*), which already carries dark mode. */
+  .jm { --gap:clamp(.75rem,2vw,1rem); }
+  .jm-top { display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; flex-wrap:wrap; }
+  .jm-top .h-sec { margin:0; }
 
-  /* The table scrolls sideways inside its own box, so the page never does.
-     The name column stays put while the answers scroll past it. */
-  .tbl-wrap { margin-top:1.5rem; overflow-x:auto; border:1px solid var(--line); }
-  table.jc { border-collapse:collapse; width:100%; min-width:1100px; font-size:0.88rem; }
-  table.jc th, table.jc td { text-align:left; vertical-align:top; padding:0.65rem 0.8rem;
-    border-bottom:1px solid var(--line); }
-  table.jc th { font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase;
-    color:var(--gray-text); background:var(--grey-soft); position:sticky; top:0; white-space:nowrap; }
-  table.jc td.nm, table.jc th.nm { position:sticky; left:0; background:var(--white); z-index:1;
-    font-weight:700; min-width:170px; }
-  table.jc th.nm { background:var(--grey-soft); z-index:2; }
-  table.jc td.why { min-width:240px; }
-  table.jc td.notes { min-width:200px; white-space:pre-wrap; }
-  table.jc a { color:inherit; }
-  table.jc tr:last-child td { border-bottom:0; }
+  /* live state */
+  .live { display:inline-flex; align-items:center; gap:.55rem; font-size:.82rem; color:var(--p-dim);
+    border:1px solid var(--p-line); background:var(--p-card); border-radius:999px; padding:.4rem .5rem .4rem .8rem; }
+  .live i { width:8px; height:8px; border-radius:50%; background:var(--p-ok); position:relative; flex:none; }
+  .live i::after { content:""; position:absolute; inset:-4px; border-radius:50%; border:2px solid var(--p-ok);
+    opacity:0; animation:ping 2.4s ease-out infinite; }
+  .live.stale i { background:var(--p-wait); } .live.stale i::after { display:none; }
+  .live.off i { background:var(--red); } .live.off i::after { display:none; }
+  .live button { border:0; background:none; color:inherit; font:inherit; font-weight:700; cursor:pointer;
+    padding:.15rem .5rem; border-radius:999px; }
+  .live button:hover { color:var(--red); }
+  .live button:focus-visible { outline:2px solid var(--red); outline-offset:2px; }
+  @keyframes ping { 0%{transform:scale(.6);opacity:.7} 80%,100%{transform:scale(1.6);opacity:0} }
+  @media (prefers-reduced-motion:reduce){ .live i::after{ animation:none; } }
 
-  @media (prefers-color-scheme: dark){
-    html:not([data-theme="light"]) .stat { background:var(--panel); }
-    html:not([data-theme="light"]) table.jc th { background:var(--panel); }
-    html:not([data-theme="light"]) table.jc td.nm { background:var(--page); }
+  /* the dues bar: one glance, how much of the club has paid */
+  .dues { margin-top:1.75rem; background:var(--p-card); border:1px solid var(--p-line); border-radius:8px;
+    padding:clamp(1rem,3vw,1.4rem); box-shadow:var(--p-shadow); }
+  .dues-head { display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap; }
+  .dues-head h2 { font-size:1rem; margin:0; }
+  .dues-head .yr { font-size:.8rem; color:var(--p-dim); }
+  .bar { display:flex; height:12px; border-radius:99px; overflow:hidden; background:var(--p-tint); margin:.9rem 0 1rem; }
+  .bar span { display:block; height:100%; transition:width .5s cubic-bezier(.2,.8,.2,1); }
+  .bar .b-paid { background:var(--p-ok); } .bar .b-pend { background:var(--p-wait); }
+  .tiles { display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); }
+  .tile { all:unset; box-sizing:border-box; cursor:pointer; border:1px solid var(--p-line); border-radius:6px;
+    padding:.8rem .9rem; background:var(--p-card); display:block; transition:border-color .15s, background .15s; }
+  .tile .n { font-size:1.6rem; font-weight:700; line-height:1.1; color:var(--p-ink); display:flex; align-items:center; gap:.5rem; }
+  .tile .k { font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; color:var(--p-dim); margin-top:.25rem; font-weight:700; }
+  .tile .dot { width:10px; height:10px; border-radius:50%; flex:none; }
+  .tile[aria-pressed="true"] { border-color:var(--red); background:var(--p-tint); }
+  .tile:focus-visible { outline:2px solid var(--red); outline-offset:2px; }
+  @media (hover:hover) and (pointer:fine){ .tile:hover { border-color:var(--p-ink); } }
+
+  /* filters */
+  .filters { margin-top:1.5rem; display:grid; gap:.75rem; }
+  .f-row { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; }
+  .f-row input[type="search"] { flex:1 1 240px; width:auto; margin:0; padding:.7rem .8rem; font:inherit; font-size:.95rem; }
+  .f-row select { flex:0 1 auto; width:auto; margin:0; padding:.6rem 2.2rem .6rem .7rem; font:inherit; font-size:.88rem; }
+  .f-meta { display:flex; justify-content:space-between; align-items:center; gap:.75rem; flex-wrap:wrap;
+    font-size:.88rem; color:var(--p-dim); }
+  .linkbtn { border:0; background:none; color:var(--red); font:inherit; font-weight:700; cursor:pointer; padding:0; }
+  .linkbtn[hidden] { display:none; }
+  .actions { display:flex; gap:.6rem; flex-wrap:wrap; }
+  .actions .btn { padding:.6rem 1rem; font-size:.88rem; }
+  @media (max-width:640px){
+    .f-row.sel { display:grid; grid-template-columns:1fr 1fr; }
+    .f-row.sel select { width:100%; min-width:0; }
+    .f-meta { display:grid; }
+    .actions { display:grid; grid-template-columns:1fr 1fr; }
+    .actions .btn { width:100%; text-align:center; padding:.65rem .5rem; }
+    .actions #csv { grid-column:1 / -1; }
   }
-  html[data-theme="dark"] .stat { background:var(--panel); }
-  html[data-theme="dark"] table.jc th { background:var(--panel); }
-  html[data-theme="dark"] table.jc td.nm { background:var(--page); }
+
+  /* member cards */
+  .cards { margin-top:1.25rem; display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr)); }
+  .card { background:var(--p-card); border:1px solid var(--p-line); border-radius:8px; padding:1.1rem 1.15rem 1rem;
+    display:flex; flex-direction:column; gap:.85rem; box-shadow:inset 0 4px 0 var(--edge, var(--p-line)); }
+  /* The dues colour runs along the top edge. A shadow rather than a border,
+     so the site's dark mode card rules cannot repaint it. */
+  .cards .is-paid { --edge:var(--p-ok); }
+  .cards .is-pending { --edge:var(--p-wait); }
+  .cards .is-unpaid { --edge:var(--red); }
+  .c-top { display:flex; justify-content:space-between; gap:.75rem; align-items:flex-start; }
+  .c-top h3 { font-size:1.05rem; margin:0; line-height:1.3; overflow-wrap:anywhere; }
+  .c-top .sub { font-size:.85rem; color:var(--p-dim); margin-top:.2rem; }
+  .pill { display:inline-flex; align-items:center; gap:.35rem; white-space:nowrap; font-size:.72rem; font-weight:700;
+    letter-spacing:.05em; text-transform:uppercase; padding:.28rem .55rem; border-radius:99px; border:1.5px solid currentColor; }
+  .pill::before { content:""; width:7px; height:7px; border-radius:50%; background:currentColor; }
+  .pill.paid { color:var(--p-ok); } .pill.pending { color:var(--p-wait); } .pill.unpaid { color:var(--red); }
+  .contact { display:flex; gap:.5rem; flex-wrap:wrap; }
+  .chip { display:inline-flex; align-items:center; gap:.4rem; font-size:.85rem; text-decoration:none; color:var(--p-ink);
+    border:1px solid var(--p-line); border-radius:99px; padding:.38rem .7rem; max-width:100%; overflow:hidden; }
+  .chip span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .chip svg { width:15px; height:15px; flex:none; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .contact a.chip, .contact a.chip:visited { color:var(--p-ink); }
+  .contact a.chip.wa, .contact a.chip.wa:visited { color:var(--p-ok); border-color:currentColor; font-weight:700; }
+  .chip.none { color:var(--red); border-style:dashed; }
+  @media (hover:hover) and (pointer:fine){ a.chip:hover { border-color:var(--p-ink); } }
+  .facts { display:grid; grid-template-columns:auto 1fr; gap:.3rem .9rem; margin:0; font-size:.88rem; }
+  .facts dt { color:var(--p-dim); }
+  .facts dd { margin:0; color:var(--p-ink); }
+  .tags { display:flex; flex-wrap:wrap; gap:.35rem; }
+  .tags span { font-size:.76rem; background:var(--p-tint); color:var(--p-ink); padding:.25rem .55rem; border-radius:4px; }
+  .note { font-size:.86rem; background:var(--p-tint); border-left:3px solid var(--p-wait); padding:.55rem .7rem; white-space:pre-wrap; }
+  .note b { display:block; font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--p-dim); margin-bottom:.2rem; }
+  .c-foot { margin-top:auto; font-size:.78rem; color:var(--p-dim); display:flex; justify-content:space-between; gap:.5rem; flex-wrap:wrap; }
+  mark { background:rgba(255,200,0,.35); color:inherit; border-radius:2px; padding:0 .05em; }
+
+  .empty { margin-top:1.5rem; border:1px dashed var(--p-line); border-radius:8px; padding:2rem 1.25rem; text-align:center; color:var(--p-dim); }
+  .toast { position:fixed; left:50%; bottom:1.25rem; transform:translateX(-50%) translateY(150%); background:var(--p-ink);
+    color:var(--p-card); padding:.7rem 1.1rem; border-radius:6px; font-size:.9rem; font-weight:600; transition:transform .25s ease;
+    z-index:20; max-width:calc(100% - 2rem); visibility:hidden; }
+  .toast.on { transform:translateX(-50%) translateY(0); visibility:visible; }
+
+  /* The first-session sheet. Only exists on paper. */
+  #sheet { display:none; }
+  @media print {
+    header, footer, .jm-screen, .toast { display:none !important; }
+    body { background:#fff !important; color:#000 !important; }
+    #sheet { display:block; font-size:11pt; color:#000; }
+    #sheet h1 { font-size:18pt; margin:0 0 2pt; }
+    #sheet p { margin:0 0 10pt; color:#333; }
+    #sheet table { width:100%; border-collapse:collapse; }
+    #sheet th, #sheet td { border:1px solid #999; padding:5pt 6pt; text-align:left; vertical-align:top; }
+    #sheet th { background:#eee; font-size:9pt; text-transform:uppercase; letter-spacing:.04em; }
+    #sheet td.box { width:22pt; }
+    #sheet tr.owe td { background:#fdeaea; }
+    #sheet tr { break-inside:avoid; }
+  }
 </style>
 </head>
 <body>
@@ -82,11 +167,17 @@
 </header>
 <main id="main">
 
-<section>
-  <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow">Journal Club</p>
-      <h1 class="h-sec">Members.</h1>
+<section class="jm">
+  <div class="wrap jm-screen">
+    <div class="sec-head jm-top">
+      <div>
+        <p class="eyebrow">Journal Club</p>
+        <h1 class="h-sec">Members.</h1>
+      </div>
+      <p class="live" id="live" hidden role="status" aria-live="polite">
+        <i aria-hidden="true"></i><span id="live-text">Live</span>
+        <button type="button" id="refresh" aria-label="Refresh now">Refresh</button>
+      </p>
     </div>
 
     <p id="loading" class="muted" style="margin-top:2rem;">Loading&hellip;</p>
@@ -98,29 +189,62 @@
     </div>
 
     <div id="app" hidden>
-      <div class="stats" id="stats"></div>
 
-      <div class="toolbar">
-        <input type="search" id="q" placeholder="Search name, email or university" aria-label="Search members">
-        <button type="button" class="btn" id="csv">Download for Excel</button>
+      <div class="dues" aria-labelledby="dues-h">
+        <div class="dues-head">
+          <h2 id="dues-h">LADS dues</h2>
+          <span class="yr" id="dues-yr"></span>
+        </div>
+        <div class="bar" id="bar" role="img"></div>
+        <div class="tiles" id="tiles"></div>
       </div>
 
-      <div class="tbl-wrap">
-        <table class="jc">
-          <thead><tr>
-            <th class="nm">Name</th><th>Email</th><th>Phone</th><th>University</th><th>Year</th>
-            <th>Joined</th><th>Would like to present</th><th>Research experience</th>
-            <th>Attending</th><th>Why joining</th><th>Notes</th>
-          </tr></thead>
-          <tbody id="rows"></tbody>
-        </table>
+      <div class="filters">
+        <div class="f-row">
+          <input type="search" id="q" placeholder="Search name, email, phone or university" aria-label="Search members">
+        </div>
+        <div class="f-row sel">
+          <select id="f-uni" aria-label="University"><option value="">All universities</option></select>
+          <select id="f-year" aria-label="Year"><option value="">All years</option></select>
+          <select id="f-present" aria-label="Presenting">
+            <option value="">Presenting: any</option>
+            <option value="yes">Will present</option>
+            <option value="maybe">Maybe, with guidance</option>
+            <option value="later">Later or not</option>
+          </select>
+          <select id="f-mode" aria-label="Attending"><option value="">Attending: any</option></select>
+          <select id="sort" aria-label="Sort">
+            <option value="new">Newest first</option>
+            <option value="old">Oldest first</option>
+            <option value="name">Name A to Z</option>
+            <option value="dues">Not paid first</option>
+          </select>
+        </div>
+        <div class="f-meta">
+          <span><span id="count" aria-live="polite"></span>
+            <button type="button" class="linkbtn" id="clear" hidden>&nbsp;Clear filters</button></span>
+          <span class="actions">
+            <button type="button" class="btn btn-outline" id="copy-unpaid">Copy unpaid contacts</button>
+            <button type="button" class="btn btn-outline" id="print">First session sheet</button>
+            <button type="button" class="btn" id="csv">Download for Excel</button>
+          </span>
+        </div>
       </div>
-      <p id="empty" class="muted" hidden style="margin-top:1rem;">Nobody matches that search.</p>
+
+      <div class="cards" id="cards"></div>
+      <p class="empty" id="empty" hidden></p>
 
       <p style="margin-top:3rem;"><a href="account.html" class="btn btn-outline">Back to your account</a></p>
     </div>
   </div>
+
+  <!-- Printed only. A sign-in sheet for the first session, every member in
+       alphabetical order, the ones who still owe dues shaded so whoever is on
+       the door can tell them. -->
+  <div id="sheet" aria-hidden="true"></div>
 </section>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 </main>
 <footer>
   <div class="wrap foot-grid">
@@ -263,29 +387,50 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
 
-import { sb, requireAuth, escapeHtml } from "./js/portal.js";
+import { sb, requireAuth, escapeHtml, duesYear } from "./js/portal.js";
+const esc = escapeHtml;
 const $ = id => document.getElementById(id);
 
-const COLS = [
-  ["Name", r => r.full_name],
-  ["Email", r => r.email],
-  ["Phone", r => r.phone],
-  ["University", r => r.university],
-  ["Year", r => r.year],
-  ["Joined", r => r.joined_at ? r.joined_at.slice(0, 10) : ""],
-  ["Would like to present", r => r.presenting],
-  ["Research experience", r => r.research_level],
-  ["Attending", r => r.mode_pref],
-  ["Why joining", r => (r.interests || []).join("; ")],
-  ["Notes", r => r.access_needs],
-];
+/* ---------------------------------------------------------------- vocab */
+const DUES = {
+  paid:    { label: "Paid",              dot: "var(--p-ok)" },
+  pending: { label: "Awaiting check",    dot: "var(--p-wait)" },
+  unpaid:  { label: "Not paid",          dot: "var(--red)" },
+};
+/* The form's presenting answers, folded into three groups a person can filter
+   by without remembering the exact wording. */
+const presentGroup = v =>
+  /^Yes/.test(v || "") ? "yes" : /^Maybe/.test(v || "") ? "maybe" : v ? "later" : "";
+
+const ICON = {
+  wa: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9.2 8.8c.3 2.6 2.4 4.9 5.2 5.6l1-1.2-1.8-.9-.7.7c-1-.5-1.8-1.3-2.3-2.3l.7-.7-.9-1.8z"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></svg>',
+  none: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5M12 16h.01"/></svg>',
+};
+
+/* Lebanese numbers arrive every way: 76 123 456, 03-456789, +961 3 456 789,
+   00961... wa.me wants country code and digits only. */
+function waNumber(raw) {
+  let d = String(raw || "").replace(/\D/g, "");
+  if (!d) return "";
+  if (d.startsWith("00")) d = d.slice(2);
+  if (d.startsWith("961")) return d;
+  if (d.startsWith("0")) d = d.slice(1);
+  return d.length === 7 || d.length === 8 ? "961" + d : d;
+}
 
 const short = v => v ? new Date(v).toLocaleDateString("en-GB",
-  { day:"numeric", month:"short", year:"numeric" }) : "";
+  { day: "numeric", month: "short", year: "numeric" }) : "";
 
+/* ---------------------------------------------------------------- state */
 let rows = [];
-const session = await requireAuth();
+let lastOk = 0;
+let duesFilter = "";
+let timer = null;
+const REFRESH_MS = 60_000;
 
+/* ---------------------------------------------------------------- start */
+const session = await requireAuth();
 if (session) {
   /* The database decides who may see this, the same check that guards the
      list itself, so the page and the data cannot disagree. */
@@ -294,66 +439,248 @@ if (session) {
     $("loading").hidden = true;
     $("denied").hidden = false;
   } else {
-    const { data, error } = await sb.rpc("journal_member_list");
+    const first = await load();
     $("loading").hidden = true;
-    if (error) {
+    if (!first) {
       $("denied").hidden = false;
-      $("denied").querySelector("p").textContent = "Could not load the list: " + error.message;
+      $("denied").querySelector("p").textContent = "Could not load the list. Refresh the page to try again.";
     } else {
-      rows = data || [];
       $("app").hidden = false;
-      stats();
+      $("live").hidden = false;
+      wire();
+      fillOptions();
       render();
-      $("q").addEventListener("input", render);
-      $("csv").addEventListener("click", download);
+      schedule();
+      setInterval(tick, 15_000);
     }
   }
 }
 
-function stats() {
-  const n = rows.length;
-  const present = rows.filter(r => /^(Yes|Maybe)/.test(r.presenting || "")).length;
-  const nophone = rows.filter(r => !(r.phone || "").trim()).length;
-  $("stats").innerHTML = [[n, "Members"], [present, "Open to presenting"], [nophone, "No phone number"]]
-    .map(([v, k]) => `<div class="stat"><div class="n">${v}</div><div class="k">${k}</div></div>`).join("");
+/* ---------------------------------------------------------------- data */
+async function load() {
+  const { data, error } = await sb.rpc("journal_member_list");
+  if (error) { live("off", "Offline, retrying"); return false; }
+  rows = (data || []).map(r => ({ ...r, dues: r.dues || "unpaid" }));
+  lastOk = Date.now();
+  tick();
+  return true;
+}
+
+async function refresh() {
+  const btn = $("refresh");
+  btn.disabled = true;
+  const ok = await load();
+  btn.disabled = false;
+  if (ok) { fillOptions(); render(); }
+  schedule();
+}
+
+/* Polls once a minute while the tab is visible and catches up the moment it
+   comes back, so a payment the Treasurer confirms shows here without anyone
+   reloading. Nothing is fetched while the page sits in a background tab. */
+function schedule() {
+  clearTimeout(timer);
+  if (document.visibilityState === "visible") timer = setTimeout(refresh, REFRESH_MS);
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible") { clearTimeout(timer); return; }
+  if (Date.now() - lastOk > 20_000) refresh(); else schedule();
+});
+
+function tick() {
+  if (!lastOk) return;
+  const s = Math.round((Date.now() - lastOk) / 1000);
+  const ago = s < 20 ? "just now" : s < 90 ? "a minute ago" : `${Math.round(s / 60)} minutes ago`;
+  live(s > 180 ? "stale" : "", `Live, updated ${ago}`);
+}
+function live(state, text) {
+  $("live").className = "live" + (state ? " " + state : "");
+  $("live-text").textContent = text;
+}
+
+/* ---------------------------------------------------------------- filters */
+function wire() {
+  $("q").addEventListener("input", render);
+  ["f-uni", "f-year", "f-present", "f-mode", "sort"].forEach(id => $(id).addEventListener("change", render));
+  $("clear").addEventListener("click", () => {
+    $("q").value = ""; ["f-uni", "f-year", "f-present", "f-mode"].forEach(id => $(id).value = "");
+    duesFilter = ""; render();
+  });
+  $("refresh").addEventListener("click", refresh);
+  $("csv").addEventListener("click", download);
+  $("copy-unpaid").addEventListener("click", copyUnpaid);
+  $("print").addEventListener("click", printSheet);
+  $("tiles").addEventListener("click", e => {
+    const t = e.target.closest(".tile"); if (!t) return;
+    duesFilter = duesFilter === t.dataset.k ? "" : t.dataset.k;
+    render();
+  });
+}
+
+/* Options come from the data, so a new university or year appears without
+   anyone editing this page. The current choice survives a refresh. */
+function fillOptions() {
+  const opts = (id, vals, first) => {
+    const keep = $(id).value;
+    $(id).innerHTML = `<option value="">${first}</option>` +
+      [...new Set(vals.filter(Boolean))].sort().map(v => `<option>${esc(v)}</option>`).join("");
+    $(id).value = keep;
+  };
+  opts("f-uni", rows.map(r => r.university), "All universities");
+  opts("f-year", rows.map(r => r.year), "All years");
+  opts("f-mode", rows.map(r => r.mode_pref), "Attending: any");
 }
 
 function shown() {
   const q = $("q").value.trim().toLowerCase();
-  if (!q) return rows;
-  return rows.filter(r => [r.full_name, r.email, r.university]
-    .some(v => (v || "").toLowerCase().includes(q)));
+  const qd = q.replace(/\D/g, "");
+  const uni = $("f-uni").value, yr = $("f-year").value,
+        pres = $("f-present").value, mode = $("f-mode").value;
+  let list = rows.filter(r =>
+    (!duesFilter || (duesFilter === "present" ? presentGroup(r.presenting) === "yes" : r.dues === duesFilter)) &&
+    (!uni  || r.university === uni) &&
+    (!yr   || r.year === yr) &&
+    (!pres || presentGroup(r.presenting) === pres) &&
+    (!mode || r.mode_pref === mode) &&
+    (!q || [r.full_name, r.email, r.university].some(v => (v || "").toLowerCase().includes(q)) ||
+           (qd.length >= 3 && String(r.phone || "").replace(/\D/g, "").includes(qd))));
+  const by = $("sort").value;
+  const rank = { unpaid: 0, pending: 1, paid: 2 };
+  list = [...list].sort((a, b) =>
+    by === "name" ? (a.full_name || "").localeCompare(b.full_name || "") :
+    by === "old"  ? new Date(a.joined_at) - new Date(b.joined_at) :
+    by === "dues" ? (rank[a.dues] - rank[b.dues]) || (a.full_name || "").localeCompare(b.full_name || "") :
+                    new Date(b.joined_at) - new Date(a.joined_at));
+  return list;
 }
 
+/* ---------------------------------------------------------------- render */
 function render() {
+  const n = rows.length;
+  const c = { paid: 0, pending: 0, unpaid: 0 };
+  rows.forEach(r => c[r.dues]++);
+  const present = rows.filter(r => presentGroup(r.presenting) === "yes").length;
+
+  $("dues-yr").textContent = `${duesYear()} · ${n ? Math.round(c.paid / n * 100) : 0}% paid`;
+  $("bar").innerHTML = n
+    ? `<span class="b-paid" style="width:${c.paid / n * 100}%"></span><span class="b-pend" style="width:${c.pending / n * 100}%"></span>`
+    : "";
+  $("bar").setAttribute("aria-label", `${c.paid} of ${n} paid, ${c.pending} awaiting check, ${c.unpaid} not paid`);
+  const tile = (k, v, label, dot) =>
+    `<button type="button" class="tile" data-k="${k}" aria-pressed="${duesFilter === k}">` +
+    `<span class="n">${dot ? `<span class="dot" style="background:${dot}"></span>` : ""}${v}</span>` +
+    `<span class="k">${label}</span></button>`;
+  $("tiles").innerHTML =
+    tile("paid", c.paid, "Paid", DUES.paid.dot) +
+    tile("pending", c.pending, "Awaiting check", DUES.pending.dot) +
+    tile("unpaid", c.unpaid, "Not paid", DUES.unpaid.dot) +
+    tile("present", present, "Will present");
+
   const list = shown();
-  $("empty").hidden = list.length > 0 || rows.length === 0;
-  if (!rows.length) {
-    $("rows").innerHTML = `<tr><td class="nm" colspan="11">Nobody has joined yet.</td></tr>`;
-    return;
-  }
-  $("rows").innerHTML = list.map(r => {
-    const c = COLS.map(([, f]) => escapeHtml(f(r) || ""));
-    const mail = r.email ? `<a href="mailto:${c[1]}">${c[1]}</a>` : "";
-    const tel = r.phone ? `<a href="tel:${c[2].replace(/\s+/g, "")}">${c[2]}</a>` : "";
-    return `<tr><td class="nm">${c[0]}</td><td>${mail}</td><td class="nw">${tel}</td><td>${c[3]}</td>` +
-      `<td class="nw">${c[4]}</td><td class="nw">${escapeHtml(short(r.joined_at))}</td><td>${c[6]}</td><td>${c[7]}</td>` +
-      `<td>${c[8]}</td><td class="why">${c[9]}</td><td class="notes">${c[10]}</td></tr>`;
+  const filtered = list.length !== n;
+  $("count").textContent = filtered ? `Showing ${list.length} of ${n} members` : `${n} member${n === 1 ? "" : "s"}`;
+  $("clear").hidden = !filtered && !duesFilter;
+  $("copy-unpaid").disabled = !c.unpaid;
+
+  $("empty").hidden = list.length > 0;
+  $("empty").textContent = n ? "Nobody matches these filters." : "Nobody has joined yet. Sign ups appear here as they come in.";
+
+  const q = $("q").value.trim();
+  const hl = s => {
+    const t = esc(s || "");
+    if (!q) return t;
+    const i = String(s || "").toLowerCase().indexOf(q.toLowerCase());
+    if (i < 0) return t;
+    return esc(s.slice(0, i)) + "<mark>" + esc(s.slice(i, i + q.length)) + "</mark>" + esc(s.slice(i + q.length));
+  };
+
+  $("cards").innerHTML = list.map(r => {
+    const d = DUES[r.dues] || DUES.unpaid;
+    const wa = waNumber(r.phone);
+    const sub = [r.university, r.year].filter(Boolean).map(esc).join(" &middot; ");
+    const phone = wa
+      ? `<a class="chip wa" href="https://wa.me/${wa}" target="_blank" rel="noopener">${ICON.wa}<span>${esc(r.phone)}</span></a>`
+      : `<span class="chip none">${ICON.none}<span>No phone</span></span>`;
+    const mail = r.email
+      ? `<a class="chip" href="mailto:${esc(r.email)}">${ICON.mail}<span>${hl(r.email)}</span></a>` : "";
+    const facts = [
+      ["Present", r.presenting], ["Research", r.research_level], ["Attending", r.mode_pref],
+    ].filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
+    const tags = (r.interests || []).map(t => `<span>${esc(t)}</span>`).join("");
+    return `<article class="card is-${r.dues}">
+      <div class="c-top">
+        <div><h3>${hl(r.full_name)}</h3>${sub ? `<p class="sub">${sub}</p>` : ""}</div>
+        <span class="pill ${r.dues}">${d.label}</span>
+      </div>
+      <div class="contact">${phone}${mail}</div>
+      ${facts ? `<dl class="facts">${facts}</dl>` : ""}
+      ${tags ? `<div class="tags" aria-label="Why joining">${tags}</div>` : ""}
+      ${r.access_needs ? `<p class="note"><b>Note</b>${esc(r.access_needs)}</p>` : ""}
+      <p class="c-foot"><span>Joined ${esc(short(r.joined_at))}</span>${r.paid_on ? `<span>Dues paid ${esc(short(r.paid_on))}</span>` : ""}</p>
+    </article>`;
   }).join("");
 }
 
+/* ---------------------------------------------------------------- tools */
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2600);
+}
+
+/* Name and number of everyone who has not paid, one per line, ready to paste
+   into a WhatsApp message or a note for whoever is on the door. */
+async function copyUnpaid() {
+  const owe = rows.filter(r => r.dues === "unpaid")
+    .sort((a, b) => (a.full_name || "").localeCompare(b.full_name || ""));
+  const text = owe.map(r => `${r.full_name}${r.phone ? " · " + r.phone : ""}`).join("\n");
+  try { await navigator.clipboard.writeText(text); toast(`Copied ${owe.length} name${owe.length === 1 ? "" : "s"}`); }
+  catch { prompt("Copy this list:", text); }
+}
+
 /* A CSV with a byte order mark, so Excel reads Arabic names correctly. It
-   downloads what the search currently shows. */
+   downloads what the filters currently show. */
 function download() {
+  const COLS = [
+    ["Name", r => r.full_name], ["Email", r => r.email], ["Phone", r => r.phone],
+    ["University", r => r.university], ["Year", r => r.year],
+    ["LADS dues", r => (DUES[r.dues] || DUES.unpaid).label], ["Dues paid on", r => r.paid_on || ""],
+    ["Joined", r => r.joined_at ? r.joined_at.slice(0, 10) : ""],
+    ["Would like to present", r => r.presenting], ["Research experience", r => r.research_level],
+    ["Attending", r => r.mode_pref], ["Why joining", r => (r.interests || []).join("; ")],
+    ["Notes", r => r.access_needs],
+  ];
   const cell = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
   const lines = [COLS.map(([h]) => cell(h)).join(",")]
     .concat(shown().map(r => COLS.map(([, f]) => cell(f(r))).join(",")));
-  const blob = new Blob(["\ufeff" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = `journal-club-members-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* The next session's paper is public, so the sheet can carry its date and
+   title without asking anyone to type them. */
+async function printSheet() {
+  const today = new Date().toISOString().slice(0, 10);
+  const { data: next } = await sb.from("journal_papers").select("session_on,title")
+    .gte("session_on", today).order("session_on").limit(1);
+  const s = next && next[0];
+  const when = s ? new Date(s.session_on + "T12:00:00").toLocaleDateString("en-GB",
+    { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "";
+  const list = [...rows].sort((a, b) => (a.full_name || "").localeCompare(b.full_name || ""));
+  const owe = list.filter(r => r.dues !== "paid").length;
+  $("sheet").innerHTML =
+    `<h1>LADS Journal Club${when ? " · " + esc(when) : ""}</h1>` +
+    `<p>${s ? esc(s.title) + ". " : ""}${list.length} members. ${owe} not yet paid up for ${esc(duesYear())} LADS dues, shaded below: please remind them at the door.</p>` +
+    `<table><thead><tr><th>Here</th><th>Name</th><th>University</th><th>Phone</th><th>LADS dues</th></tr></thead><tbody>` +
+    list.map(r => `<tr class="${r.dues === "paid" ? "" : "owe"}"><td class="box"></td><td>${esc(r.full_name)}</td>` +
+      `<td>${esc([r.university, r.year].filter(Boolean).join(", "))}</td><td>${esc(r.phone || "")}</td>` +
+      `<td>${(DUES[r.dues] || DUES.unpaid).label}</td></tr>`).join("") +
+    `</tbody></table>`;
+  window.print();
 }
 
 </script>
