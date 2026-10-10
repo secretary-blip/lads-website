@@ -110,7 +110,7 @@
           <thead><tr>
             <th class="nm">Name</th><th>Email</th><th>Phone</th><th>University</th><th>Year</th>
             <th>Joined</th><th>Would like to present</th><th>Research experience</th>
-            <th>Attending</th><th>Why joining</th><th>Notes</th><th>WhatsApp</th>
+            <th>Attending</th><th>Why joining</th><th>Notes</th>
           </tr></thead>
           <tbody id="rows"></tbody>
         </table>
@@ -278,7 +278,6 @@ const COLS = [
   ["Attending", r => r.mode_pref],
   ["Why joining", r => (r.interests || []).join("; ")],
   ["Notes", r => r.access_needs],
-  ["WhatsApp", r => r.whatsapp ? "Yes" : "No"],
 ];
 
 const short = v => v ? new Date(v).toLocaleDateString("en-GB",
@@ -314,8 +313,8 @@ if (session) {
 function stats() {
   const n = rows.length;
   const present = rows.filter(r => /^(Yes|Maybe)/.test(r.presenting || "")).length;
-  const wa = rows.filter(r => r.whatsapp).length;
-  $("stats").innerHTML = [[n, "Members"], [present, "Open to presenting"], [wa, "Want WhatsApp"]]
+  const nophone = rows.filter(r => !(r.phone || "").trim()).length;
+  $("stats").innerHTML = [[n, "Members"], [present, "Open to presenting"], [nophone, "No phone number"]]
     .map(([v, k]) => `<div class="stat"><div class="n">${v}</div><div class="k">${k}</div></div>`).join("");
 }
 
@@ -330,7 +329,7 @@ function render() {
   const list = shown();
   $("empty").hidden = list.length > 0 || rows.length === 0;
   if (!rows.length) {
-    $("rows").innerHTML = `<tr><td class="nm" colspan="12">Nobody has joined yet.</td></tr>`;
+    $("rows").innerHTML = `<tr><td class="nm" colspan="11">Nobody has joined yet.</td></tr>`;
     return;
   }
   $("rows").innerHTML = list.map(r => {
@@ -339,7 +338,7 @@ function render() {
     const tel = r.phone ? `<a href="tel:${c[2].replace(/\s+/g, "")}">${c[2]}</a>` : "";
     return `<tr><td class="nm">${c[0]}</td><td>${mail}</td><td class="nw">${tel}</td><td>${c[3]}</td>` +
       `<td class="nw">${c[4]}</td><td class="nw">${escapeHtml(short(r.joined_at))}</td><td>${c[6]}</td><td>${c[7]}</td>` +
-      `<td>${c[8]}</td><td class="why">${c[9]}</td><td class="notes">${c[10]}</td><td>${c[11]}</td></tr>`;
+      `<td>${c[8]}</td><td class="why">${c[9]}</td><td class="notes">${c[10]}</td></tr>`;
   }).join("");
 }
 

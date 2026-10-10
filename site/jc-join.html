@@ -114,8 +114,10 @@
     </div>
 
     <!-- NOT A MEMBER YET ----------------------------------------------------
-         Four questions, a note and a tick. Name, email, phone, university and
-         year are on the profile already and are deliberately not asked again. -->
+         Four questions and a note. Name, email, university and year are on the
+         profile already and are not asked again. Phone is asked because the
+         club adds every member to its WhatsApp group: it is filled in from
+         the profile when there is one, required, and saved back to it. -->
     <form id="join" hidden novalidate>
       <p class="p-muted" style="max-width:60ch;">
         One paper, one hour, every two weeks. We already have your name,
@@ -128,6 +130,13 @@
           <input type="text" id="cert_name" autocomplete="name">
           <p class="p-muted" style="font-size:.85rem;margin-top:.35rem;">
             Leave it blank to use the name on your account.</p>
+        </div>
+
+        <div class="form-field">
+          <label for="jc_phone">Phone number (WhatsApp)</label>
+          <input type="tel" id="jc_phone" autocomplete="tel" placeholder="76 123 456" required>
+          <p class="p-muted" style="font-size:.85rem;margin-top:.35rem;">
+            Every member is added to the Journal Club WhatsApp group.</p>
         </div>
 
         <fieldset style="border:0;padding:0;margin:0 0 1.35rem;">
@@ -176,14 +185,6 @@
             placeholder="Access needs, or anything else. Optional."></textarea>
         </div>
 
-        <!-- A choice, not a term. Off by default, and joining does not
-             depend on it. -->
-        <div class="jc-consents">
-          <label class="jc-consent">
-            <input type="checkbox" id="consent_whatsapp">
-            <span>Add me to the Journal Club WhatsApp group.</span>
-          </label>
-        </div>
       </div>
 
       <div class="btn-row" style="margin-top:1.5rem;">
@@ -368,8 +369,12 @@ if (session) {
     `<label><input type="checkbox" value="${esc(t)}" id="int${i}"><span>${esc(t)}</span></label>`
   ).join("");
 
-  const { data: mem } = await sb.from("journal_members")
-    .select("joined_at").eq("profile_id", me).maybeSingle();
+  const [{ data: mem }, { data: prof }] = await Promise.all([
+    sb.from("journal_members").select("joined_at").eq("profile_id", me).maybeSingle(),
+    sb.from("profiles").select("phone").eq("id", me).maybeSingle(),
+  ]);
+  const savedPhone = (prof?.phone || "").trim();
+  $("jc_phone").value = savedPhone;
 
   $("loading").hidden = true;
 
@@ -388,9 +393,29 @@ if (session) {
     e.preventDefault();
     const btn = $("submit"), msg = $("msg");
     const picked = [...document.querySelectorAll("#interests input:checked")].map(i => i.value);
+    const phone = $("jc_phone").value.trim();
+    const digits = phone.replace(/\D/g, "").length;
+    if (digits < 7 || digits > 15) {
+      msg.className = "form-msg error";
+      msg.textContent = "Please enter the phone number you use on WhatsApp.";
+      $("jc_phone").focus();
+      return;
+    }
     btn.disabled = true;
     msg.className = "form-msg";
     msg.textContent = "Joining\u2026";
+
+    /* The phone lives on the profile, so the board and the club read one
+       number. Saved first so the join email to Nour already carries it. */
+    if (phone !== savedPhone) {
+      const { error: pe } = await sb.from("profiles").update({ phone }).eq("id", me);
+      if (pe) {
+        btn.disabled = false;
+        msg.className = "form-msg error";
+        msg.textContent = "Could not save your phone number: " + pe.message;
+        return;
+      }
+    }
 
     const { error } = await sb.from("journal_members").insert({
       profile_id:       me,
@@ -400,7 +425,7 @@ if (session) {
       research_level:   $("research_level").value || null,
       mode_pref:        $("mode_pref").value || null,
       access_needs:     $("access_needs").value.trim() || null,
-      consent_whatsapp: $("consent_whatsapp").checked,
+      consent_whatsapp: true,
     });
 
     if (error) {
